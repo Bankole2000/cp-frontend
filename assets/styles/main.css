@@ -1,0 +1,225 @@
+:root {
+  --primary: #833AB4;
+  --secondary: #212121;
+  --accent: #E63083;
+  --error: #FF2C1D;
+  --info: #585DE4;
+  --success: #5Ab55E;
+  --warning: #F77737;
+  --primary-light: #F5F0F9;
+  --secondary-light: #EEEEEE;
+  --accent-light: #FDEFF5;
+  --error-light: #FFEEED;
+  --info-light: #F2F2FD;
+  --success-light: #F2F9F2;
+  --warning-light: #FEF4EF;
+  --primary-dark: #26212A;
+  --secondary-dark: #303030;
+  --accent-dark: #2E2026;
+  --error-dark: #301F1E;
+  --info-dark: #23232E;
+  --success-dark: #232A23;
+  --warning-dark: #2F2520;
+}
+
+a {
+  text-decoration: none; 
+}
+
+.v-application .bg-light {
+  background-color: #f0efef;
+}
+
+.v-application .bg-dark {
+  background-color: #121212;
+}
+
+.v-application .bg-primary-lt {
+  background-color: var(--primary-light);
+}
+
+.v-application .bg-secondary-lt {
+  background-color: var(--secondary-light);
+}
+
+.v-application .bg-success-lt {
+  background-color: var(--success-light);
+}
+
+.v-application .bg-info-lt {
+  background-color: var(--info-light);
+}
+
+.v-application .bg-accent-lt {
+  background-color: var(--accent-light);
+}
+
+.v-application .bg-error-lt {
+  background-color: var(--error-light);
+}
+
+.v-application .bg-warning-lt {
+  background-color: var(--warning-light);
+}
+
+.v-application .bg-primary-dk {
+  background-color: var(--primary-dark);
+}
+
+.v-application .bg-secondary-dk {
+  background-color: var(--secondary-dark);
+}
+
+.v-application .bg-success-dk {
+  background-color: var(--success-dark);
+}
+
+.v-application .bg-info-dk {
+  background-color: var(--info-dark);
+}
+
+.v-application .bg-accent-dk {
+  background-color: var(--accent-dark);
+}
+
+.v-application .bg-error-dk {
+  background-color: var(--error-dark);
+}
+
+.v-application .bg-warning-dk {
+  background-color: var(--warning-dark);
+}
+
+.v-application .bg-gradient-top-dark {
+  background-image: linear-gradient(to top, #1e1e1e, #1e1e1e99);
+}
+
+.v-application .bg-gradient-top-light {
+  background-image: linear-gradient(to top, #ffffff, #ffffff99);
+}
+
+.v-application .bg-gradient-right-primary {
+  background-image: linear-gradient(to right, var(--primary), var(--accent));
+}
+
+.v-application .bg-gradient-top-success-dk {
+  background-color: var(--success-dark);
+}
+
+.v-application .bg-gradient-top-info-dk {
+  background-color: var(--info-dark);
+}
+
+.v-application .bg-gradient-top-accent-dk {
+  background-color: var(--accent-dark);
+}
+
+.v-application .bg-gradient-top-error-dk {
+  background-color: var(--error-dark);
+}
+
+.v-application .bg-gradient-top-warning-dk {
+  background-color: var(--warning-dark);
+}
+
+.primary-lt {
+  color: var(--primary-light) !important;
+}
+
+.secondary-lt {
+  color: var(--secondary-light) !important;
+}
+
+.info-lt {
+  color: var(--info-light) !important;
+}
+
+.success-lt {
+  color: var(--success-light) !important;
+}
+
+.accent-lt {
+  color: var(--accent-light) !important;
+}
+
+.error-lt {
+  color: var(--error-light) !important;
+}
+
+.warning-lt {
+  color: var(--warning-light) !important;
+}
+
+/* div {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+  overflow: hidden;
+}
+
+div:hover {
+  overflow-y: scroll;
+}
+
+div::-webkit-scrollbar {
+  width: 10px;
+}
+div::-webkit-scrollbar-track {
+  background: transparent;
+}
+div::-webkit-scrollbar-thumb {
+  background-color: #e91e63;
+  border-radius: 10px;
+  border: transparent;
+} */
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.router-anim-enter-active {
+  animation: coming 0.1s;
+  /* animation-delay: 0.0s; */
+  opacity: 0;
+}
+
+.router-anim-leave-active {
+  animation: going 0.1s;
+}
+
+@keyframes going {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+}
+
+@keyframes coming {
+  from {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+
+.v-application .elevated {
+  box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.12),
+    0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.1),
+    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.1),
+    0 0.125rem 0.1875rem rgba(4, 9, 20, 0.1) !important;
+}
+
+.v-application .elevated-light {
+  box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.042),
+    0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.04),
+    0 0.25rem 0.53125rem rgba(4, 9, 20, 0.04),
+    0 0.125rem 0.1875rem rgba(4, 9, 20, 0.04) !important;
+}

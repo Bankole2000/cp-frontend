@@ -1,4 +1,4 @@
-import colors from 'vuetify/es5/util/colors'
+// import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -18,10 +18,16 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: [
+    '~assets/styles/main.css'
+  ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    { src: '~/plugins/axios.js', mode: 'client' },
+    '~/plugins/common-components.js',
+    '~/plugins/common-filters.js',
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -43,7 +49,36 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    // baseURL: 'http://localhost',
+    credentials: true,
+    withCredentials: true
+  },
+
+  publicRuntimeConfig: {
+    // axios: {
+    //   browserBaseURL: process.env.BASE_URL
+    // }
+    env: {
+      baseURL: process.env.BASE_URL,
+      authPath: process.env.BASE_URL + process.env.AUTH_PATH,
+      chatPath: process.env.BASE_URL + process.env.CHAT_PATH,
+      commsPath: process.env.BASE_URL + process.env.COMMS_PATH,
+      eventPath: process.env.BASE_URL + process.env.EVENT_PATH,
+      feedPath: process.env.BASE_URL + process.env.FEED_PATH,
+      listingPath: process.env.BASE_URL + process.env.LISTING_PATH,
+      notificationPath: process.env.BASE_URL + process.env.NOTIFICATION_PATH,
+      offerPath: process.env.BASE_URL + process.env.OFFER_PATH,
+      profilePath: process.env.BASE_URL + process.env.PROFILE_PATH,
+      transactionPath: process.env.BASE_URL + process.env.TRANSACTION_PATH,
+      postPath: process.env.BASE_URL + process.env.POST_PATH,
+    }
+  },
+
+  privateRuntimeConfig: {
+    // axios: {
+    //   baseURL: process.env.BASE_URL
+    // }
+
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -53,18 +88,33 @@ export default {
       dark: true,
       themes: {
         dark: {
-          primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3,
+          primary: '#833AB4',
+          accent: '#E63083',
+          error: '#FF2C1D',
+          info: '#585DE4',
+          warning: '#F77737',
+          secondary: '#212121',
+          success: '#5Ab55E',
         },
+        light: {
+          primary: '#833AB4',
+          accent: '#E63083',
+          error: '#FF2C1D',
+          info: '#585DE4',
+          warning: '#F77737',
+          secondary: '#212121',
+          success: '#5Ab55E',
+        }
       },
     },
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: [/^v-snackbars($|\/)/, 'short-uuid']
+  },
+  transition: {
+    name: 'router-anim',
+    mode: 'out-in'
+  }
 }
