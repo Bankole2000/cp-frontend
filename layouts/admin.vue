@@ -171,6 +171,7 @@ import MainLeftNav from '~/components/shared/MainLeftNav.vue'
 import MainRightNav from '~/components/shared/MainRightNav.vue'
 import UserDashboardLeftNav from '~/components/shared/UserDashboardLeftNav.vue'
 export default {
+  name: 'admin',
   components: {
     MultiSnackBars,
     MainLeftNav,

@@ -1,130 +1,144 @@
 <template>
   <div>
-    <v-card>
-      <v-app-bar
-        color="#6A76AB"
-        dark
-        prominent
-        src="https://picsum.photos/1920/1080?random"
-        extension-height="80"
-        class="elevated-light"
-      >
-        <template #img="{ props }">
-          <v-img
-            v-bind="props"
-            gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
-          ></v-img>
-        </template>
-
-        <template #extension>
-          <div class="mb-n16 pt-6" style="width: 100%">
-            <v-container>
-              <v-row align="end">
-                <v-col cols="8">
-                  <div class="d-flex align-end" style="width: 100%">
-                    <v-avatar
-                      size="150"
-                      style="border-width: 5px; border-style: solid"
-                      :style="{
-                        borderColor: $vuetify.theme.dark
-                          ? '#121212'
-                          : '#f0efef',
-                      }"
-                    >
-                      <v-img
-                        src="https://randomuser.me/api/portraits/men/12.jpg"
-                        contain
-                        :aspect-ratio="1"
-                        alt="Vuetify Logo"
-                      ></v-img>
-                    </v-avatar>
-                    <div class="mb-2 ml-2">
-                      <div class="text-h6 font-weight-black mb-0">
-                        Display name
-                      </div>
-                      <div
-                        class="subtitle-1 text--secondary font-weight-regular"
-                      >
-                        @username
-                      </div>
-                    </div>
+    <div>
+      <v-container>
+        <v-row>
+          <v-col cols="3">
+            <v-card
+              flat
+              class="transparent"
+              style="
+                position: sticky;
+                left: 20px;
+                right: 60px;
+                bottom: 5px;
+                top: 80px;
+              "
+            >
+              <div style="width: 100%">
+                <v-card
+                  class="elevated-light rounded-xl"
+                  style="position: sticky; width: 100%"
+                >
+                  <!-- <v-card-title class="py-1">
+                    <span class="caption text--disabled">Navigation</span>
+                  </v-card-title>
+                  <v-divider inset></v-divider> -->
+                  <v-card-text class="py-1 py-3">
+                    <nuxt-link to="/">
+                      <HoverButton
+                        text="Community"
+                        :block="true"
+                        :rounded="true"
+                        class="mb-2"
+                        :class="{
+                          'elevated-light bg-gradient-right-primary-accent white--text':
+                            $route.name === 'index',
+                        }"
+                        size="lg"
+                      />
+                    </nuxt-link>
+                    <nuxt-link to="/listings">
+                      <HoverButton
+                        text="Listings"
+                        :block="true"
+                        :rounded="true"
+                        class="mb-2"
+                        :class="{
+                          'elevated-light bg-gradient-right-primary-accent white--text':
+                            $route.name.includes('listing'),
+                        }"
+                        size="lg"
+                      />
+                    </nuxt-link>
+                    <nuxt-link to="/people">
+                      <HoverButton
+                        text="Personal Ads"
+                        :block="true"
+                        :rounded="true"
+                        class="mb-2"
+                        :class="{
+                          'elevated-light bg-gradient-right-primary-accent white--text':
+                            $route.name.includes('people'),
+                        }"
+                        size="lg"
+                      />
+                    </nuxt-link>
+                    <nuxt-link to="/services">
+                      <HoverButton
+                        text="Services"
+                        :block="true"
+                        :rounded="true"
+                        class="mb-2"
+                        :class="{
+                          'elevated-light bg-gradient-right-primary-accent white--text':
+                            $route.name.includes('services'),
+                        }"
+                        size="lg"
+                      />
+                    </nuxt-link>
+                    <v-switch v-model="$vuetify.theme.dark"></v-switch>
+                  </v-card-text>
+                  <v-card-actions>
                     <v-spacer></v-spacer>
-                    <div class="mb-4">
-                      <v-btn icon outlined color="primary"
-                        ><v-icon>mdi-dots-horizontal</v-icon></v-btn
-                      >
-                      <v-btn icon outlined color="primary"
-                        ><v-icon>mdi-email-outline</v-icon></v-btn
-                      >
-                      <v-btn
-                        outlined
-                        rounded
-                        large
-                        color="primary"
-                        class="text-capitalize"
-                        >Following</v-btn
-                      >
-                      <v-btn
-                        outlined
-                        rounded
-                        large
-                        color="primary"
-                        class="text-capitalize"
-                        >Edit Profile</v-btn
-                      >
-                    </div>
+                    <!-- @click="testMessage" -->
+                    <v-btn class="primary" rounded>Click me</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </div>
+            </v-card>
+          </v-col>
+          <v-col cols="9">
+            <nuxt-child />
+            <!-- <v-container>
+              <v-row>
+                <v-col cols="7">
+                  <PostCardItem v-for="i in 5" :key="`${i}-b`" class="mb-4" />
+                  <OfferCardItem v-for="i in 5" :key="`${i}-a`" class="mb-4" />
+                  <ListingCardItem v-for="i in 5" :key="i" class="mb-4" />
+                </v-col>
+                <v-col cols="5">
+                  <div
+                    style="
+                      position: sticky;
+                      left: 20px;
+                      right: 60px;
+                      bottom: 5px;
+                      top: 80px;
+                    "
+                  >
+                    <v-card class="elevated-light rounded-xl mb-4">
+                      <v-card-title>
+                        <div class="d-flex align-center">
+                          <CountrySelectButton />
+                          <v-textarea
+                            placeholder="Search By City or State"
+                            rows="1"
+                            prepend-inner-icon="mdi-magnify"
+                            auto-grow
+                            hide-details
+                            filled
+                            dense
+                            rounded
+                            single-line
+                          ></v-textarea>
+                        </div>
+                      </v-card-title>
+                      <v-divider></v-divider>
+                      <v-card-text>Card Text</v-card-text>
+                    </v-card>
+                    <v-card class="elevated-light rounded-xl mb-4">
+                      <v-card-title>Trending</v-card-title>
+                    </v-card>
+                    <SuggestedProfilesCard />
                   </div>
                 </v-col>
-                <v-col cols="4"></v-col>
               </v-row>
-            </v-container>
-          </div>
-        </template>
-      </v-app-bar>
-    </v-card>
-    <v-container>
-      <v-row>
-        <v-col cols="3" class="pt-8">
-          <v-card
-            style="
-              position: sticky;
-              left: 20px;
-              right: 60px;
-              bottom: 5px;
-              top: 80px;
-            "
-            class="elevated-light rounded-xl mt-16"
-          >
-            <v-card-title>Card Title</v-card-title>
-            <v-card-text>Card Text</v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="5" class="pt-8 mt-16">
-          <!-- <v-tabs grow class="mt-16 mb-8" background-color="transparent">
-            <v-tab>Posts</v-tab>
-            <v-tab>Listings</v-tab>
-            <v-tab>Roommate</v-tab>
-          </v-tabs> -->
-          <ListingCardItem v-for="i in 5" :key="i" class="mb-4" />
-        </v-col>
-        <v-col cols="4">
-          <v-card
-            style="
-              position: sticky;
-              left: 20px;
-              right: 60px;
-              bottom: 5px;
-              top: 80px;
-            "
-            class="elevated-light rounded-xl"
-          >
-            <v-card-title>Card Title</v-card-title>
-            <v-card-text>Card Text</v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-    <ListingPreviewModal />
+            </v-container> -->
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 </template>
 
@@ -132,5 +146,11 @@
 export default {
   name: 'IndexPage',
   layout: 'admin',
+  scrollToTop: true,
+  // middleware: 'checkAuth',
+  data: () => ({}),
+  mounted() {
+    console.log({ routes: this.$router })
+  },
 }
 </script>

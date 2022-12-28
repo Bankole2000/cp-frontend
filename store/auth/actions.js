@@ -1,27 +1,30 @@
-import { loadingMessage, infoMessage, errorMessage, successMessage } from "~/utils/messaging";
+import Cookie from "js-cookie";
+import { loadingMessage, errorMessage, successMessage } from "~/utils/messaging";
 
 export default {
-  async getMe({ commit, rootState, dispatch }) {
-    const message = loadingMessage({});
-    const uuid = await dispatch('ui/showMessage', message, { root: true })
+  async getMe({ commit, state, rootState, dispatch }) {
+    // if (!state.refreshToken) {
+    //   return;
+    // }
     try {
       const response = await this.$axios.$get(`${rootState.env.authPath}/currentuser/me`);
       console.log({ response });
       if (response.success) {
-        commit('setUser', response.data)
-        await dispatch('ui/updateMessage', {
-          uuid,
-          ...infoMessage({ text: `${response.message}` })
-        }, { root: true })
+        const { accessToken, user } = response.data;
+        const { newAccessToken } = response;
+        commit('setUser', user)
+        if (newAccessToken) {
+          await dispatch('setTokens', { accessToken: newAccessToken, refreshToken: state.refreshToken });
+          this.$axios.setToken(newAccessToken, 'Bearer');
+        } else {
+          await dispatch('setTokens', { accessToken, refreshToken: state.refreshToken });
+          this.$axios.setToken(accessToken, 'Bearer');
+        }
       }
       return response;
     } catch (error) {
-      console.log({ error });
-      await dispatch('ui/updateMessage', {
-        uuid,
-        ...errorMessage({ text: `${error.response.data.message}` })
-      }, { root: true })
-      return error.response;
+      console.log({ error, response: error.response });
+      return error.response.data;
     }
   },
   async loginWithEmail({ commit, rootState, dispatch }, { email, password }) {
@@ -50,7 +53,7 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true })
-      return error.response;
+      return error.response.data;
     }
   },
   async loginWithUsername({ commit, rootState, dispatch }, { username, password }) {
@@ -79,7 +82,7 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true })
-      return error.response;
+      return error.response.data;
     }
   },
   async loginWithPhoneNumber({ commit, rootState, dispatch }, { phone, countryCode, password }) {
@@ -107,7 +110,7 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true })
-      return error.response;
+      return error.response.data;
     }
   },
   async logout({ commit, rootState, dispatch }) {
@@ -116,6 +119,7 @@ export default {
     try {
       const response = await this.$axios.$get(`${rootState.env.authPath}/logout`);
       if (response.success) {
+        Cookie.remove('refreshToken');
         await dispatch('clearTokens');
         commit('setUser', null);
         this.$axios.setToken(false);
@@ -130,7 +134,7 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true });
-      return error.response;
+      return error.response.data;
     }
   },
   async registerWithEmail({ commit, rootState, dispatch }, { firstname, lastname, email, dob, tos }) {
@@ -155,7 +159,7 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true });
-      return error.response;
+      return error.response.data;
     }
   },
   async registerWithPhoneNumber({ commit, rootState, dispatch }, { firstname, lastname, phone, countryCode, dob, tos }) {
@@ -180,7 +184,7 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true });
-      return error.response;
+      return error.response.data;
     }
   },
   async onboard({ commit, rootState, dispatch }, { username, gender, password, confirmPassword }) {
@@ -206,7 +210,7 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true });
-      return error.response;
+      return error.response.data;
     }
   },
   async verifyDeviceLogin({ commit, rootState, dispatch }, { userId, code, email, type, phone, deviceId }) {
@@ -237,14 +241,18 @@ export default {
         uuid,
         ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
       }, { root: true });
-      return error.response;
+      return error.response.data;
     }
   },
   setTokens({ commit }, { accessToken, refreshToken }) {
     commit('setAuthToken', accessToken)
     commit('setRefreshToken', refreshToken)
-    localStorage.setItem('cp-access', accessToken);
-    localStorage.setItem('cp-refresh', refreshToken);
+    if (process.client) {
+      localStorage.setItem('cp-access', accessToken);
+      localStorage.setItem('cp-refresh', refreshToken);
+    }
+    Cookie.set('refreshToken', refreshToken, { expires: 7 });
+    Cookie.set('accessToken', accessToken, { expires: 1 / (24 * 4) });
   },
   setIdToken({ commit }, { idToken }) {
     commit('setIdToken', idToken)
@@ -258,8 +266,49 @@ export default {
     commit('setAuthToken', null)
     commit('setRefreshToken', null)
     commit('setIdToken', null)
-    localStorage.removeItem('cp-access');
-    localStorage.removeItem('cp-refresh');
-    localStorage.removeItem('cp-id');
+    if (process.client) {
+      localStorage.removeItem('cp-access');
+      localStorage.removeItem('cp-refresh');
+      localStorage.removeItem('cp-id');
+    }
+  },
+  async initAuth({ commit, dispatch }, req) {
+    console.log('dispatching initAuth');
+    // this.$axios.setToken(false);
+    console.log({ isServer: process.server, isClient: process.client, req });
+    if (req && process.server) {
+      if (!req.headers.cookie) {
+        return;
+      }
+      const refreshCookie = req.headers.cookie.split(';').find(c => c.trim().startsWith('refreshToken='));
+      const accessCookie = req.headers.cookie.split(';').find(c => c.trim().startsWith('accessToken='));
+      if (!refreshCookie) {
+        return;
+      }
+      const refreshToken = refreshCookie.split('=')[1];
+
+      const accessToken = accessCookie ? accessCookie.split('=')[1] : "";
+      console.log('refreshToken Found');
+      console.log({ refreshToken });
+      console.log('accessToken Found');
+      console.log({ accessToken });
+      commit('setRefreshToken', refreshToken);
+      commit('setAuthToken', accessToken);
+      this.$axios.setToken(accessToken, 'Bearer');
+      await dispatch('getMe');
+    } else {
+      const accessToken = localStorage.getItem('cp-access');
+      const refreshToken = localStorage.getItem('cp-refresh');
+      const idToken = localStorage.getItem('cp-id');
+      if (accessToken && refreshToken) {
+        commit('setAuthToken', accessToken)
+        commit('setRefreshToken', refreshToken)
+        await dispatch('getMe');
+      }
+      if (idToken) {
+        commit('setIdToken', idToken)
+      }
+    }
+    // dispatch('fetchUser');
   }
 }

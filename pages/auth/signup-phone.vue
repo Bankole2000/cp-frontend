@@ -1,5 +1,6 @@
 <template>
   <div
+    class="register-phone"
     style="
       display: flex;
       justify-content: center;
@@ -17,12 +18,10 @@
               'px-12': $vuetify.breakpoint.mdAndUp,
             }"
           >
-            <LoginForm
-              @loginSuccess="loginSuccess"
+            <RegisterPhoneForm
+              @signupSuccess="signupSuccess"
               @goback="goback"
-              @requiresDeviceVerification="requiresDeviceVerification"
             />
-            <div></div>
           </div>
         </v-col>
       </v-row>
@@ -31,19 +30,19 @@
 </template>
 
 <script>
-import LoginForm from '../../components/forms/auth/LoginForm.vue'
+import RegisterPhoneForm from '~/components/forms/auth/RegisterPhoneForm.vue'
 export default {
-  components: { LoginForm },
+  name: 'RegisterPhone',
+  components: {
+    RegisterPhoneForm,
+  },
   methods: {
-    loginSuccess() {
-      this.$router.push({ name: 'index' })
-    },
     goback() {
       console.log('Go back')
-      this.$router.push({ name: 'auth' })
+      this.$router.push({ name: 'auth-signup' })
     },
-    requiresDeviceVerification() {
-      console.log('Requires Device Verification')
+    signupSuccess() {
+      this.$router.push({ name: 'index' })
     },
   },
 }

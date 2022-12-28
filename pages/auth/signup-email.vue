@@ -17,12 +17,10 @@
               'px-12': $vuetify.breakpoint.mdAndUp,
             }"
           >
-            <LoginForm
-              @loginSuccess="loginSuccess"
+            <RegisterEmailForm
               @goback="goback"
-              @requiresDeviceVerification="requiresDeviceVerification"
+              @signupSuccess="signupSuccess"
             />
-            <div></div>
           </div>
         </v-col>
       </v-row>
@@ -31,19 +29,19 @@
 </template>
 
 <script>
-import LoginForm from '../../components/forms/auth/LoginForm.vue'
+import RegisterEmailForm from '~/components/forms/auth/RegisterEmailForm.vue'
 export default {
-  components: { LoginForm },
+  name: 'RegisterEmail',
+  components: {
+    RegisterEmailForm,
+  },
   methods: {
-    loginSuccess() {
-      this.$router.push({ name: 'index' })
-    },
     goback() {
       console.log('Go back')
-      this.$router.push({ name: 'auth' })
+      this.$router.push({ name: 'auth-signup' })
     },
-    requiresDeviceVerification() {
-      console.log('Requires Device Verification')
+    signupSuccess() {
+      this.$router.push({ name: 'index' })
     },
   },
 }

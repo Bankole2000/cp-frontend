@@ -79,10 +79,10 @@
             <v-card
               :to="{ name: item.route }"
               flat
-              class="py-4 mb-4 d-flex pl-6"
+              class="py-3 mb-4 d-flex pl-6"
               :class="{
-                'elevated-light': hover || $route.name === item.route,
-                primary: $route.name == item.route,
+                'elevated-light': hover || $route.name.includes(item.route),
+                primary: $route.name.includes(item.route),
               }"
               style="
                 border-radius: 20px;
@@ -101,7 +101,7 @@
                 <p
                   class="mb-0 ml-2"
                   :class="
-                    $route.name == item.route
+                    $route.name.includes(item.route)
                       ? 'white--text font-weight-bold'
                       : ''
                   "
@@ -116,7 +116,7 @@
           <v-hover v-slot="{ hover }">
             <v-card
               flat
-              class="py-4 mb-4 d-flex pl-6"
+              class="py-3 mb-4 d-flex pl-6"
               :class="{
                 'elevated-light': hover || $route.name === 'dashboard',
                 primary: $route.name == 'dashboard',
@@ -164,29 +164,35 @@ export default {
     mini: false,
     mainRoutes: [
       {
-        title: 'Home',
+        title: 'Explore',
         step: 'profile',
         minValue: 1,
-        icon: 'profile',
+        icon: 'mdi-compass-outline',
         route: 'index',
         to: '/',
       },
       {
-        title: 'Test',
-        icon: 'mdi-view-dashboard',
-        to: '/admin/test',
-        route: 'admin-test',
-      },
-      {
-        title: 'Chat',
-        icon: 'mdi-account-multiple',
-        to: '/users',
-      },
-      {
         title: 'Notifications',
+        icon: 'mdi-view-dashboard',
+        to: '/notifications',
+        route: 'notifications',
+      },
+      {
+        title: 'Profile',
+        icon: 'mdi-account-multiple',
+        to: '/profile',
+        route: 'profile',
+      },
+      {
+        title: 'Create',
         icon: 'mdi-account-multiple',
         to: '/roles',
       },
+      // {
+      //   title: 'Dashboard',
+      //   icon: 'mdi-account-multiple',
+      //   to: '/roles',
+      // },
     ],
   }),
   computed: {

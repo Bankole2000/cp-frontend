@@ -1,5 +1,7 @@
 <template>
-  <h1>Listing Details Page</h1>
+  <div class="profile-following">
+    <h1>User Is Following</h1>
+  </div>
 </template>
 
 <script>

@@ -44,6 +44,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    'nuxt-socket-io',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -71,6 +72,8 @@ export default {
       profilePath: process.env.BASE_URL + process.env.PROFILE_PATH,
       transactionPath: process.env.BASE_URL + process.env.TRANSACTION_PATH,
       postPath: process.env.BASE_URL + process.env.POST_PATH,
+      ipFindAPIKey: process.env.IP_FIND_API_KEY,
+      ipGeoAPIKey: process.env.IP_GEOLOCATION_API_KEY,
     }
   },
 
@@ -85,7 +88,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: '#833AB4',

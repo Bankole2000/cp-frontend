@@ -13,8 +13,12 @@ export default function ({ $axios, store }) {
   })
 
   $axios.onRequest(config => {
+    console.log({ auth: store.state.auth });
     if (store.state.auth.refreshToken) {
       config.headers.common['x-refresh-token'] = store.state.auth.refreshToken;
+    }
+    if (store.state.auth.accessToken) {
+      $axios.setToken(store.state.auth.authToken, 'Bearer')
     }
     if (store.state.auth.idToken) {
       config.headers.common['x-user-id-token'] = store.state.auth.idToken;

@@ -89,6 +89,10 @@ export default {
       type: String,
       default: 'md',
     },
+    active: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     bgColor() {

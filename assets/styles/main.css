@@ -102,6 +102,94 @@ a {
   background-image: linear-gradient(to right, var(--primary), var(--accent));
 }
 
+.v-application .bg-gradient-right-primary-accent {
+  background-image: linear-gradient(to right, var(--primary), var(--accent));
+}
+
+.v-application .bg-gradient-right-primary-secondary {
+  background-image: linear-gradient(to right, var(--primary), var(--secondary));
+}
+
+.v-application .bg-gradient-right-primary-warning {
+  background-image: linear-gradient(to right, var(--primary), var(--warning));
+}
+
+.v-application .bg-gradient-right-primary-success {
+  background-image: linear-gradient(to right, var(--primary), var(--success));
+}
+
+.v-application .bg-gradient-right-primary-info {
+  background-image: linear-gradient(to right, var(--primary), var(--info));
+}
+
+.v-application .bg-gradient-right-primary-error {
+  background-image: linear-gradient(to right, var(--primary), var(--error));
+}
+
+.v-application .bg-gradient-right-info-dk {
+  background-image: linear-gradient(to right, var(--info), var(--info-dark));
+}
+
+.v-application .bg-gradient-right-info-lt {
+  background-image: linear-gradient(to right, var(--info), var(--info-light));
+}
+
+.v-application .bg-gradient-right-info-accent {
+  background-image: linear-gradient(to right, var(--info), var(--accent));
+}
+
+.v-application .bg-gradient-right-info-secondary {
+  background-image: linear-gradient(to right, var(--info), var(--secondary));
+}
+
+.v-application .bg-gradient-right-info-warning {
+  background-image: linear-gradient(to right, var(--info), var(--warning));
+}
+
+.v-application .bg-gradient-right-info-success {
+  background-image: linear-gradient(to right, var(--info), var(--success));
+}
+
+.v-application .bg-gradient-right-info-primary {
+  background-image: linear-gradient(to right, var(--info), var(--primary));
+}
+
+.v-application .bg-gradient-right-info-error {
+  background-image: linear-gradient(to right, var(--info), var(--error));
+}
+
+.v-application .bg-gradient-right-error-dk {
+  background-image: linear-gradient(to right, var(--error), var(--error-dark));
+}
+
+.v-application .bg-gradient-right-error-lt {
+  background-image: linear-gradient(to right, var(--error), var(--error-light));
+}
+
+.v-application .bg-gradient-right-error-accent {
+  background-image: linear-gradient(to right, var(--error), var(--accent));
+}
+
+.v-application .bg-gradient-right-error-secondary {
+  background-image: linear-gradient(to right, var(--error), var(--secondary));
+}
+
+.v-application .bg-gradient-right-error-warning {
+  background-image: linear-gradient(to right, var(--error), var(--warning));
+}
+
+.v-application .bg-gradient-right-error-success {
+  background-image: linear-gradient(to right, var(--error), var(--success));
+}
+
+.v-application .bg-gradient-right-error-primary {
+  background-image: linear-gradient(to right, var(--error), var(--primary));
+}
+
+.v-application .bg-gradient-right-error-info {
+  background-image: linear-gradient(to right, var(--error), var(--info));
+}
+
 .v-application .bg-gradient-top-success-dk {
   background-color: var(--success-dark);
 }

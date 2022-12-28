@@ -85,7 +85,7 @@
                   :disabled="loadingGoogle"
                   large
                   block
-                  to="/auth/login-email"
+                  to="/auth/signup-email"
                   ripple
                   nuxt
                   style="transition: all 0.3s ease-in-out"
@@ -97,7 +97,7 @@
                   "
                 >
                   <v-icon left>mdi-email-lock-outline</v-icon>
-                  Login with Email</v-btn
+                  Sign up with Email</v-btn
                 >
               </v-hover>
             </div>
@@ -106,7 +106,7 @@
                 <v-btn
                   rounded
                   block
-                  to="/auth/login-phone"
+                  to="/auth/signup-phone"
                   nuxt
                   large
                   :disabled="loadingGoogle"
@@ -119,15 +119,15 @@
                   "
                 >
                   <v-icon left>mdi-cellphone-lock</v-icon>
-                  Login with Phone
+                  Sign up with Phone
                 </v-btn>
               </v-hover>
             </div>
             <div>
               <p class="text-center">
-                Don't have an {app name} account?
+                Already have an {app name} account?
                 <v-hover v-slot="{ hover }">
-                  <nuxt-link :to="loadingGoogle ? '' : { name: 'auth-signup' }">
+                  <nuxt-link :to="loadingGoogle ? '' : '/auth'">
                     <span
                       style="transition: all 0.3s ease-in-out"
                       role="link"
@@ -140,7 +140,7 @@
                         'text--disabled': loadingGoogle,
                         'primary--text': !loadingGoogle,
                       }"
-                      >Sign up</span
+                      >Login</span
                     >
                   </nuxt-link>
                 </v-hover>

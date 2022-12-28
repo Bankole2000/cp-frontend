@@ -1,5 +1,7 @@
 <template>
-  <div>Listing List / Search page</div>
+  <div class="profile-saved">
+    <h1>User Saved Listings</h1>
+  </div>
 </template>
 
 <script>

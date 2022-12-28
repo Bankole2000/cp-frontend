@@ -2,7 +2,10 @@
   <v-app>
     <v-main>
       <div style="width: 100vw; height: 100vh; display: flex">
-        <div style="flex: 6; z-index: 1; background-color: white">
+        <div
+          v-if="$vuetify.breakpoint.lgAndUp"
+          style="flex: 6; z-index: 1; background-color: white"
+        >
           <h1>Here's the auth pages'</h1>
           <router-link to="/auth/login-email">Login with email</router-link>
           <router-link to="/auth/login-phone">Login With phone</router-link>
@@ -14,9 +17,9 @@
         </div>
         <div style="flex: 4; border-left: 1px solid grey; z-index: 0">
           <!-- <transition name="router-anim"> -->
-          <v-container>
-            <nuxt-child />
-          </v-container>
+
+          <nuxt-child />
+
           <!-- </transition> -->
         </div>
       </div>

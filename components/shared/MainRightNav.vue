@@ -85,8 +85,19 @@
           </div>
         </v-tab-item>
         <v-tab-item :value="items.indexOf('Invites')">
-          <div>
-            <h1>Invites</h1>
+          <div style="min-height: calc(100vh - 65px)">
+            <div>
+              <v-tabs fixed-tabs height="65px">
+                <v-tab> Recieved </v-tab>
+                <v-tab> Sent </v-tab>
+              </v-tabs>
+            </div>
+            <v-divider></v-divider>
+            <div style="height: calc(100vh - 130px); overflow-y: scroll">
+              <div>
+                <ChatSample />
+              </div>
+            </div>
           </div>
         </v-tab-item>
         <!-- <v-tab-item :value="items.indexOf('Settings')">
