@@ -150,12 +150,34 @@
             </v-card>
           </v-hover>
         </div>
+        <div class="ml-4 mr-8">
+          <v-hover v-slot="{ hover }">
+            <v-card
+              flat
+              class="py-3 mb-4 d-flex pl-6"
+              :class="{
+                'elevated-light': hover,
+              }"
+              style="
+                border-radius: 20px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+              "
+              @click="logout"
+            >
+              <div class="d-flex align-center">
+                <p class="mb-0 ml-2">Logout</p>
+              </div>
+            </v-card>
+          </v-hover>
+        </div>
       </div>
     </div>
   </v-navigation-drawer>
 </template>
 
 <script>
+// import { mapActions } from 'vuex';
 export default {
   data: () => ({
     type: 'default (no property)',
@@ -181,7 +203,7 @@ export default {
         title: 'Profile',
         icon: 'mdi-account-multiple',
         to: '/profile',
-        route: 'profile',
+        route: 'profile-index',
       },
       {
         title: 'Create',
@@ -211,9 +233,15 @@ export default {
     },
   },
   methods: {
+    // ...mapActions({
+    //   logout: 'auth/logout',
+    // }),
     goToUserDashboard() {
       this.$store.commit('ui/toggleUserDashboardLeftNav', true)
       this.$router.push({ name: 'dashboard' })
+    },
+    async logout() {
+      await this.$store.dispatch('auth/logout')
     },
   },
 }

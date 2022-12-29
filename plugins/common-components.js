@@ -10,6 +10,7 @@ import ChatContactsModal from '@/components/modals/ChatContactsModal.vue';
 import CountrySelectButton from '@/components/common/CountrySelectButton.vue';
 import PostCardItem from '@/components/blocks/PostCardItem.vue';
 import SuggestedProfilesCard from '@/components/common/SuggestedProfiles.vue';
+import verifyOTPForm from '@/components/common/verifyOTPForm.vue';
 
 Vue.component('HoverButton', HoverButton);
 Vue.component('PhoneCountrySelect', PhoneCountrySelect);
@@ -20,4 +21,4 @@ Vue.component('ChatContactsModal', ChatContactsModal);
 Vue.component('CountrySelectButton', CountrySelectButton);
 Vue.component('PostCardItem', PostCardItem);
 Vue.component('SuggestedProfilesCard', SuggestedProfilesCard);
-
+Vue.component('verifyOTPForm', verifyOTPForm);

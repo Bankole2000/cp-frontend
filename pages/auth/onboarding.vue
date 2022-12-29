@@ -1,6 +1,5 @@
 <template>
   <div
-    class="register-phone"
     style="
       display: flex;
       justify-content: center;
@@ -18,10 +17,7 @@
               'px-12': $vuetify.breakpoint.mdAndUp,
             }"
           >
-            <RegisterPhoneForm
-              @signupSuccess="signupSuccess"
-              @goback="goback"
-            />
+            <OnboardingForm />
           </div>
         </v-col>
       </v-row>
@@ -30,21 +26,9 @@
 </template>
 
 <script>
-import RegisterPhoneForm from '~/components/forms/auth/RegisterPhoneForm.vue'
+import OnboardingForm from '~/components/forms/auth/OnboardingForm.vue'
 export default {
-  name: 'RegisterPhone',
-  components: {
-    RegisterPhoneForm,
-  },
-  methods: {
-    goback() {
-      console.log('Go back')
-      this.$router.push({ name: 'auth-signup' })
-    },
-    signupSuccess() {
-      this.$router.push({ name: 'verify' })
-    },
-  },
+  components: { OnboardingForm },
 }
 </script>
 

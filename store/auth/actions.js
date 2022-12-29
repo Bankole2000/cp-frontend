@@ -24,7 +24,7 @@ export default {
       return response;
     } catch (error) {
       console.log({ error, response: error.response });
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   async loginWithEmail({ commit, rootState, dispatch }, { email, password }) {
@@ -45,15 +45,18 @@ export default {
       }
       return response;
     } catch (error) {
-      console.log({ error });
+      if (!error) {
+        return null;
+      }
+      console.log({ error, response: error.response });
       if (error.response.data.idToken) {
         await dispatch('setIdToken', { idToken: error.response.data.idToken });
       }
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true })
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   async loginWithUsername({ commit, rootState, dispatch }, { username, password }) {
@@ -74,15 +77,18 @@ export default {
       }
       return response;
     } catch (error) {
-      console.log({ error });
+      if (!error) {
+        return error;
+      }
+      console.log({ error, response: error.response });
       if (error.response.data.idToken) {
         await dispatch('setIdToken', { idToken: error.response.data.idToken });
       }
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true })
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   async loginWithPhoneNumber({ commit, rootState, dispatch }, { phone, countryCode, password }) {
@@ -102,15 +108,18 @@ export default {
       }
       return response;
     } catch (error) {
+      if (!error) {
+        return error;
+      }
       console.log({ error });
       if (error.response.data.idToken) {
         await dispatch('setIdToken', { idToken: error.response.data.idToken });
       }
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true })
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   async logout({ commit, rootState, dispatch }) {
@@ -120,6 +129,7 @@ export default {
       const response = await this.$axios.$get(`${rootState.env.authPath}/logout`);
       if (response.success) {
         Cookie.remove('refreshToken');
+        Cookie.remove('accessToken');
         await dispatch('clearTokens');
         commit('setUser', null);
         this.$axios.setToken(false);
@@ -129,12 +139,15 @@ export default {
         }, { root: true });
       }
     } catch (error) {
+      if (!error) {
+        return error;
+      }
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true });
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   async registerWithEmail({ commit, rootState, dispatch }, { firstname, lastname, email, dob, tos }) {
@@ -154,12 +167,15 @@ export default {
       }
       return response;
     } catch (error) {
+      if (!error) {
+        return error;
+      }
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true });
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   async registerWithPhoneNumber({ commit, rootState, dispatch }, { firstname, lastname, phone, countryCode, dob, tos }) {
@@ -179,12 +195,73 @@ export default {
       }
       return response;
     } catch (error) {
+      if (!error) {
+        return error;
+      }
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true });
-      return error.response.data;
+      return error.response ? error.response.data : error;
+    }
+  },
+  async resendOTP({ commit, rootState, state, dispatch }, { type, email, phone, userId }) {
+    const message = loadingMessage({ text: `Resending Verification Code...` });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$post(`${rootState.env.authPath}/verify/otp/resend`, { type, email, phone, userId, idToken: state.idToken });
+      console.log(response);
+      if (response.success) {
+        await dispatch('ui/updateMessage', {
+          uuid,
+          ...successMessage({ text: `${response.message}` })
+        }, { root: true });
+      }
+      return response;
+    } catch (error) {
+      if (!error) {
+        return error;
+      }
+      console.log({ error });
+      await dispatch('ui/updateMessage', {
+        uuid,
+        ...errorMessage({ text: 'Something went wrong' })
+      }, { root: true });
+      return error.response ? error.response.data : error;
+    }
+  },
+  async verifyOTP({ commit, state, rootState, dispatch }, { OTP, type, email, phone, userId }) {
+    const message = loadingMessage({ text: `Verifying ${type.toLowerCase()} OTP...` });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$post(`${rootState.env.authPath}/verify/otp/verify`, { OTP, type, email, phone, userId, idToken: state.idToken });
+      console.log(response);
+      if (response.success) {
+        const { data: user } = response;
+        commit('setUser', user);
+        await dispatch('ui/updateMessage', {
+          uuid,
+          ...successMessage({ text: `${response.message}` })
+        }, { root: true });
+      } else {
+
+        await dispatch('ui/updateMessage', {
+          uuid,
+          ...errorMessage({ text: `${response.message}` })
+        }, { root: true });
+      }
+      return response;
+    } catch (error) {
+      if (!error) {
+        return error;
+      }
+      console.log({ error });
+      await dispatch('ui/updateMessage', {
+        uuid,
+        ...errorMessage({ text: 'Something went wrong' })
+      }, { root: true });
+      return error.response ? error.response.data : error;
     }
   },
   async onboard({ commit, rootState, dispatch }, { username, gender, password, confirmPassword }) {
@@ -205,12 +282,15 @@ export default {
       }
       return response;
     } catch (error) {
+      if (!error) {
+        return error;
+      }
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true });
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   async verifyDeviceLogin({ commit, rootState, dispatch }, { userId, code, email, type, phone, deviceId }) {
@@ -236,12 +316,15 @@ export default {
       }
       return response;
     } catch (error) {
+      if (!error) {
+        return error;
+      }
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: `${error.response.data.message || 'Something went wrong'}` })
+        ...errorMessage({ text: 'Something went wrong' })
       }, { root: true });
-      return error.response.data;
+      return error.response ? error.response.data : error;
     }
   },
   setTokens({ commit }, { accessToken, refreshToken }) {
@@ -282,6 +365,7 @@ export default {
       }
       const refreshCookie = req.headers.cookie.split(';').find(c => c.trim().startsWith('refreshToken='));
       const accessCookie = req.headers.cookie.split(';').find(c => c.trim().startsWith('accessToken='));
+      console.log({ refreshCookie, accessCookie });
       if (!refreshCookie) {
         return;
       }

@@ -1,4 +1,7 @@
 export default {
+  idToken(state) {
+    return state.idToken;
+  },
   isAdmin(state) {
     return state.user ? state.user.roles.includes('ADMIN') : false;
   },
@@ -10,5 +13,14 @@ export default {
   },
   user(state) {
     return state.user;
+  },
+  emailVerified(state) {
+    return state.user ? state.user.emailVerified : false;
+  },
+  phoneVerified(state) {
+    return state.user ? state.user.phoneVerified : false;
+  },
+  registeredVia(state) {
+    return state.user ? state.user.registeredVia : null;
   }
 }

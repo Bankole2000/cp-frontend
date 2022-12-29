@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <PostCardItem v-for="i in 5" :key="`${i}-b`" class="mb-4" />
+  <div class="profile-followers">
+    <h1>User has Followers</h1>
   </div>
 </template>
 

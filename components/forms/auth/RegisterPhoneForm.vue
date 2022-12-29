@@ -6,8 +6,8 @@
           <v-col cols="12" class="py-2">
             <v-slide-y-transition>
               <v-alert
-                :key="0"
                 v-show="success ? true : false"
+                :key="0"
                 text
                 dense
                 style="border-radius: 15px"
@@ -60,15 +60,11 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12" md="4" class="py-0">
-            <!-- <PhoneCountrySelect
-              @phoneCountryCodeSelected="selectCountryCode"
-              :country-code="visitorData ? visitorData.countryCode : null"
-            /> -->
             <v-hover v-slot="{ hover }">
               <v-card
+                ref="countrySelectTrigger"
                 outlined
                 :disabled="loading"
-                ref="countrySelectTrigger"
                 class="rounded-xl d-flex align-center px-2 py-2"
                 :class="{ 'elevated-light': hover }"
                 :focusable="false"
@@ -155,8 +151,8 @@
                 large
                 rounded
                 text
-                @click="$emit('goback')"
                 :disabled="loading"
+                @click="$emit('goback')"
               >
                 <v-icon left>mdi-arrow-left</v-icon>
                 Back
