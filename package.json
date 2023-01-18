@@ -18,7 +18,8 @@
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
-    "release:major": "standard-version --release-as major"
+    "release:major": "standard-version --release-as major",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
