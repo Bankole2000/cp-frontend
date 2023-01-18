@@ -11,10 +11,18 @@
     app
     overflow
   >
-    <div style="min-height: 100vh">
+    <div
+      style="
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-items: flex-start;
+      "
+    >
       <v-img
         :aspect-ratio="16 / 9"
-        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+        style="flex-grow: 0"
+        :src="profileWallpaper"
       >
         <v-row
           align="start"
@@ -27,92 +35,57 @@
         >
           <v-col>
             <v-avatar size="50" class="mb-2">
-              <img
-                src="https://randomuser.me/api/portraits/women/79.jpg"
-                alt="John"
-              />
+              <img :src="profileImage" alt="John" />
             </v-avatar>
-            <div class="heading font-weight-black">Display name</div>
-            <div class="subheading">@username</div>
+            <div v-if="profile">
+              <div class="heading font-weight-black">
+                {{ profile.displayname }}
+              </div>
+              <div class="subheading">@{{ profile.username }}</div>
+            </div>
             <div class="d-flex align-center mt-4">
               <div>
-                <span>999</span>
+                <span class="font-weight-black">{{
+                  followingCount | count
+                }}</span>
                 <span class="text--secondary">Following</span>
               </div>
               <v-spacer></v-spacer>
               <div>
-                <span>999</span>
+                <span class="font-weight-black">{{
+                  followerCount | count
+                }}</span>
                 <span class="text--secondary">Followers</span>
               </div>
             </div>
           </v-col>
         </v-row>
       </v-img>
-      <!-- <v-list
-        style="
-          background-image: url('https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg');
-          background-size: cover;
-        "
-      >
-        <v-list-item class="px-2">
-          <v-list-item-avatar size="56">
-            <v-img
-              src="https://randomuser.me/api/portraits/women/85.jpg"
-            ></v-img>
-          </v-list-item-avatar>
-        </v-list-item>
-
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="text-h6">
-              Sandra Adams
-            </v-list-item-title>
-            <v-list-item-subtitle>sandra_a88@gmail.com</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list> -->
-
-      <!-- <v-divider></v-divider> -->
       <div class="mt-16">
-        <div v-for="(item, i) in mainRoutes" :key="i" class="ml-4 mr-8">
-          <v-hover v-slot="{ hover }">
-            <v-card
-              :to="{ name: item.route }"
-              flat
-              class="py-3 mb-4 d-flex pl-6"
-              :class="{
-                'elevated-light': hover || $route.name.includes(item.route),
-                primary: $route.name.includes(item.route),
-              }"
-              style="
-                border-radius: 20px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-              "
-            >
-              <div class="d-flex align-center">
-                <!-- <DynamicIcon
-                v-if="mainRoutes[currentValue] <= item.minValue"
-                :icon="item.icon"
-                :color="$route.name == item.route ? 'white' : '#888888'"
-                :size="24"
-              /> -->
-                <!-- <v-icon v-else color="success">mdi-check-circle</v-icon> -->
-                <p
-                  class="mb-0 ml-2"
-                  :class="
-                    $route.name.includes(item.route)
-                      ? 'white--text font-weight-bold'
-                      : ''
-                  "
-                >
-                  {{ item.title }}
-                </p>
-              </div>
-            </v-card>
-          </v-hover>
+        <div v-if="isLoggedIn" class="ml-4 mr-8">
+          <div v-for="(item, i) in mainRoutes" :key="i">
+            <NavButton
+              :title="item.title"
+              :icon="item.icon"
+              :to="item.to"
+              :active-routes="item.activeRoutes"
+              :badge-count="item.badgeCount"
+            />
+          </div>
         </div>
-        <div class="ml-4 mr-8">
+        <div v-else class="ml-4 mr-8">
+          <div v-for="(item, i) in notLoggedInRoutes" :key="i">
+            <NavButton
+              :title="item.title"
+              :icon="item.icon"
+              :to="item.to"
+              :active-routes="item.activeRoutes"
+              :badge-count="item.badgeCount"
+            />
+          </div>
+        </div>
+
+        <!-- <div class="ml-4 mr-8">
           <v-hover v-slot="{ hover }">
             <v-card
               flat
@@ -129,13 +102,6 @@
               @click="goToUserDashboard"
             >
               <div class="d-flex align-center">
-                <!-- <DynamicIcon
-                v-if="mainRoutes[currentValue] <= item.minValue"
-                :icon="item.icon"
-                :color="$route.name == item.route ? 'white' : '#888888'"
-                :size="24"
-              /> -->
-                <!-- <v-icon v-else color="success">mdi-check-circle</v-icon> -->
                 <p
                   class="mb-0 ml-2"
                   :class="
@@ -149,8 +115,9 @@
               </div>
             </v-card>
           </v-hover>
-        </div>
-        <div class="ml-4 mr-8">
+        </div> -->
+        <CreateButton v-if="isLoggedIn" />
+        <!-- <div class="ml-4 mr-8">
           <v-hover v-slot="{ hover }">
             <v-card
               flat
@@ -170,15 +137,23 @@
               </div>
             </v-card>
           </v-hover>
-        </div>
+        </div> -->
       </div>
+      <v-spacer></v-spacer>
+      <ProfileButton />
     </div>
   </v-navigation-drawer>
 </template>
 
 <script>
 // import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex'
+import CreateButton from '../common/CreateButton.vue'
+import NavButton from '../common/NavButton.vue'
+import ProfileButton from '../common/ProfileButton.vue'
+
 export default {
+  components: { CreateButton, NavButton, ProfileButton },
   data: () => ({
     type: 'default (no property)',
     clipped: false,
@@ -187,50 +162,92 @@ export default {
     mainRoutes: [
       {
         title: 'Explore',
-        step: 'profile',
-        minValue: 1,
-        icon: 'mdi-compass-outline',
-        route: 'index',
-        to: '/',
+        icon: 'mdi-compass-rose',
+        to: 'index',
+        activeRoutes: [
+          'index',
+          'index-listings',
+          'index-people',
+          'index-services',
+        ],
+        badgeCount: 0,
       },
       {
         title: 'Notifications',
-        icon: 'mdi-view-dashboard',
-        to: '/notifications',
-        route: 'notifications',
+        icon: 'mdi-bell-badge-outline',
+        to: 'notifications',
+        activeRoutes: ['notifications'],
+        badgeCount: 6,
       },
       {
         title: 'Profile',
-        icon: 'mdi-account-multiple',
-        to: '/profile',
-        route: 'profile-index',
+        icon: 'mdi-account-box-outline',
+        to: 'profile-index',
+        activeRoutes: [
+          'profile-index',
+          'profile-index-listings',
+          'profile-index-ads',
+          'profile-index-services',
+        ],
+        badgeCount: 0,
       },
       {
-        title: 'Create',
-        icon: 'mdi-account-multiple',
-        to: '/roles',
+        title: 'Dashboard',
+        icon: 'mdi-view-dashboard-outline',
+        to: 'dashboard',
+        activeRoutes: [
+          'dashboard',
+          'dashboard-index',
+          'dashboard-index-listings',
+          'dashboard-index-people',
+          'dashboard-index-services',
+        ],
+        badgeCount: 0,
       },
-      // {
-      //   title: 'Dashboard',
-      //   icon: 'mdi-account-multiple',
-      //   to: '/roles',
-      // },
+    ],
+    notLoggedInRoutes: [
+      {
+        title: 'Explore',
+        icon: 'mdi-compass-rose',
+        to: 'index',
+        activeRoutes: [
+          'index',
+          'index-listings',
+          'index-people',
+          'index-services',
+        ],
+        badgeCount: 0,
+      },
+      {
+        title: 'Login / Register',
+        icon: 'mdi-account-box-outline',
+        to: 'auth',
+        activeRoutes: ['auth'],
+        badgeCount: 0,
+      },
     ],
   }),
   computed: {
+    ...mapGetters({
+      isLoggedIn: 'auth/isLoggedIn',
+      profileImage: 'user/profileImage',
+      profile: 'user/profile',
+      profileWallpaper: 'user/profileWallpaper',
+      followerCount: 'user/followerCount',
+      followingCount: 'user/followingCount',
+    }),
     nav: {
       get() {
         return this.$store.getters['ui/showMainLeftNav']
       },
       set(val) {
-        // if (this.$route.path.includes('dashboard')) {
-        //   console.log('Not changing main Nav')
-        //   return
-        // }
         console.log('Setting main Nav')
         return this.$store.commit('ui/toggleMainLeftNav', val)
       },
     },
+  },
+  mounted() {
+    console.log({ breakpoint: this.$vuetify.breakpoint })
   },
   methods: {
     // ...mapActions({
@@ -241,7 +258,8 @@ export default {
       this.$router.push({ name: 'dashboard' })
     },
     async logout() {
-      await this.$store.dispatch('auth/logout')
+      const result = await this.$store.dispatch('auth/logout')
+      console.log({ result })
     },
   },
 }

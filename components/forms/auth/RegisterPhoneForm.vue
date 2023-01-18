@@ -127,6 +127,7 @@
                   prepend-inner-icon="mdi-calendar-check"
                   readonly
                   rounded
+                  hide-details
                   :disabled="loading"
                   filled
                   single-line
@@ -144,6 +145,12 @@
               >
               </v-date-picker>
             </v-dialog>
+          </v-col>
+          <v-col cols="12" class="py-0">
+            <v-checkbox
+              v-model="registerData.tos"
+              label="By signing up you agree to the terms and conditions"
+            ></v-checkbox>
           </v-col>
           <v-col cols="12" class="py-0">
             <div class="d-flex align-center">

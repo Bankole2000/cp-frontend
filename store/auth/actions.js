@@ -34,29 +34,11 @@ export default {
       const response = await this.$axios.$post(`${rootState.env.authPath}/login/email`, { email, password });
       console.log({ response });
       if (response.success) {
-        const { accessToken, refreshToken, user } = response.data;
-        await dispatch('setTokens', { accessToken, refreshToken });
-        commit('setUser', user);
-        this.$axios.setToken(accessToken, 'Bearer');
-        await dispatch('ui/updateMessage', {
-          uuid,
-          ...successMessage({ text: `${response.message}` })
-        }, { root: true })
+        return await dispatch('handleLoginSuccess', { response, uuid });
       }
       return response;
     } catch (error) {
-      if (!error) {
-        return null;
-      }
-      console.log({ error, response: error.response });
-      if (error.response.data.idToken) {
-        await dispatch('setIdToken', { idToken: error.response.data.idToken });
-      }
-      await dispatch('ui/updateMessage', {
-        uuid,
-        ...errorMessage({ text: 'Something went wrong' })
-      }, { root: true })
-      return error.response ? error.response.data : error;
+      return await dispatch('handleLoginError', { error, uuid });
     }
   },
   async loginWithUsername({ commit, rootState, dispatch }, { username, password }) {
@@ -66,29 +48,11 @@ export default {
       const response = await this.$axios.$post(`${rootState.env.authPath}/login/username`, { username, password });
       console.log({ response });
       if (response.success) {
-        const { accessToken, refreshToken, user } = response.data;
-        await dispatch('setTokens', { accessToken, refreshToken });
-        commit('setUser', user);
-        this.$axios.setToken(accessToken, 'Bearer');
-        await dispatch('ui/updateMessage', {
-          uuid,
-          ...successMessage({ text: `${response.message}` })
-        }, { root: true })
+        return await dispatch('handleLoginSuccess', { response, uuid });
       }
       return response;
     } catch (error) {
-      if (!error) {
-        return error;
-      }
-      console.log({ error, response: error.response });
-      if (error.response.data.idToken) {
-        await dispatch('setIdToken', { idToken: error.response.data.idToken });
-      }
-      await dispatch('ui/updateMessage', {
-        uuid,
-        ...errorMessage({ text: 'Something went wrong' })
-      }, { root: true })
-      return error.response ? error.response.data : error;
+      return await dispatch('handleLoginError', { error, uuid });
     }
   },
   async loginWithPhoneNumber({ commit, rootState, dispatch }, { phone, countryCode, password }) {
@@ -97,30 +61,51 @@ export default {
     try {
       const response = await this.$axios.$post(`${rootState.env.authPath}/login/phone`, { phone, countryCode, password });
       if (response.success) {
-        const { accessToken, refreshToken, user } = response.data;
-        await dispatch('setTokens', { accessToken, refreshToken });
-        commit('setUser', user);
-        this.$axios.setToken(accessToken, 'Bearer');
-        await dispatch('ui/updateMessage', {
-          uuid,
-          ...successMessage({ text: `${response.message}` })
-        }, { root: true });
+        return await dispatch('handleLoginSuccess', { response, uuid });
       }
       return response;
     } catch (error) {
-      if (!error) {
-        return error;
-      }
-      console.log({ error });
-      if (error.response.data.idToken) {
-        await dispatch('setIdToken', { idToken: error.response.data.idToken });
-      }
+      return await dispatch('handleLoginError', { error, uuid });
+    }
+  },
+  async handleLoginError({ dispatch }, { error, uuid }) {
+    if (!error) {
+      return null;
+    }
+    console.log({ error, response: error.response });
+    if (!error.response) {
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: 'Something went wrong' })
+        ...errorMessage({ text: 'Something went wrong. Please try again.' })
       }, { root: true })
       return error.response ? error.response.data : error;
     }
+    if (!error.response.data.data) {
+      await dispatch('ui/updateMessage', {
+        uuid,
+        ...errorMessage({ text: error.response.data.message })
+      }, { root: true })
+      return error.response ? error.response.data : error;
+    }
+    if (error.response.data.data.idToken) {
+      await dispatch('setIdToken', { idToken: error.response.data.data.idToken });
+    }
+    await dispatch('ui/updateMessage', {
+      uuid,
+      ...errorMessage({ text: error.response.data.message })
+    }, { root: true })
+    return error.response ? error.response.data : error;
+  },
+  async handleLoginSuccess({ commit, dispatch }, { response, uuid }) {
+    const { accessToken, refreshToken, user } = response.data;
+    await dispatch('setTokens', { accessToken, refreshToken });
+    commit('setUser', user);
+    this.$axios.setToken(accessToken, 'Bearer');
+    await dispatch('ui/updateMessage', {
+      uuid,
+      ...successMessage({ text: `${response.message}` })
+    }, { root: true })
+    return response;
   },
   async logout({ commit, rootState, dispatch }) {
     const message = loadingMessage({ text: 'Logging out...' });
@@ -138,6 +123,7 @@ export default {
           ...successMessage({ text: `${response.message}` })
         }, { root: true });
       }
+      return response;
     } catch (error) {
       if (!error) {
         return error;
@@ -145,7 +131,7 @@ export default {
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: 'Something went wrong' })
+        ...errorMessage({ text: error.response.data.message })
       }, { root: true });
       return error.response ? error.response.data : error;
     }
@@ -173,7 +159,7 @@ export default {
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: 'Something went wrong' })
+        ...errorMessage({ text: error.response.data.message })
       }, { root: true });
       return error.response ? error.response.data : error;
     }
@@ -201,12 +187,12 @@ export default {
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: 'Something went wrong' })
+        ...errorMessage({ text: error.response.data.message })
       }, { root: true });
       return error.response ? error.response.data : error;
     }
   },
-  async resendOTP({ commit, rootState, state, dispatch }, { type, email, phone, userId }) {
+  async resendOTP({ rootState, state, dispatch }, { type, email, phone, userId }) {
     const message = loadingMessage({ text: `Resending Verification Code...` });
     const uuid = await dispatch('ui/showMessage', message, { root: true });
     try {
@@ -226,7 +212,7 @@ export default {
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: 'Something went wrong' })
+        ...errorMessage({ text: error.response.data.message })
       }, { root: true });
       return error.response ? error.response.data : error;
     }
@@ -259,7 +245,7 @@ export default {
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: 'Something went wrong' })
+        ...errorMessage({ text: error.response.data.message })
       }, { root: true });
       return error.response ? error.response.data : error;
     }
@@ -293,16 +279,11 @@ export default {
       return error.response ? error.response.data : error;
     }
   },
-  async verifyDeviceLogin({ commit, rootState, dispatch }, { userId, code, email, type, phone, deviceId }) {
+  async verifyDeviceLogin({ commit, rootState, state, dispatch }, { userId, code, email, type, phone, username, deviceId }) {
     const message = loadingMessage({ text: 'Verifying Device...' });
     const uuid = await dispatch('ui/showMessage', message, { root: true });
     try {
-      let response;
-      if (type === 'EMAIL') {
-        response = await this.$axios.$post(`${rootState.env.authPath}/verify/verify-device-login`, { userId, code, email, deviceId, type });
-      } else {
-        response = await this.$axios.$post(`${rootState.env.authPath}/verify/verify-device-login`, { userId, code, phone, deviceId, type });
-      }
+      const response = await this.$axios.$post(`${rootState.env.authPath}/verify/verify-device-login`, { userId, code, email, phone, username, deviceId, type, idToken: state.idToken });
       console.log(response);
       if (response.success) {
         const { accessToken, refreshToken, user } = response.data;
@@ -322,9 +303,55 @@ export default {
       console.log({ error });
       await dispatch('ui/updateMessage', {
         uuid,
-        ...errorMessage({ text: 'Something went wrong' })
+        ...errorMessage({ text: error.response.data.message })
       }, { root: true });
       return error.response ? error.response.data : error;
+    }
+  },
+  async sendForgotPasswordRequest({ commit, rootState, dispatch }, { username, email, phone, field, countryCode }) {
+    const message = loadingMessage({ text: 'Searching...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$post(`${rootState.env.authPath}/verify/forgot-password`, { username, email, phone, countryCode, field })
+      if (response.success) {
+        const { user, idToken, verifData } = response.data;
+        commit('setUser', user);
+        commit('setIdToken', idToken);
+        commit('setVerifData', verifData);
+        await dispatch('ui/updateMessage', {
+          uuid,
+          ...successMessage({ text: `${response.message}` })
+        }, { root: true });
+      } else {
+        await dispatch('ui/updateMessage', {
+          uuid,
+          ...errorMessage({ text: `${response.message}` })
+        }, { root: true });
+      }
+      return response;
+    } catch (error) {
+      console.log({ error });
+      await dispatch('ui/updateMessage', { uuid, ...errorMessage({ text: error.response ? error.response.data.message : 'Something went wrong' }) }, { root: true });
+      return error.response.data;
+    }
+  },
+  async setNewPassword({ rootState, state, dispatch }, { password, confirmPassword, userId, type, phone, email }) {
+    const message = loadingMessage({ text: 'Setting new password...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$post(`${rootState.env.authPath}/register/onboarding/password`, { password, confirmPassword, idToken: state.idToken, userId, type, email, phone });
+      if (response.success) {
+        await dispatch('clearTokens');
+        await dispatch('ui/updateMessage', {
+          uuid,
+          ...successMessage({ text: `${response.message}` })
+        }, { root: true });
+      }
+      return response;
+    } catch (error) {
+      console.log({ error });
+      await dispatch('ui/updateMessage', { uuid, ...errorMessage({ text: error.response ? error.response.data.message : 'Something went wrong' }) }, { root: true });
+      return error.response ? error.response.data : error
     }
   },
   setTokens({ commit }, { accessToken, refreshToken }) {

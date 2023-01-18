@@ -34,6 +34,9 @@ export default {
       title,
     }
   },
+  mounted() {
+    this.$store.commit('ui/setMessages', [])
+  },
 }
 </script>
 

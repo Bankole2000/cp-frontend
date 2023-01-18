@@ -42,7 +42,7 @@ export default {
       this.$router.push({ name: 'auth-signup' })
     },
     signupSuccess() {
-      this.$router.push({ name: 'verify' })
+      this.$router.push({ name: 'auth-verify' })
     },
   },
 }

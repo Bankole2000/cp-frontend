@@ -6,8 +6,8 @@
           <v-col cols="12" class="py-2">
             <v-slide-y-transition>
               <v-alert
-                :key="0"
                 v-show="success ? true : false"
+                :key="0"
                 text
                 dense
                 style="border-radius: 15px"
@@ -77,8 +77,8 @@
                 large
                 rounded
                 text
-                @click="$emit('goback')"
                 :disabled="loading"
+                @click="$emit('goback')"
               >
                 <v-icon left>mdi-arrow-left</v-icon>
                 Back
@@ -182,6 +182,9 @@ export default {
             this.$emit('loginSuccess')
           }
           if (!result.success) {
+            if (result.errors === 'AUTH_SERVICE_DEVICE_NOT_RECOGNIZED') {
+              this.$emit('requiresDeviceVerification', result.data)
+            }
             this.handleErrors(result)
           }
         } catch (error) {
@@ -196,7 +199,7 @@ export default {
       try {
         const { email, password } = this.$data.loginData
         const result = await this.loginWithEmail({ email, password })
-        console.log({ result: result.success })
+        console.log({ result })
         if (result.success) {
           this.$emit('loginSuccess')
         }

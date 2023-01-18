@@ -1,0 +1,13 @@
+test: Adding non-written tests
+
+feat: Introduce a new feature
+
+fix: A bug fix
+
+chore: Build process or auxiliary tool changes
+
+docs: Documentation changes only
+
+refactor: A code change that neither fixes a bug or add a feature
+
+style: Markup, white-space, formatting or UI development

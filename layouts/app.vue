@@ -100,5 +100,8 @@ export default {
       title: 'Vuetify.js',
     }
   },
+  mounted() {
+    this.$store.commit('ui/setMessages', [])
+  },
 }
 </script>

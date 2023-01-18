@@ -2,10 +2,32 @@
   <div class="index">
     <v-container>
       <v-row>
-        <v-col cols="7">
-          <OfferCardItem v-for="i in 5" :key="`${i}-a`" class="mb-4" />
+        <v-col cols="12" sm="7" xl="8">
+          <v-row>
+            <v-col v-for="i in listLength" :key="`${i}-b`" cols="12" xl="6">
+              <OfferCardItem
+                :id="`${i}-b`"
+                :index="i"
+                :total="listLength"
+                class="mb-4"
+                @fetch-more="fetchMore"
+              />
+            </v-col>
+            <v-col cols="12">
+              <v-scroll-y-transition>
+                <div v-show="loading">
+                  <div class="d-flex justify-center">
+                    <v-progress-circular indeterminate></v-progress-circular>
+                  </div>
+                </div>
+              </v-scroll-y-transition>
+            </v-col>
+            <!-- <v-col cols="12">
+              <div style="height: 1000px"></div>
+            </v-col> -->
+          </v-row>
         </v-col>
-        <v-col cols="5">
+        <v-col v-if="$vuetify.breakpoint.smAndUp" cols="5" xl="4">
           <div
             style="
               position: sticky;
@@ -47,7 +69,23 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      listLength: 2,
+      loading: false,
+    }
+  },
+  methods: {
+    fetchMore() {
+      this.loading = true
+      setTimeout(() => {
+        this.listLength += 6
+        this.loading = false
+      }, 3000)
+    },
+  },
+}
 </script>
 
 <style>

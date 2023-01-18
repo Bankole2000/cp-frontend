@@ -90,8 +90,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   computed: {
+    ...mapGetters({
+      showMainNav: 'ui/showMainLeftNav',
+    }),
     nav: {
       get() {
         return this.$store.getters['ui/showUserDashboardLeftNav']
@@ -104,7 +108,9 @@ export default {
   methods: {
     openMainNav() {
       this.$store.commit('ui/toggleUserDashboardLeftNav', false)
-      this.$store.commit('ui/toggleMainLeftNav', true)
+      // if (!this.showMainNav) {
+      //   this.$store.commit('ui/toggleMainLeftNav', true)
+      // }
     },
   },
 }

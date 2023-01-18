@@ -27,14 +27,20 @@
         </v-col>
       </v-row>
     </v-container>
+    <VerifyDeviceModal
+      @deviceVerified="deviceVerified"
+      @cancel="cancelDeviceVerification"
+    />
   </div>
 </template>
 
 <script>
 import LoginPhoneForm from '~/components/forms/auth/LoginPhoneForm.vue'
+import VerifyDeviceModal from '~/components/modals/VerifyDeviceModal.vue'
 export default {
   components: {
     LoginPhoneForm,
+    VerifyDeviceModal,
   },
   methods: {
     goback() {
@@ -42,10 +48,31 @@ export default {
       this.$router.push({ name: 'auth' })
     },
     loginSuccess() {
+      setTimeout(() => {
+        this.$router.push({ name: 'index' })
+      }, 2000)
+    },
+    requiresDeviceVerification(e) {
+      console.log('Requires Device Verification')
+      if (e.idToken) delete e.idToken
+      this.$store.commit('auth/setVerifData', e)
+      this.$store.commit('ui/showVerifyDeviceModal', true)
+      console.log({ store: this.$store })
+      console.log({ e })
+    },
+    deviceVerified() {
+      console.log('Device Verified')
+      this.clear()
       this.$router.push({ name: 'index' })
     },
-    requiresDeviceVerification() {
-      console.log('Requires Device Verification')
+    cancelDeviceVerification() {
+      console.log('Cancel Device Verification')
+      this.clear()
+    },
+    clear() {
+      this.$store.commit('auth/setVerifData', null)
+      this.$store.commit('auth/setIdToken', null)
+      this.$store.commit('ui/showVerifyDeviceModal', false)
     },
   },
 }

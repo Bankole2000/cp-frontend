@@ -1,5 +1,5 @@
 <template>
-  <div class="offer">
+  <div ref="adCard" class="offer">
     <v-card class="rounded-xl elevated-light">
       <v-card-title class="pt-2 px-2 pb-0"
         ><v-list-item class="px-0">
@@ -10,8 +10,8 @@
             :close-on-content-click="true"
             origin="top left"
           >
-            <template v-slot:activator="{ on }">
-              <v-list-item-avatar class="mx-2" size="48" v-on="on" color="grey">
+            <template #activator="{ on }">
+              <v-list-item-avatar class="mx-2" size="48" color="grey" v-on="on">
                 <v-img
                   src="https://cdn.vuetifyjs.com/images/lists/3.jpg"
                 ></v-img
@@ -139,7 +139,7 @@
           ><v-icon left size="20">mdi-cash</v-icon> &#8358;150k</v-chip
         >
         <v-spacer></v-spacer>
-        <v-btn @click="goToOffer" color="primary" text class="mx-1 rounded-xl">
+        <v-btn color="primary" text class="mx-1 rounded-xl" @click="goToOffer">
           More <v-icon right>mdi-menu-right</v-icon>
         </v-btn>
       </div>
@@ -155,22 +155,22 @@
           @click="toggleComments"
           ><v-icon left>mdi-chat-outline</v-icon>5</v-btn
         >
-        <v-btn @click="sendInvite" text width="23%" large class="rounded-xl"
+        <v-btn text width="23%" large class="rounded-xl" @click="sendInvite"
           ><v-icon left>mdi-send</v-icon>89</v-btn
         >
-        <v-btn @click="share" text width="23%" large class="rounded-xl"
+        <v-btn text width="23%" large class="rounded-xl" @click="share"
           ><v-icon left>mdi-share-variant</v-icon>89</v-btn
         >
-        <v-btn @click="like" text width="23%" large class="rounded-xl"
+        <v-btn text width="23%" large class="rounded-xl" @click="like"
           ><v-icon left>mdi-heart-outline</v-icon>89</v-btn
         >
       </v-card-text>
       <v-card-actions class="pt-1 pb-0">
         <v-expand-transition>
           <v-card
+            v-show="show"
             elevation="0"
             style="width: 100%"
-            v-show="show"
             class="px-4 pb-0 rounded-xl"
           >
             <v-divider></v-divider>
@@ -353,10 +353,27 @@
 
 <script>
 export default {
+  props: {
+    id: {
+      type: String,
+      default: 'key',
+    },
+    index: {
+      type: Number,
+      default: 0,
+    },
+    total: {
+      type: Number,
+      default: 1,
+    },
+  },
   data() {
     return {
       show: false,
     }
+  },
+  mounted() {
+    this.onElementObserved()
   },
   methods: {
     share() {
@@ -386,6 +403,31 @@ export default {
     },
     getPreviousComments() {
       console.log('Get more comments')
+    },
+    onElementObserved() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          console.log({ entries })
+          entries.forEach((entry) => {
+            if (entry.intersectionRatio > 0) {
+              // this.player.play();
+              console.log(`Is Intersecting ${this.id}`)
+              if (this.index === this.total) {
+                console.log('Last Ad')
+                // check if any more ads to fetch
+                this.$emit('fetch-more')
+              }
+              // this.visible = true
+            } else {
+              // this.player.pause();
+              console.log(`Is NOT Intersecting ${this.id}`)
+              // this.visible = false
+            }
+          })
+        },
+        { threshold: 1 }
+      )
+      observer.observe(this.$refs.adCard)
     },
   },
 }

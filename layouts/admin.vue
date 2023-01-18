@@ -6,23 +6,140 @@
     <v-app-bar
       :clipped-left="primaryDrawer.clipped"
       class="elevated-light"
+      :extension-height="showSearch ? '56px' : '0px'"
       :style="{ backgroundColor: $vuetify.theme.dark ? '#1e1e1e' : '#ffffff' }"
       app
     >
-      <v-app-bar-nav-icon
-        v-if="primaryDrawer.type !== 'permanent'"
-        @click.stop="showLeftNav = !showLeftNav"
-      ></v-app-bar-nav-icon>
-      <v-toolbar-title>Vuetify</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn icon @click.stop="toggleFullScreen">
-        <v-icon>mdi-overscan</v-icon>
-      </v-btn>
-      <v-btn icon @click.stop="showRightNav = !showRightNav">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-    </v-app-bar>
+      <v-container>
+        <v-row>
+          <v-col cols="12">
+            <div class="d-flex align-center">
+              <v-expand-x-transition>
+                <v-icon
+                  v-show="$route.name.startsWith('dashboard')"
+                  @click="toggleDashboardNav"
+                  >mdi-view-dashboard-outline</v-icon
+                >
+              </v-expand-x-transition>
+              <v-app-bar-nav-icon
+                v-if="primaryDrawer.type !== 'permanent'"
+                @click.stop="showLeftNav = !showLeftNav"
+              ></v-app-bar-nav-icon>
+              <v-toolbar-title>Vuetify</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn icon @click.stop="toggleSearch">
+                <v-icon>mdi-magnify</v-icon>
+              </v-btn>
+              <v-btn icon @click.stop="toggleFullScreen">
+                <v-icon>mdi-overscan</v-icon>
+              </v-btn>
+              <v-switch v-model="$vuetify.theme.dark" hide-details></v-switch>
+              <v-btn icon @click.stop="showRightNav = !showRightNav">
+                <v-icon>mdi-forum-outline</v-icon>
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+      <!-- <div>
+        <v-switch v-model="$vuetify.theme.dark"></v-switch>
+      </div> -->
 
+      <!-- <div>
+        <v-textarea
+          placeholder="Search By City or State"
+          rows="1"
+          prepend-inner-icon="mdi-magnify"
+          auto-grow
+          hide-details
+          filled
+          dense
+          rounded
+          single-line
+        >
+        </v-textarea>
+      </div> -->
+      <!-- <template #extension>
+        <div>
+          <v-toolbar dark color="teal">
+           
+            <v-autocomplete
+              cache-items
+              class="mx-4"
+              flat
+              hide-no-data
+              hide-details
+              label="What state are you from?"
+              solo-inverted
+            ></v-autocomplete>
+            <v-btn icon>
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </v-toolbar>
+        </div>
+      </template> -->
+      <template #extension>
+        <v-scroll-y-transition hide-on-leave>
+          <div v-show="showSearch">
+            <v-container>
+              <div class="d-flex align-center justify-center">
+                <CountrySelectButton />
+                <div>
+                  <v-text-field
+                    placeholder="Search By City or State"
+                    rows="1"
+                    prepend-inner-icon="mdi-magnify"
+                    auto-grow
+                    hide-details
+                    filled
+                    dense
+                    rounded
+                    single-line
+                  >
+                  </v-text-field>
+                </div>
+              </div>
+            </v-container>
+          </div>
+        </v-scroll-y-transition>
+      </template>
+      <!-- <template #extension>
+        <v-tabs grow show-arrows>
+          <v-tab>
+            <v-icon>mdi-post-outline</v-icon>
+          </v-tab>
+          <v-tab>
+            <v-icon>mdi-home-account</v-icon>
+          </v-tab>
+          <v-tab>
+            <v-icon>mdi-bullhorn-outline</v-icon>
+          </v-tab>
+          <v-tab>
+            <v-icon>mdi-account-hard-hat-outline</v-icon>
+          </v-tab>
+          <v-tab>
+            <v-icon>mdi-account-arrow-left-outline</v-icon>
+          </v-tab>
+          <v-tab>
+            <v-icon>mdi-account-arrow-right-outline</v-icon>
+          </v-tab>
+          <v-tab>
+            <v-icon>mdi-bookmark-box-multiple-outline</v-icon>
+          </v-tab>
+          <v-tab>
+            <v-icon>mdi-timeline-text-outline</v-icon>
+          </v-tab>
+        </v-tabs>
+      </template> -->
+    </v-app-bar>
+    <!-- <v-toolbar color="white" floating dense extense>
+      <v-flex xs12 sm12 md12>
+        <v-text-field hide-details single-line full-width></v-text-field>
+      </v-flex>
+      <v-btn icon>
+        <v-icon>search</v-icon>
+      </v-btn>
+    </v-toolbar> -->
     <v-main :class="$vuetify.theme.dark ? 'bg-dark' : 'bg-light'">
       <Nuxt />
       <MultiSnackBars />
@@ -128,7 +245,7 @@
       <span class="px-4">&copy; {{ new Date().getFullYear() }}</span>
     </v-footer> -->
     <!-- :width="showLeftNav ? 'calc(100vw - 255px)' : '100vw'" -->
-    <v-bottom-navigation
+    <!-- <v-bottom-navigation
       v-model="bottomNav"
       :inset="true"
       :background-color="color"
@@ -161,7 +278,11 @@
         <span>Image</span>
         <v-icon>mdi-image</v-icon>
       </v-btn>
-    </v-bottom-navigation>
+    </v-bottom-navigation> -->
+    <CreatePostModal />
+    <MainBottomNav
+      v-if="$route.name.startsWith('index') && $vuetify.breakpoint.smAndDown"
+    />
   </v-app>
 </template>
 
@@ -170,14 +291,19 @@ import MultiSnackBars from '~/components/shared/SnackBars.vue'
 import MainLeftNav from '~/components/shared/MainLeftNav.vue'
 import MainRightNav from '~/components/shared/MainRightNav.vue'
 import UserDashboardLeftNav from '~/components/shared/UserDashboardLeftNav.vue'
+import MainBottomNav from '~/components/shared/MainBottomNav.vue'
+import CreatePostModal from '~/components/modals/CreatePostModal.vue'
 export default {
-  name: 'admin',
+  name: 'Admin',
   components: {
     MultiSnackBars,
     MainLeftNav,
     MainRightNav,
     UserDashboardLeftNav,
+    MainBottomNav,
+    CreatePostModal,
   },
+  middleware: 'getUserIfLoggedIn',
   data: () => ({
     drawers: ['Default (no property)', 'Permanent', 'Temporary'],
     primaryDrawer: {
@@ -194,6 +320,7 @@ export default {
     rightDrawer: false,
     clipped: false,
     bottomNav: 3,
+    showSearch: false,
   }),
   computed: {
     showLeftNav: {
@@ -229,19 +356,19 @@ export default {
         //     return this.$store.commit('ui/toggleUserDashboardLeftNav', true)
         //   }
         // }
-        if (this.$route.path.includes('/dashboard')) {
-          if (
-            this.$store.state.ui.showMainLeftNav &&
-            !this.$store.state.ui.showUserDashboardLeftNav
-          ) {
-            return this.$store.commit('ui/toggleMainLeftNav')
-          }
-          if (!this.$store.state.ui.showMainLeftNav) {
-            this.$store.commit('ui/toggleMainLeftNav')
-          }
-          return this.$store.commit('ui/toggleUserDashboardLeftNav')
-        }
-        this.$store.commit('ui/toggleUserDashboardLeftNav', false)
+        // if (this.$route.path.includes('/dashboard')) {
+        //   if (
+        //     this.$store.state.ui.showMainLeftNav &&
+        //     !this.$store.state.ui.showUserDashboardLeftNav
+        //   ) {
+        //     return this.$store.commit('ui/toggleMainLeftNav')
+        //   }
+        //   if (!this.$store.state.ui.showMainLeftNav) {
+        //     this.$store.commit('ui/toggleMainLeftNav')
+        //   }
+        //   return this.$store.commit('ui/toggleUserDashboardLeftNav')
+        // }
+        // this.$store.commit('ui/toggleUserDashboardLeftNav', false)
         return this.$store.commit('ui/toggleMainLeftNav', v)
       },
     },
@@ -268,6 +395,12 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$store.commit('ui/setMessages', [])
+    // setTimeout(() => {
+    //   this.showSearch = true
+    // }, 1000)
+  },
   methods: {
     toggleFullScreen() {
       if (!document.fullscreenElement) {
@@ -275,6 +408,12 @@ export default {
       } else if (document.exitFullscreen) {
         document.exitFullscreen()
       }
+    },
+    toggleDashboardNav() {
+      this.$store.commit('ui/toggleUserDashboardLeftNav')
+    },
+    toggleSearch() {
+      this.showSearch = !this.showSearch
     },
   },
 }

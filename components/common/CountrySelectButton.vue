@@ -11,7 +11,6 @@
           <v-card
             color="warning"
             v-bind="attrs"
-            v-on="{ ...tooltip, ...menu }"
             class="
               rounded-xl
               py-1
@@ -22,6 +21,7 @@
               align-center
               elevated-light
             "
+            v-on="{ ...tooltip, ...menu }"
           >
             <div
               class="ma-1"

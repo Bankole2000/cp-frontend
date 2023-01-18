@@ -14,6 +14,7 @@ export default {
     }
 
     // messageUpdate = { ...messageUpdate, ...payload };
+    console.log({ messageUpdate })
     state.messages.splice(idx, 1, messageUpdate);
   },
   removeMessage(state, payload) {
@@ -43,5 +44,12 @@ export default {
       return;
     }
     state.showMainRightNav = !state.showMainRightNav;
+  },
+  showVerifyDeviceModal(state, payload) {
+    if (payload !== undefined) {
+      state.showVerifyDeviceModal = payload;
+      return;
+    }
+    state.showVerifyDeviceModal = !state.showVerifyDeviceModal;
   }
 }

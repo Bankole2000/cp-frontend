@@ -17,7 +17,7 @@ export default function ({ $axios, store }) {
     if (store.state.auth.refreshToken) {
       config.headers.common['x-refresh-token'] = store.state.auth.refreshToken;
     }
-    if (store.state.auth.accessToken) {
+    if (store.state.auth.authToken) {
       $axios.setToken(store.state.auth.authToken, 'Bearer')
     }
     if (store.state.auth.idToken) {

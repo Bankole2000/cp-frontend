@@ -1,8 +1,9 @@
 <template>
   <v-card class="elevated-light rounded-xl mb-4 pa-0">
-    <v-card-title class="px-4 pt-3 pb-1">Suggested Profiles</v-card-title>
+    <!-- <v-card-title class="px-4 pt-3 pb-1">Suggested Profiles</v-card-title> -->
     <v-card-text class="pa-0">
-      <v-list two-line>
+      <v-card-text class="pb-1 pt-3"> Suggested Profiles </v-card-text>
+      <v-list two-line class="py-0">
         <v-list-item-group>
           <div v-for="(profile, i) in suggestedProfiles" :key="i">
             <v-list-item dense>
@@ -48,6 +49,7 @@
                 <v-btn
                   class="text-capitalize rounded-xl"
                   depressed
+                  small
                   :class="
                     $vuetify.theme.dark ? 'white black--text' : 'secondary'
                   "
@@ -60,8 +62,8 @@
         </v-list-item-group>
       </v-list>
     </v-card-text>
-    <v-card-actions class="px-4">
-      <a href="" class="caption">Show more</a>
+    <v-card-actions class="px-4 pt-1 d-flex justify-center">
+      <a href="" class="subtitle-2">Show more</a>
     </v-card-actions>
   </v-card>
 </template>

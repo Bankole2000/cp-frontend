@@ -222,6 +222,7 @@ export default {
   }),
   mounted() {
     this.$vuetify.theme.dark = false
+    this.$store.commit('ui/setMessages', [])
   },
   methods: {
     ...mapActions({

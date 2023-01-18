@@ -26,6 +26,18 @@ a {
   text-decoration: none; 
 }
 
+.v-application .v-card--link:focus {
+  border-radius: inherit;
+}
+
+.v-application .v-card--link:focus:before {
+  border-radius: inherit;
+}
+
+.v-application .v-card--link:focus:after {
+  border-radius: inherit;
+}
+
 .v-application .bg-light {
   background-color: #f0efef;
 }

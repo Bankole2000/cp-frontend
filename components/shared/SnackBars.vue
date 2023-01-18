@@ -93,6 +93,9 @@ export default {
       },
     },
   },
+  mounted() {
+    console.log('snackbars mounted')
+  },
   methods: {
     takeAction(action, close) {
       this.performAction(action)

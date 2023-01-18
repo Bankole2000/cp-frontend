@@ -2,10 +2,14 @@
   <div class="index">
     <v-container>
       <v-row>
-        <v-col cols="7">
-          <OfferCardItem v-for="i in 5" :key="`${i}-a`" class="mb-4" />
+        <v-col cols="12" sm="7" xl="9">
+          <v-row>
+            <v-col v-for="i in 6" :key="`${i}-b`" cols="12" xl="6">
+              <OfferCardItem class="mb-4" />
+            </v-col>
+          </v-row>
         </v-col>
-        <v-col cols="5">
+        <v-col v-if="$vuetify.breakpoint.smAndUp" cols="5" xl="3">
           <div
             style="
               position: sticky;

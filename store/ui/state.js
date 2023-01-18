@@ -3,6 +3,7 @@ export default () => ({
   showMainLeftNav: false,
   showUserDashboardLeftNav: false,
   showMainRightNav: false,
+  showVerifyDeviceModal: false,
   mainLeftNav: {
     show: false,
     clipped: true,
