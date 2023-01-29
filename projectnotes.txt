@@ -11,3 +11,6 @@ docs: Documentation changes only
 refactor: A code change that neither fixes a bug or add a feature
 
 style: Markup, white-space, formatting or UI development
+
+onboarding example
+https://microsoftedgewelcome.microsoft.com/en-us/mb03?form=MA13E6&slide=welcome

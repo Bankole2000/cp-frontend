@@ -8,28 +8,39 @@
         >
           <v-btn class="ma-4" small text color="accent">Sponsored</v-btn>
           <v-spacer></v-spacer>
-          <v-btn @click.stop="share" icon dark color="primary" class="my-4">
+          <v-btn icon dark color="primary" class="my-4" @click.stop="share">
             <v-icon size="32"> mdi-share-variant </v-icon>
           </v-btn>
-          <v-btn @click.stop="like" icon dark color="primary" class="ma-4">
+          <v-btn icon dark color="primary" class="ma-4" @click.stop="like">
             <v-icon size="32"> mdi-heart-outline </v-icon>
           </v-btn>
         </div>
         <v-carousel
-          class="rounded-xl"
+          class="rounded-t-xl"
           :continuous="false"
           :cycle="false"
           :show-arrows="true"
           hide-delimiter-background
-          height="300"
+          height="auto"
         >
           <v-carousel-item v-for="i in 3" :key="i">
+            <!-- :aspect-ratio="1.2" -->
             <v-img
+              src="https://picsum.photos/720/600?random"
+              :aspect-ratio="1.2"
+              class="rounded-t-xl"
               @click="goToListing"
-              src="https://picsum.photos/510/300?random"
-              height="300"
-              class="rounded-xl"
-            ></v-img>
+            >
+              <template v-slot:placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular
+                    indeterminate
+                    size="64"
+                    color="grey lighten-5"
+                  ></v-progress-circular>
+                </v-row>
+              </template>
+            </v-img>
           </v-carousel-item>
         </v-carousel>
       </div>
@@ -82,16 +93,16 @@
       <v-card-actions class="pt-0">
         <v-list-item class="px-0">
           <v-menu
-            bottom
             v-model="profileMenu"
+            bottom
             right
             transition="scale-transition"
             :close-on-content-click="false"
             :close-on-click="false"
             origin="top left"
           >
-            <template v-slot:activator="{ on }">
-              <v-list-item-avatar class="mx-2" size="48" v-on="on" color="grey">
+            <template #activator="{ on }">
+              <v-list-item-avatar class="mx-2" size="48" color="grey" v-on="on">
                 <v-img
                   src="https://cdn.vuetifyjs.com/images/lists/3.jpg"
                 ></v-img
@@ -125,7 +136,7 @@
                     <v-list-item-subtitle>@usernameball</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action>
-                    <v-btn @click="profileMenu = false" icon>
+                    <v-btn icon @click="profileMenu = false">
                       <v-icon>mdi-close-circle</v-icon>
                     </v-btn>
                   </v-list-item-action>
@@ -165,10 +176,10 @@
                 </v-list-item>
               </v-list>
               <v-card-actions class="d-flex justify-space-around">
-                <v-btn @click="sendInvite" text color="primary" class="px-4"
+                <v-btn text color="primary" class="px-4" @click="sendInvite"
                   ><v-icon left>mdi-send</v-icon> Invite</v-btn
                 >
-                <v-btn @click="startChat" color="accent" class="px-4"
+                <v-btn color="accent" class="px-4" @click="startChat"
                   ><v-icon left>mdi-forum</v-icon> Chat</v-btn
                 >
               </v-card-actions>
