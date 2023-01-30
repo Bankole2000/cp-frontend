@@ -125,7 +125,6 @@
             :max="10000"
           ></v-text-field>
         </div>
-        <!-- color="red" -->
         <v-snackbars :messages.sync="messages" bottom left></v-snackbars>
         <v-snackbars
           :messages.sync="interactivities"

@@ -127,14 +127,28 @@
           :cycle="false"
           :show-arrows="true"
           hide-delimiter-background
-          height="300"
+          height="auto"
         >
+          <!-- height="400" -->
+          <!-- :aspect-ratio="1.2" -->
+          <!-- height="400" -->
           <v-carousel-item v-for="i in 3" :key="i">
             <v-img
-              src="https://picsum.photos/510/300?random"
-              height="300"
+              src="https://picsum.photos/720/600?random"
+              :aspect-ratio="1.2"
+              cover
               @click="goToListing"
-            ></v-img>
+            >
+              <template v-slot:placeholder>
+                <v-row class="fill-height ma-0" align="center" justify="center">
+                  <v-progress-circular
+                    indeterminate
+                    size="64"
+                    color="grey lighten-5"
+                  ></v-progress-circular>
+                </v-row>
+              </template>
+            </v-img>
           </v-carousel-item>
         </v-carousel>
       </div>

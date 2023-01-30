@@ -3,12 +3,26 @@ export default {
     return state.profile;
   },
   profileImage(state, _, rootState) {
-    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-    return `${rootState.env.profilePath}/u/image/${state.profile ? state.profile.username : uniqueId}`
+    if (state.profile) {
+      if (state.profile.imageSecureUrl) {
+        return state.profile.imageSecureUrl;
+      }
+      if (state.profile.imageUrl) {
+        return state.profile.imageUrl;
+      }
+    }
+    return `${rootState.env.profilePath}/u/image/guest`
   },
   profileWallpaper(state, _, rootState) {
-    const uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-    return `${rootState.env.profilePath}/u/wallpaper/${state.profile ? state.profile.username : uniqueId}`
+    if (state.profile) {
+      if (state.profile.wallpaperSecureUrl) {
+        return state.profile.wallpaperSecureUrl;
+      }
+      if (state.profile.wallpaperUrl) {
+        return state.profile.wallpaperUrl;
+      }
+    }
+    return `${rootState.env.profilePath}/u/wallpaper/guest`
   },
   followerCount(state) {
     return state.profile ? state.profile._count.followers : 0;
