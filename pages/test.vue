@@ -1,8 +1,16 @@
 <template>
   <div>
+    <v-container>
+      <v-row>
+        <v-col cols="12">
+          <login-email />
+          <ListingTypeConfig />
+        </v-col>
+      </v-row>
+    </v-container>
     <h1>Random Test page</h1>
     <p>{{ $store.state.ui.messages }}</p>
-    <v-hover v-slot:default="{ hover }">
+    <v-hover v-slot="{ hover }">
       <v-card
         flat
         :class="{ 'elevated-light': hover }"
@@ -15,10 +23,15 @@
 </template>
 
 <script>
+import LoginEmail from './auth/login-email.vue'
+import ListingTypeConfig from '~/components/blocks/setting/ListingTypeConfig.vue'
 export default {
-  layout: 'test',
+  components: { ListingTypeConfig, LoginEmail },
+  layout: 'empty',
+  data() {
+    return {}
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>
