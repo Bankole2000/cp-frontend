@@ -14,10 +14,25 @@
         <v-window v-model="step">
           <v-window-item :value="1">
             <v-card-text>
-              <v-item-group mandatory>
+              <v-item-group v-model="selected" mandatory>
                 <v-container>
                   <v-row align="center">
-                    <draggable v-model="draggableCards" tag="v-layout">
+                    <draggable
+                      v-model="draggableCards"
+                      :move="draggableMoved"
+                      tag="v-layout"
+                      @change="draggableChanged"
+                      @start="dragStart"
+                      @add="dragAdd"
+                      @remove="dragRemove"
+                      @update="dragUpdate"
+                      @end="dragEnd"
+                      @choose="dragChoose"
+                      @unchoose="dragUnchoose"
+                      @sort="dragSort"
+                      @filter="dragFilter"
+                      @clone="dragClone"
+                    >
                       <div v-for="(card, n) in draggableCards" :key="n">
                         <v-item v-slot="{ active, toggle }">
                           <v-hover v-slot="{ hover }">
@@ -139,6 +154,7 @@ export default {
   },
   data: () => ({
     dialog: true,
+    selected: 0,
     step: 1,
     draggableCards: [
       {
@@ -158,8 +174,76 @@ export default {
       },
     ],
   }),
+  methods: {
+    draggableChanged(e) {
+      console.log('draggableChanged event')
+      console.log({ e, selected: this.selected })
+      const {
+        moved: { newIndex, oldIndex },
+      } = e
+      if (newIndex > -1) {
+        if (oldIndex === this.selected) {
+          this.selected = newIndex
+        } else {
+          if (oldIndex > this.selected && newIndex <= this.selected) {
+            this.selected += 1
+            return
+          }
+          if (oldIndex < this.selected && newIndex >= this.selected) {
+            this.selected -= 1
+          }
+        }
+      }
+    },
+    draggableMoved(e, originalEvent) {
+      console.log('draggableMoved event')
+      const { draggedContext } = e
+      console.log({ draggedContext, e, originalEvent })
+      // NOTE: return false to cancel the move operation
+      // return false
+    },
+    dragStart(e) {
+      console.log('Drag Start')
+      console.log({ e, selected: this.selected })
+    },
+    dragAdd(e) {
+      console.log('Drag Add')
+      console.log({ e, selected: this.selected })
+    },
+    dragRemove(e) {
+      console.log('Drag Remove')
+      console.log({ e, selected: this.selected })
+    },
+    dragUpdate(e) {
+      console.log('Drag Update')
+      console.log({ e, selected: this.selected })
+    },
+    dragEnd(e) {
+      console.log('Drag End')
+      console.log({ e, selected: this.selected })
+    },
+    dragChoose(e) {
+      console.log('Drag Choose')
+      console.log({ e, selected: this.selected })
+    },
+    dragUnchoose(e) {
+      console.log('Drag Unchoose')
+      console.log({ e, selected: this.selected })
+    },
+    dragSort(e) {
+      console.log('Drag Sort')
+      console.log({ e, selected: this.selected })
+    },
+    dragFilter(e) {
+      console.log('Drag Filter')
+      console.log({ e, selected: this.selected })
+    },
+    dragClone(e) {
+      console.log('Drag Clone')
+      console.log({ e, selected: this.selected })
+    },
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>

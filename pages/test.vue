@@ -4,6 +4,7 @@
       <v-row>
         <v-col cols="12">
           <login-email />
+          <AmenityConfig />
           <ListingTypeConfig />
         </v-col>
       </v-row>
@@ -25,8 +26,9 @@
 <script>
 import LoginEmail from './auth/login-email.vue'
 import ListingTypeConfig from '~/components/blocks/setting/ListingTypeConfig.vue'
+import AmenityConfig from '~/components/blocks/setting/AmenityConfig.vue'
 export default {
-  components: { ListingTypeConfig, LoginEmail },
+  components: { ListingTypeConfig, LoginEmail, AmenityConfig },
   layout: 'empty',
   data() {
     return {}

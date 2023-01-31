@@ -9,7 +9,7 @@ export default {
 
   REMOVE_LISTING_TYPE(state, id) {
     const index = state.listingTypes.findIndex(type => type.listingType === id)
-    if (index) {
+    if (index > -1) {
       state.listingTypes.splice(index, 1);
     }
   },
@@ -37,8 +37,8 @@ export default {
   },
 
   REMOVE_LISTING_PURPOSE(state, id) {
-    const index = state.listingPurposes.find(purpose => purpose.listingPurpose === id)
-    if (index) {
+    const index = state.listingPurposes.findIndex(purpose => purpose.listingPurpose === id)
+    if (index > -1) {
       state.listingPurposes.splice(index, 1);
     }
   },
@@ -48,8 +48,8 @@ export default {
   },
 
   UPDATE_LISTING_PURPOSE(state, purposeData) {
-    const index = state.listingPurposes.find(purpose => purpose.listingPurpose === purposeData.listingPurpose);
-    if (index) {
+    const index = state.listingPurposes.findIndex(purpose => purpose.listingPurpose === purposeData.listingPurpose);
+    if (index > -1) {
       for (const field in purposeData) {
         state.listingPurposes[index][field] = purposeData[field];
       }
@@ -64,8 +64,8 @@ export default {
   },
 
   REMOVE_PURPOSE_SUBGROUP(state, id) {
-    const index = state.purposeSubgroups.find(subgroup => subgroup.purposeSubgroup === id)
-    if (index) {
+    const index = state.purposeSubgroups.findIndex(subgroup => subgroup.purposeSubgroup === id)
+    if (index > -1) {
       state.purposeSubgroups.splice(index, 1);
     }
   },
@@ -75,8 +75,8 @@ export default {
   },
 
   UPDATE_PURPOSE_SUBGROUP(state, subgroupData) {
-    const index = state.purposeSubgroups.find(subgroup => subgroup.purposeSubgroup === subgroupData.purposeSubgroup);
-    if (index) {
+    const index = state.purposeSubgroups.findIndex(subgroup => subgroup.purposeSubgroup === subgroupData.purposeSubgroup);
+    if (index > -1) {
       for (const field in subgroupData) {
         state.purposeSubgroups[index][field] = subgroupData[field];
       }
@@ -86,13 +86,14 @@ export default {
   SET_AMENITY_CATEGORIES(state, payload) {
     if (payload) {
       state.amenityCategories = payload;
+      return;
     }
     state.amenityCategories = [];
   },
 
   REMOVE_AMENITY_CATEGORY(state, id) {
-    const index = state.amenityCategories.find(category => category.amenityCategory === id)
-    if (index) {
+    const index = state.amenityCategories.findIndex(category => category.amenityCategory === id)
+    if (index > -1) {
       state.amenityCategories.splice(index, 1);
     }
   },
@@ -101,25 +102,28 @@ export default {
     state.amenityCategories.push(category);
   },
 
-  UPDATE_AMENITY_CATEGORY(state, categoryData) {
-    const index = state.amenityCategories.find(category => category.amenityCategory === categoryData.amenityCategory);
-    if (index) {
-      for (const field in categoryData) {
-        state.amenityCategories[index][field] = categoryData[field];
-      }
+  UPDATE_AMENITY_CATEGORY(state, { categoryData, useNewKey, oldKey }) {
+    console.log({ categoryData })
+    const index = useNewKey
+      ? state.amenityCategories.findIndex(type => type.amenityCategory === oldKey)
+      : state.amenityCategories.findIndex(type => type.amenityCategory === categoryData.amenityCategory)
+    console.log({ index });
+    if (index > -1) {
+      state.amenityCategories.splice(index, 1, categoryData);
     }
   },
 
   SET_AMENITIES(state, payload) {
     if (payload) {
       state.amenities = payload;
+      return;
     }
     state.amenities = [];
   },
 
   REMOVE_AMENITY(state, id) {
-    const index = state.amenities.find(amenity => amenity.amenity === id)
-    if (index) {
+    const index = state.amenities.findIndex(amenity => amenity.amenity === id)
+    if (index > -1) {
       state.amenities.splice(index, 1);
     }
   },
@@ -128,12 +132,32 @@ export default {
     state.amenities.push(amenity);
   },
 
-  UPDATE_AMENITY(state, amenityData) {
-    const index = state.amenities.find(amenity => amenity.amenity === amenityData.amenity);
-    if (index) {
-      for (const field in amenityData) {
-        state.amenities[index][field] = amenityData[field];
+  UPDATE_AMENITY(state, { amenityData, useNewKey, oldKey }) {
+    console.log({ amenityData })
+    const index = useNewKey
+      ? state.amenities.findIndex(type => type.amenity === oldKey)
+      : state.amenities.findIndex(type => type.amenity === amenityData.amenity)
+    console.log({ index });
+    if (index > -1) {
+      state.amenities.splice(index, 1, amenityData);
+    }
+  },
+
+  UPDATE_CATEGORY_AMENITY_COUNT(state, { category, amount }) {
+    state.amenityCategories.forEach(x => {
+      if (x.amenityCategory === category) {
+        x._count.amenities += amount
       }
+    })
+  },
+
+  UPDATE_CATEGORIES_IN_AMENITIES(state, { oldCategory, newCategory }) {
+    if (state.amenities.length) {
+      state.amenities.forEach(x => {
+        if (x.amenityCategory === oldCategory) {
+          x.amenityCategory = newCategory
+        }
+      });
     }
   },
 
@@ -145,8 +169,8 @@ export default {
   },
 
   REMOVE_HOUSE_RULE(state, id) {
-    const index = state.houseRules.find(houseRule => houseRule.houseRule === id)
-    if (index) {
+    const index = state.houseRules.findIndex(houseRule => houseRule.houseRule === id)
+    if (index > -1) {
       state.houseRules.splice(index, 1);
     }
   },
@@ -156,8 +180,8 @@ export default {
   },
 
   UPDATE_HOUSE_RULE(state, houseRuleData) {
-    const index = state.houseRules.find(houseRule => houseRule.houseRule === houseRuleData.houseRule);
-    if (index) {
+    const index = state.houseRules.findIndex(houseRule => houseRule.houseRule === houseRuleData.houseRule);
+    if (index > -1) {
       for (const field in houseRuleData) {
         state.houseRules[index][field] = houseRuleData[field];
       }

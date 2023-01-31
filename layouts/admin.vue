@@ -25,7 +25,7 @@
                 v-if="primaryDrawer.type !== 'permanent'"
                 @click.stop="showLeftNav = !showLeftNav"
               ></v-app-bar-nav-icon>
-              <v-toolbar-title>Vuetify</v-toolbar-title>
+              <v-toolbar-title>Relodge</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn icon @click.stop="toggleSearch">
                 <v-icon>mdi-magnify</v-icon>
