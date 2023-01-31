@@ -1,7 +1,7 @@
 <template>
   <v-card class="elevated-light">
     <v-card-title class="py-3"
-      >Listing Type Settings
+      >Amenity Settings
 
       <v-spacer></v-spacer>
       <v-expand-x-transition>
@@ -40,7 +40,7 @@
         <v-card-text class="pt-0">
           <v-tabs v-model="tab">
             <v-tab>
-              Listing Types
+              Amenities
               <v-tooltip top>
                 <template #activator="{ on, attrs }">
                   <v-btn
@@ -56,8 +56,24 @@
                 <span>Refresh</span>
               </v-tooltip>
             </v-tab>
+            <v-tab> {{ amenityData.id ? 'Edit' : 'Add' }} Amenity </v-tab>
             <v-tab>
-              {{ listingTypeData.id ? 'Edit' : 'Add' }} Listing Type
+              Categories
+
+              <v-tooltip top>
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    small
+                    class="ml-2"
+                    icon
+                    v-bind="attrs"
+                    @click="refresh"
+                    v-on="on"
+                    ><v-icon small>mdi-refresh</v-icon></v-btn
+                  >
+                </template>
+                <span>Refresh</span>
+              </v-tooltip>
             </v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab" class="mt-4">
@@ -67,7 +83,7 @@
                 :headers="headers"
                 class="elevated-light"
                 :items="
-                  listingTypes.map((t, i) => {
+                  amenities.map((t, i) => {
                     return {
                       ...t,
                       // sno: i + 1,
@@ -83,14 +99,14 @@
                 <template #[`item.descriptionHTML`]="{ item }">
                   <div v-html="item.descriptionHTML"></div>
                 </template>
-                <template #[`item.isActive`]="{ item }">
+                <!-- <template #[`item.isActive`]="{ item }">
                   <v-chip
                     class="ma-2"
                     :color="item.isActive ? 'success' : 'error'"
                   >
                     {{ item.isActive ? 'Active' : 'Disabled' }}
                   </v-chip>
-                </template>
+                </template> -->
                 <template #[`item.actions`]="{ item }">
                   <div style="display: flex">
                     <v-tooltip top>
@@ -167,23 +183,23 @@
                 <v-row>
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      v-model="listingTypeData.listingType"
+                      v-model="amenityData.amenity"
                       prepend-inner-icon="mdi-key"
                       dense
-                      label="Listing Type key"
+                      label="Amenity key"
                       filled
                       hide-details
                       rounded
                       type="text"
                       single-line
                       placeholder="LISTING_TYPE"
-                      @keyup="formatKey(listingTypeData.listingType)"
+                      @keyup="formatKey(amenityData.amenity)"
                     >
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      v-model="listingTypeData.title"
+                      v-model="amenityData.title"
                       prepend-inner-icon="mdi-pen"
                       dense
                       label="Title"
@@ -192,16 +208,16 @@
                       rounded
                       type="text"
                       single-line
-                      placeholder="Listing Type Title"
+                      placeholder="Amenity Title"
                     >
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-textarea
-                      v-model="listingTypeData.descriptionHTML"
+                      v-model="amenityData.descriptionHTML"
                       dense
                       auto-grow
-                      rows="3"
+                      rows="4"
                       prepend-inner-icon="mdi-note-text"
                       label="Description (HTML)"
                       filled
@@ -209,13 +225,13 @@
                       rounded
                       type="text"
                       single-line
-                      placeholder="Listing Type Description (HTML allowed)"
+                      placeholder="Amenity Description (HTML allowed)"
                     >
                     </v-textarea>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-autocomplete
-                      v-model="listingTypeData.mdiIcon"
+                      v-model="amenityData.mdiIcon"
                       prepend-inner-icon="mdi-information-outline"
                       rounded
                       filled
@@ -225,14 +241,14 @@
                       placeholder="mdi icon"
                       flat
                       single-line
-                      :append-icon="`mdi-${listingTypeData.mdiIcon}`"
+                      :append-icon="`mdi-${amenityData.mdiIcon}`"
                       prefix="mdi -"
                       hide-details
                       label="mdi Icon"
                     >
                     </v-autocomplete>
                     <v-autocomplete
-                      v-model="listingTypeData.faIcon"
+                      v-model="amenityData.faIcon"
                       prepend-inner-icon="mdi-font-awesome"
                       rounded
                       filled
@@ -242,52 +258,58 @@
                       placeholder="fa icon"
                       flat
                       single-line
-                      :append-icon="`mdi-${listingTypeData.faIcon}`"
+                      :append-icon="`mdi-${amenityData.faIcon}`"
                       prefix="fa -"
                       hide-details
                       label="fa Icon"
                     >
                     </v-autocomplete>
+                    <v-select
+                      v-model="amenityData.amenityCategory"
+                      :items="amenityCategories"
+                      item-text="amenityCategory"
+                      item-value="amenityCategory"
+                      :disabled="Boolean(amenityData.id)"
+                      filled
+                      single-line
+                      hide-details
+                      dense
+                      rounded
+                      label="Amenity Category"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12" sm="6" class="pb-4 pt-0">
                     <div class="d-flex align-center">
                       <v-switch
-                        v-model="listingTypeData.isActive"
-                        hide-details
-                        label="Active"
-                        class="mr-2 mt-0"
-                      ></v-switch>
-                      <v-switch
-                        v-if="listingTypeData.id"
-                        v-model="listingTypeData.useNewKey"
+                        v-if="amenityData.id"
+                        v-model="amenityData.useNewKey"
                         hide-details
                         label="Change Key"
                         class="mr-4 mt-0"
                       ></v-switch>
                       <v-text-field
-                        v-if="listingTypeData.id"
-                        v-model="listingTypeData.newkey"
+                        v-if="amenityData.id"
+                        v-model="amenityData.newkey"
                         dense
                         prepend-inner-icon="mdi-key"
                         label="New Key"
-                        :disabled="!listingTypeData.useNewKey || loading"
+                        :disabled="!amenityData.useNewKey || loading"
                         filled
                         hide-details
                         rounded
                         type="text"
                         single-line
-                        placeholder="NEW_LISTING_KEY"
+                        placeholder="NEW_AMENITY_KEY"
                       ></v-text-field>
                     </div>
                   </v-col>
-                  <v-col cols="12" offset-sm="6" sm="6" class="py-4">
+                  <v-col cols="12" sm="6" class="pb-4 pt-0">
                     <v-row>
                       <v-col cols="6">
                         <v-btn text block @click="cancel">Cancel</v-btn>
                       </v-col>
                       <v-col cols="6">
-                        <v-btn
-                          v-if="listingTypeData.id"
-                          block
-                          @click="updateItem"
+                        <v-btn v-if="amenityData.id" block @click="updateItem"
                           >Update</v-btn
                         >
                         <v-btn v-else block @click="createItem">Save</v-btn>
@@ -296,6 +318,9 @@
                   </v-col>
                 </v-row>
               </v-form>
+            </v-tab-item>
+            <v-tab-item>
+              <AmenityCategoryConfig />
             </v-tab-item>
           </v-tabs-items>
         </v-card-text>
@@ -306,11 +331,15 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import AmenityCategoryConfig from './AmenityCategoryConfig.vue'
 import faIcons from '@/utils/data/fa5Icons.json'
 import mdiIcons from '@/utils/data/mdiIconsData.json'
 // import { formatAsKey } from '@/utils/validators'
 
 export default {
+  components: {
+    AmenityCategoryConfig,
+  },
   data() {
     return {
       show: true,
@@ -327,21 +356,21 @@ export default {
         //   sortable: true,
         //   value: 'sno',
         // },
-        { text: 'Listing Type', value: 'listingType' },
+        { text: 'Listing Type', value: 'amenity' },
         { text: 'Title', value: 'title' },
         // { text: 'Description', value: 'descriptionHTML' },
-        { text: 'Status', value: 'isActive', align: 'center' },
+        { text: 'Category', value: 'amenityCategory' },
         { text: 'mdi Icon', value: 'mdiIcon', sortable: false },
         // { text: 'Fa Icon', value: 'faIcon' },
         { text: 'Listings', value: 'listings' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      listingTypeData: {
+      amenityData: {
         id: '',
-        listingType: '',
+        amenity: '',
         title: '',
         descriptionHTML: '',
-        isActive: false,
+        amenityCategory: '',
         mdiIcon: '',
         faIcon: '',
         newkey: '',
@@ -351,59 +380,63 @@ export default {
   },
   computed: {
     ...mapGetters({
-      listingTypes: 'admin/settings/listingTypes',
+      amenities: 'admin/settings/amenities',
+      amenityCategories: 'admin/settings/amenityCategories',
     }),
   },
   async mounted() {
-    await this.getListingTypes()
+    await this.getAmenityCategories().then(async () => {
+      await this.getAmenities()
+    })
   },
   methods: {
     ...mapActions({
-      getListingTypes: 'admin/settings/getListingTypes',
-      createListingType: 'admin/settings/createListingType',
-      updateListingType: 'admin/settings/updateListingType',
-      deleteListingType: 'admin/settings/deleteListingType',
+      getAmenities: 'admin/settings/getAllAmenities',
+      getAmenityCategories: 'admin/settings/getAmenityCategories',
+      createAmenity: 'admin/settings/createAmenity',
+      updateAmenity: 'admin/settings/updateAmenity',
+      deleteAmenity: 'admin/settings/deleteAmenity',
     }),
-    async refresh() {
-      await this.getListingTypes()
-    },
     async createItem() {
-      const result = await this.createListingType(this.listingTypeData)
+      const result = await this.createAmenity(this.amenityData)
       console.log({ result })
       if (result.success) {
         this.cancel()
       }
     },
     editItem(item) {
-      this.listingTypeData = {
-        ...this.listingTypeData,
+      this.amenityData = {
+        ...this.amenityData,
         ...item,
-        id: item.listingType,
+        id: item.amenity,
       }
       this.tab = 1
     },
     async updateItem() {
-      const result = await this.updateListingType({
-        id: this.listingTypeData.id,
-        data: this.listingTypeData,
+      const result = await this.updateAmenity({
+        id: this.amenityData.id,
+        data: this.amenityData,
       })
       console.log({ result })
       if (result.success) {
         this.cancel()
       }
     },
+    async refresh() {
+      await this.getAmenityCategories()
+      await this.getAmenities()
+    },
     async deleteItem(item) {
-      const result = await this.deleteListingType(item.listingType)
+      const result = await this.deleteAmenity(item)
       console.log({ result })
     },
     cancel() {
-      this.$refs.form.reset()
-      this.listingTypeData = {
+      // this.$refs.form.reset()
+      this.amenityData = {
         id: '',
-        listingType: '',
+        amenity: '',
         title: '',
         descriptionHTML: '',
-        isActive: false,
         mdiIcon: '',
         faIcon: '',
         newkey: '',
@@ -412,10 +445,7 @@ export default {
       this.tab = 0
     },
     formatKey(string) {
-      this.listingTypeData.listingType = string
-        .toUpperCase()
-        .split(' ')
-        .join('_')
+      this.amenityData.amenity = string.toUpperCase().split(' ').join('_')
     },
   },
 }
