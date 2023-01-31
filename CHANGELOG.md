@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/Bankole2000/cp-frontend/compare/v1.1.0...v1.1.1) (2023-01-31)
+
+
+### Features
+
+* **listings:** admins can crud amenities ([2197443](https://github.com/Bankole2000/cp-frontend/commits/219744378482c27a84db7c2b441971212aa5b2bc))
+
 ## [1.1.0](https://github.com/Bankole2000/cp-frontend/compare/v1.0.1...v1.1.0) (2023-01-30)
 
 
