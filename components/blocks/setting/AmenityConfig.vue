@@ -186,6 +186,7 @@
                       v-model="amenityData.amenity"
                       prepend-inner-icon="mdi-key"
                       dense
+                      :disabled="Boolean(amenityData.id)"
                       label="Amenity key"
                       filled
                       hide-details
@@ -356,7 +357,7 @@ export default {
         //   sortable: true,
         //   value: 'sno',
         // },
-        { text: 'Listing Type', value: 'amenity' },
+        { text: 'key', value: 'amenity' },
         { text: 'Title', value: 'title' },
         // { text: 'Description', value: 'descriptionHTML' },
         { text: 'Category', value: 'amenityCategory' },

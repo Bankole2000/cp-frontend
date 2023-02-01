@@ -1,7 +1,7 @@
 <template>
   <v-card class="elevated-light">
     <v-card-title class="py-3"
-      >Listing Type Settings
+      >House Rules Settings
 
       <v-spacer></v-spacer>
       <v-expand-x-transition>
@@ -40,7 +40,7 @@
         <v-card-text class="pt-0">
           <v-tabs v-model="tab">
             <v-tab>
-              Listing Types
+              House Rules
               <v-tooltip top>
                 <template #activator="{ on, attrs }">
                   <v-btn
@@ -56,9 +56,7 @@
                 <span>Refresh</span>
               </v-tooltip>
             </v-tab>
-            <v-tab>
-              {{ listingTypeData.id ? 'Edit' : 'Add' }} Listing Type
-            </v-tab>
+            <v-tab> {{ houseRuleData.id ? 'Edit' : 'Add' }} House Rule </v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab" class="mt-4">
             <v-tab-item>
@@ -67,7 +65,7 @@
                 :headers="headers"
                 class="elevated-light"
                 :items="
-                  listingTypes.map((t, i) => {
+                  houseRules.map((t, i) => {
                     return {
                       ...t,
                       // sno: i + 1,
@@ -83,13 +81,11 @@
                 <template #[`item.descriptionHTML`]="{ item }">
                   <div v-html="item.descriptionHTML"></div>
                 </template>
-                <template #[`item.isActive`]="{ item }">
-                  <v-chip
-                    class="ma-2"
-                    :color="item.isActive ? 'success' : 'error'"
-                  >
-                    {{ item.isActive ? 'Active' : 'Disabled' }}
-                  </v-chip>
+                <template #[`item.mdiIconFalse`]="{ item }">
+                  <v-icon>mdi-{{ item.mdiIconFalse }}</v-icon>
+                </template>
+                <template #[`item.mdiIconTrue`]="{ item }">
+                  <v-icon>mdi-{{ item.mdiIconTrue }}</v-icon>
                 </template>
                 <template #[`item.actions`]="{ item }">
                   <div style="display: flex">
@@ -167,24 +163,24 @@
                 <v-row>
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      v-model="listingTypeData.listingType"
+                      v-model="houseRuleData.houseRule"
                       prepend-inner-icon="mdi-key"
+                      :disabled="Boolean(houseRuleData.id)"
                       dense
-                      :disabled="Boolean(listingTypeData.id)"
-                      label="Listing Type key"
+                      label="House Rule key"
                       filled
                       hide-details
                       rounded
                       type="text"
                       single-line
-                      placeholder="LISTING_TYPE"
-                      @keyup="formatKey(listingTypeData.listingType)"
+                      placeholder="HOUSE_RULE"
+                      @keyup="formatKey(houseRuleData.houseRule)"
                     >
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      v-model="listingTypeData.title"
+                      v-model="houseRuleData.title"
                       prepend-inner-icon="mdi-pen"
                       dense
                       label="Title"
@@ -193,13 +189,13 @@
                       rounded
                       type="text"
                       single-line
-                      placeholder="Listing Type Title"
+                      placeholder="House Rule Title"
                     >
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-textarea
-                      v-model="listingTypeData.descriptionHTML"
+                      v-model="houseRuleData.descriptionHTML"
                       dense
                       auto-grow
                       rows="3"
@@ -210,72 +206,105 @@
                       rounded
                       type="text"
                       single-line
-                      placeholder="Listing Type Description (HTML allowed)"
+                      placeholder="House Rule Description (HTML allowed)"
                     >
                     </v-textarea>
                   </v-col>
                   <v-col cols="12" sm="6">
-                    <v-autocomplete
-                      v-model="listingTypeData.mdiIcon"
-                      prepend-inner-icon="mdi-information-outline"
-                      rounded
-                      filled
-                      class="mb-2"
-                      dense
-                      :items="mdiIcons.map((x) => x.name)"
-                      placeholder="mdi icon"
-                      flat
-                      single-line
-                      :append-icon="`mdi-${listingTypeData.mdiIcon}`"
-                      prefix="mdi -"
-                      hide-details
-                      label="mdi Icon"
-                    >
-                    </v-autocomplete>
-                    <v-autocomplete
-                      v-model="listingTypeData.faIcon"
-                      prepend-inner-icon="mdi-font-awesome"
-                      rounded
-                      filled
-                      class="mb-2"
-                      dense
-                      :items="faIcons"
-                      placeholder="fa icon"
-                      flat
-                      single-line
-                      :append-icon="`mdi-${listingTypeData.faIcon}`"
-                      prefix="fa -"
-                      hide-details
-                      label="fa Icon"
-                    >
-                    </v-autocomplete>
+                    <div class="d-flex align-center">
+                      <v-autocomplete
+                        v-model="houseRuleData.mdiIconTrue"
+                        prepend-inner-icon="mdi-check"
+                        rounded
+                        filled
+                        class="mb-2"
+                        dense
+                        :items="mdiIcons.map((x) => x.name)"
+                        placeholder="mdi icon"
+                        flat
+                        single-line
+                        :append-icon="`mdi-${houseRuleData.mdiIconTrue}`"
+                        prefix="mdi -"
+                        hide-details
+                        label="Allowed Icon"
+                      >
+                      </v-autocomplete>
+                      <v-autocomplete
+                        v-model="houseRuleData.mdiIconFalse"
+                        prepend-inner-icon="mdi-cancel"
+                        rounded
+                        filled
+                        class="mb-2"
+                        dense
+                        :items="mdiIcons.map((x) => x.name)"
+                        placeholder="mdi icon"
+                        flat
+                        single-line
+                        :append-icon="`mdi-${houseRuleData.mdiIconFalse}`"
+                        prefix="mdi -"
+                        hide-details
+                        label="Not Allowed Icon"
+                      >
+                      </v-autocomplete>
+                    </div>
+                    <div class="d-flex align-center">
+                      <v-autocomplete
+                        v-model="houseRuleData.faIconTrue"
+                        prepend-inner-icon="mdi-font-awesome"
+                        rounded
+                        filled
+                        class="mb-2"
+                        dense
+                        :items="faIcons"
+                        placeholder="fa icon"
+                        flat
+                        single-line
+                        :append-icon="`mdi-${houseRuleData.faIconTrue}`"
+                        prefix="fa -"
+                        hide-details
+                        label="Allowed fa Icon"
+                      >
+                      </v-autocomplete>
+                      <v-autocomplete
+                        v-model="houseRuleData.faIconFalse"
+                        prepend-inner-icon="mdi-cancel"
+                        rounded
+                        filled
+                        class="mb-2"
+                        dense
+                        :items="faIcons"
+                        placeholder="fa icon"
+                        flat
+                        single-line
+                        :append-icon="`mdi-${houseRuleData.faIconFalse}`"
+                        prefix="fa -"
+                        hide-details
+                        label="Not allowed fa Icon"
+                      >
+                      </v-autocomplete>
+                    </div>
+
                     <div class="d-flex align-center">
                       <v-switch
-                        v-model="listingTypeData.isActive"
-                        hide-details
-                        label="Active"
-                        class="mr-2 mt-0"
-                      ></v-switch>
-                      <v-switch
-                        v-if="listingTypeData.id"
-                        v-model="listingTypeData.useNewKey"
+                        v-if="houseRuleData.id"
+                        v-model="houseRuleData.useNewKey"
                         hide-details
                         label="Change Key"
                         class="mr-4 mt-0"
                       ></v-switch>
                       <v-text-field
-                        v-if="listingTypeData.id"
-                        v-model="listingTypeData.newkey"
+                        v-if="houseRuleData.id"
+                        v-model="houseRuleData.newkey"
                         dense
                         prepend-inner-icon="mdi-key"
                         label="New Key"
-                        :disabled="!listingTypeData.useNewKey || loading"
+                        :disabled="!houseRuleData.useNewKey || loading"
                         filled
                         hide-details
                         rounded
                         type="text"
                         single-line
-                        placeholder="NEW_LISTING_KEY"
+                        placeholder="NEW_HOUSE_RULE_KEY"
                       ></v-text-field>
                     </div>
                   </v-col>
@@ -285,10 +314,7 @@
                         <v-btn text block @click="cancel">Cancel</v-btn>
                       </v-col>
                       <v-col cols="6">
-                        <v-btn
-                          v-if="listingTypeData.id"
-                          block
-                          @click="updateItem"
+                        <v-btn v-if="houseRuleData.id" block @click="updateItem"
                           >Update</v-btn
                         >
                         <v-btn v-else block @click="createItem">Save</v-btn>
@@ -328,23 +354,25 @@ export default {
         //   sortable: true,
         //   value: 'sno',
         // },
-        { text: 'Listing Type', value: 'listingType' },
+        { text: 'key', value: 'houseRule' },
         { text: 'Title', value: 'title' },
         // { text: 'Description', value: 'descriptionHTML' },
-        { text: 'Status', value: 'isActive', align: 'center' },
-        { text: 'mdi Icon', value: 'mdiIcon', sortable: false },
+        // { text: 'Status', value: 'isActive', align: 'center' },
+        { text: 'allowed Icon', value: 'mdiIconTrue', sortable: false },
+        { text: 'not allowed Icon', value: 'mdiIconFalse', sortable: false },
         // { text: 'Fa Icon', value: 'faIcon' },
         { text: 'Listings', value: 'listings' },
         { text: 'Actions', value: 'actions', sortable: false },
       ],
-      listingTypeData: {
+      houseRuleData: {
         id: '',
-        listingType: '',
+        houseRule: '',
         title: '',
         descriptionHTML: '',
-        isActive: false,
-        mdiIcon: '',
-        faIcon: '',
+        mdiIconFalse: '',
+        mdiIconTrue: '',
+        faIconFalse: '',
+        faIconTrue: '',
         newkey: '',
         useNewKey: false,
       },
@@ -352,41 +380,41 @@ export default {
   },
   computed: {
     ...mapGetters({
-      listingTypes: 'admin/settings/listingTypes',
+      houseRules: 'admin/settings/houseRules',
     }),
   },
   async mounted() {
-    await this.getListingTypes()
+    await this.getHouseRules()
   },
   methods: {
     ...mapActions({
-      getListingTypes: 'admin/settings/getListingTypes',
-      createListingType: 'admin/settings/createListingType',
-      updateListingType: 'admin/settings/updateListingType',
-      deleteListingType: 'admin/settings/deleteListingType',
+      getHouseRules: 'admin/settings/getHouseRules',
+      createHouseRule: 'admin/settings/createHouseRule',
+      updateHouseRule: 'admin/settings/updateHouseRule',
+      deleteHouseRule: 'admin/settings/deleteHouseRule',
     }),
     async refresh() {
-      await this.getListingTypes()
+      await this.getHouseRules()
     },
     async createItem() {
-      const result = await this.createListingType(this.listingTypeData)
+      const result = await this.createHouseRule(this.houseRuleData)
       console.log({ result })
       if (result.success) {
         this.cancel()
       }
     },
     editItem(item) {
-      this.listingTypeData = {
-        ...this.listingTypeData,
+      this.houseRuleData = {
+        ...this.houseRuleData,
         ...item,
-        id: item.listingType,
+        id: item.houseRule,
       }
       this.tab = 1
     },
     async updateItem() {
-      const result = await this.updateListingType({
-        id: this.listingTypeData.id,
-        data: this.listingTypeData,
+      const result = await this.updateHouseRule({
+        id: this.houseRuleData.id,
+        data: this.houseRuleData,
       })
       console.log({ result })
       if (result.success) {
@@ -394,29 +422,27 @@ export default {
       }
     },
     async deleteItem(item) {
-      const result = await this.deleteListingType(item.listingType)
+      const result = await this.deleteHouseRule(item.houseRule)
       console.log({ result })
     },
     cancel() {
-      this.$refs.form.reset()
-      this.listingTypeData = {
+      // this.$refs.form.reset()
+      this.houseRuleData = {
         id: '',
-        listingType: '',
+        houseRule: '',
         title: '',
         descriptionHTML: '',
-        isActive: false,
-        mdiIcon: '',
-        faIcon: '',
+        mdiIconTrue: '',
+        mdiIconFalse: '',
+        faIconTrue: '',
+        faIconFalse: '',
         newkey: '',
         useNewKey: false,
       }
       this.tab = 0
     },
     formatKey(string) {
-      this.listingTypeData.listingType = string
-        .toUpperCase()
-        .split(' ')
-        .join('_')
+      this.houseRuleData.houseRule = string.toUpperCase().split(' ').join('_')
     },
   },
 }
