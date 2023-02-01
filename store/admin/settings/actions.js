@@ -137,6 +137,53 @@ export default {
       console.log({ error })
     }
   },
+  async createHouseRule({ commit, rootState, dispatch }, data) {
+    const message = loadingMessage({ text: 'Creating House Rule...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$post(`${rootState.env.listingPath}/settings/house-rules`, data);
+      if (response.success) {
+        commit('ADD_HOUSE_RULE', response.data);
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+      console.log({ response });
+    } catch (error) {
+      console.log({ error });
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async updateHouseRule({ commit, dispatch, rootState }, { id, data }) {
+    console.log({ id, data });
+    const message = loadingMessage({ text: 'Updating House Rule...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$patch(`${rootState.env.listingPath}/settings/house-rules/${id}${data.useNewKey ? '?newkey=' : ''}${data.newkey}`, data)
+      console.log({ response });
+      if (response.success) {
+        const { useNewKey, id: oldKey } = data
+        commit('UPDATE_HOUSE_RULE', { houseRuleData: response.data, oldKey, useNewKey });
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+    } catch (error) {
+      console.log({ error })
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async deleteHouseRule({ commit, dispatch, rootState }, id) {
+    const message = loadingMessage({ text: 'Deleting House Rule...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$delete(`${rootState.env.listingPath}/settings/house-rules/${id}`);
+      console.log({ response });
+      if (response.success) {
+        commit('REMOVE_HOUSE_RULE', response.data.houseRule);
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+    } catch (error) {
+      console.log({ error })
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
   async createAmenity({ commit, rootState, dispatch }, data) {
     const message = loadingMessage({ text: 'Creating Listing Type...' });
     const uuid = await dispatch('ui/showMessage', message, { root: true });
@@ -184,6 +231,19 @@ export default {
     } catch (error) {
       console.log({ error })
       return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async getHouseRules({ commit, rootState }) {
+    try {
+      const response = await this.$axios.$get(`${rootState.env.listingPath}/settings/house-rules`);
+      console.log({ response });
+      if (response.success) {
+        commit('SET_HOUSE_RULES', response.data)
+      } else {
+        commit('SET_HOUSE_RULES', [])
+      }
+    } catch (error) {
+      console.log({ error })
     }
   },
   async handleRequestError({ commit, dispatch }, { error, uuid }) {

@@ -164,6 +164,7 @@ export default {
   SET_HOUSE_RULES(state, payload) {
     if (payload) {
       state.houseRules = payload;
+      return;
     }
     state.houseRules = [];
   },
@@ -179,12 +180,14 @@ export default {
     state.houseRules.push(houseRule);
   },
 
-  UPDATE_HOUSE_RULE(state, houseRuleData) {
-    const index = state.houseRules.findIndex(houseRule => houseRule.houseRule === houseRuleData.houseRule);
+  UPDATE_HOUSE_RULE(state, { houseRuleData, useNewKey, oldKey }) {
+    console.log({ houseRuleData })
+    const index = useNewKey
+      ? state.houseRules.findIndex(type => type.houseRule === oldKey)
+      : state.houseRules.findIndex(type => type.houseRule === houseRuleData.houseRule)
+    console.log({ index });
     if (index > -1) {
-      for (const field in houseRuleData) {
-        state.houseRules[index][field] = houseRuleData[field];
-      }
+      state.houseRules.splice(index, 1, houseRuleData);
     }
   },
 }
