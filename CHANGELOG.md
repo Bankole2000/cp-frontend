@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/Bankole2000/cp-frontend/compare/v1.1.1...v1.1.2) (2023-02-01)
+
+
+### Features
+
+* **listings:** admins can crud listing house rules ([911e586](https://github.com/Bankole2000/cp-frontend/commits/911e5862cd131ec179b48d76034bf67c5f6f98b5))
+
 ### [1.1.1](https://github.com/Bankole2000/cp-frontend/compare/v1.1.0...v1.1.1) (2023-01-31)
 
 
