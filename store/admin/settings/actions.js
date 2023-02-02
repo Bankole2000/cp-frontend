@@ -61,6 +61,126 @@ export default {
       return await dispatch('handleRequestError', { error, uuid })
     }
   },
+  async getListingPurposes({ commit, rootState }) {
+    try {
+      const response = await this.$axios.$get(`${rootState.env.listingPath}/settings/purposes`);
+      console.log({ response });
+      if (response.success) {
+        commit('SET_LISTING_PURPOSES', response.data)
+      } else {
+        commit('SET_LISTING_PURPOSES', [])
+      }
+    } catch (error) {
+      console.log({ error })
+    }
+  },
+  async createListingPurpose({ commit, rootState, dispatch }, data) {
+    const message = loadingMessage({ text: 'Creating Listing Purpose...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$post(`${rootState.env.listingPath}/settings/purposes`, data);
+      if (response.success) {
+        commit('ADD_LISTING_PURPOSE', response.data);
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+      console.log({ response });
+    } catch (error) {
+      console.log({ error });
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async updateListingPurpose({ commit, dispatch, rootState }, { id, data }) {
+    console.log({ id, data });
+    const message = loadingMessage({ text: 'Updating Listing Purpose...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$patch(`${rootState.env.listingPath}/settings/purposes/${id}${data.useNewKey ? '?newkey=' : ''}${data.newkey}`, data)
+      console.log({ response });
+      if (response.success) {
+        const { useNewKey, id: oldKey } = data
+        commit('UPDATE_LISTING_PURPOSE', { purposeData: response.data, oldKey, useNewKey });
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+    } catch (error) {
+      console.log({ error })
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async deleteListingPurpose({ commit, dispatch, rootState }, id) {
+    const message = loadingMessage({ text: 'Deleting Listing Purpose...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$delete(`${rootState.env.listingPath}/settings/purposes/${id}`);
+      console.log({ response });
+      if (response.success) {
+        commit('REMOVE_LISTING_PURPOSE', response.data.listingPurpose);
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+    } catch (error) {
+      console.log({ error })
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async getPurposeSubgroups({ commit, rootState }) {
+    try {
+      const response = await this.$axios.$get(`${rootState.env.listingPath}/settings/subgroups`);
+      console.log({ response });
+      if (response.success) {
+        commit('SET_PURPOSE_SUBGROUPS', response.data)
+      } else {
+        commit('SET_PURPOSE_SUBGROUPS', [])
+      }
+    } catch (error) {
+      console.log({ error })
+    }
+  },
+  async createPurposeSubgroup({ commit, rootState, dispatch }, data) {
+    const message = loadingMessage({ text: 'Creating Purpose Subgroup...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$post(`${rootState.env.listingPath}/settings/purposes/${data.listingPurpose}/subgroups`, data);
+      if (response.success) {
+        commit('ADD_PURPOSE_SUBGROUP', response.data);
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+      console.log({ response });
+    } catch (error) {
+      console.log({ error });
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async updatePurposeSubgroup({ commit, dispatch, rootState }, { id, data }) {
+    console.log({ id, data });
+    const message = loadingMessage({ text: 'Updating Purpose Subgroup...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$patch(`${rootState.env.listingPath}/settings/purposes/${data.listingPurpose}/subgroups/${id}${data.useNewKey ? '?newkey=' : ''}${data.newkey}`, data)
+      console.log({ response });
+      if (response.success) {
+        const { useNewKey, id: oldKey } = data
+        commit('UPDATE_PURPOSE_SUBGROUP', { subgroupData: response.data, oldKey, useNewKey });
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+    } catch (error) {
+      console.log({ error })
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
+  async deletePurposeSubgroup({ commit, dispatch, rootState }, data) {
+    const message = loadingMessage({ text: 'Deleting Purpose Subgroup...' });
+    const uuid = await dispatch('ui/showMessage', message, { root: true });
+    try {
+      const response = await this.$axios.$delete(`${rootState.env.listingPath}/settings/purposes/${data.listingPurpose}/subgroups/${data.purposeSubgroup}`);
+      console.log({ response });
+      if (response.success) {
+        commit('REMOVE_PURPOSE_SUBGROUP', data.purposeSubgroup);
+        return await dispatch('handleRequestSuccess', { response, uuid })
+      }
+    } catch (error) {
+      console.log({ error })
+      return await dispatch('handleRequestError', { error, uuid })
+    }
+  },
   async getAmenityCategories({ commit, rootState }) {
     try {
       const response = await this.$axios.$get(`${rootState.env.listingPath}/settings/amenity-categories`);

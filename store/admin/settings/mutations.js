@@ -32,6 +32,7 @@ export default {
   SET_LISTING_PURPOSES(state, payload) {
     if (payload) {
       state.listingPurposes = payload;
+      return;
     }
     state.listingPurposes = [];
   },
@@ -47,18 +48,21 @@ export default {
     state.listingPurposes.push(purpose);
   },
 
-  UPDATE_LISTING_PURPOSE(state, purposeData) {
-    const index = state.listingPurposes.findIndex(purpose => purpose.listingPurpose === purposeData.listingPurpose);
+  UPDATE_LISTING_PURPOSE(state, { purposeData, useNewKey, oldKey }) {
+    console.log({ purposeData })
+    const index = useNewKey
+      ? state.listingPurposes.findIndex(type => type.listingPurpose === oldKey)
+      : state.listingPurposes.findIndex(type => type.listingPurpose === purposeData.listingPurpose)
+    console.log({ index });
     if (index > -1) {
-      for (const field in purposeData) {
-        state.listingPurposes[index][field] = purposeData[field];
-      }
+      state.listingPurposes.splice(index, 1, purposeData);
     }
   },
 
   SET_PURPOSE_SUBGROUPS(state, payload) {
     if (payload) {
       state.purposeSubgroups = payload;
+      return;
     }
     state.purposeSubgroups = [];
   },
@@ -74,12 +78,14 @@ export default {
     state.purposeSubgroups.push(subgroup);
   },
 
-  UPDATE_PURPOSE_SUBGROUP(state, subgroupData) {
-    const index = state.purposeSubgroups.findIndex(subgroup => subgroup.purposeSubgroup === subgroupData.purposeSubgroup);
+  UPDATE_PURPOSE_SUBGROUP(state, { subgroupData, useNewKey, oldKey }) {
+    console.log({ subgroupData })
+    const index = useNewKey
+      ? state.purposeSubgroups.findIndex(subgroup => subgroup.purposeSubgroup === oldKey)
+      : state.purposeSubgroups.findIndex(subgroup => subgroup.purposeSubgroup === subgroupData.purposeSubgroup)
+    console.log({ index });
     if (index > -1) {
-      for (const field in subgroupData) {
-        state.purposeSubgroups[index][field] = subgroupData[field];
-      }
+      state.purposeSubgroups.splice(index, 1, subgroupData);
     }
   },
 

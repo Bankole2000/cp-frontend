@@ -13,7 +13,9 @@ export default {
   },
   async getVisitorGeoData({ commit, rootState, rootGetters }) {
     try {
-      const { ip } = await this.$axios.$get('https://api.ipify.org?format=json');
+      // const { ip } = await this.$axios.$get('https://api.ipify.org?format=json');
+      const res = await fetch(`https://api.ipify.org?format=json`)
+      const { ip } = await res.json();
       const dbResponse = await this.$axios.$get(`${rootState.env.authPath}/system/data/ip-geo-data/${ip}`).catch((error) => {
         console.log({ error });
         return null;
