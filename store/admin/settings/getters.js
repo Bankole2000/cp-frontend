@@ -5,7 +5,7 @@ export default {
   listingPurposes(state) {
     return state.listingPurposes
   },
-  listingSubgroups(state) {
+  purposeSubgroups(state) {
     return state.purposeSubgroups
   },
   amenityCategories(state) {

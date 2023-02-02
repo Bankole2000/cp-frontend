@@ -3,6 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
+          <PurposeConfig class="my-4" />
           <HouseRulesConfig class="my-4" />
           <AmenityConfig class="my-4" />
           <ListingTypeConfig />
@@ -29,12 +30,14 @@ import LoginEmail from './auth/login-email.vue'
 import ListingTypeConfig from '~/components/blocks/setting/ListingTypeConfig.vue'
 import AmenityConfig from '~/components/blocks/setting/AmenityConfig.vue'
 import HouseRulesConfig from '~/components/blocks/setting/HouseRulesConfig.vue'
+import PurposeConfig from '~/components/blocks/setting/PurposeConfig.vue'
 export default {
   components: {
     ListingTypeConfig,
     LoginEmail,
     AmenityConfig,
     HouseRulesConfig,
+    PurposeConfig,
   },
   layout: 'empty',
   data() {

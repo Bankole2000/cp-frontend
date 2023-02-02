@@ -328,7 +328,7 @@ export default {
         //   sortable: true,
         //   value: 'sno',
         // },
-        { text: 'Listing Type', value: 'listingType' },
+        { text: 'Type Key', value: 'listingType' },
         { text: 'Title', value: 'title' },
         // { text: 'Description', value: 'descriptionHTML' },
         { text: 'Status', value: 'isActive', align: 'center' },
