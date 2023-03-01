@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <v-row>
+    <nuxt-child />
+    <!-- <v-row>
       <v-col cols="12">
         <div class="d-flex align-center">
           <h1 class="display-2 mb-0 ml-4 mt-6">Welcome @username</h1>
@@ -59,7 +60,7 @@
           </v-card>
         </v-hover>
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-container>
 </template>
 
@@ -143,8 +144,11 @@ export default {
       ],
     }
   },
+  mounted() {
+    console.log('Dashboard mounted')
+    this.$store.commit('ui/toggleUserDashboardLeftNav', true)
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>

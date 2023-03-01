@@ -25,12 +25,12 @@
                 v-if="primaryDrawer.type !== 'permanent'"
                 @click.stop="showLeftNav = !showLeftNav"
               ></v-app-bar-nav-icon>
-              <v-toolbar-title>Relodge</v-toolbar-title>
+              <v-toolbar-title>Relodger</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn icon @click.stop="toggleSearch">
+              <v-btn icon small @click.stop="toggleSearch">
                 <v-icon>mdi-magnify</v-icon>
               </v-btn>
-              <v-btn icon @click.stop="toggleFullScreen">
+              <v-btn icon small @click.stop="toggleFullScreen">
                 <v-icon>mdi-overscan</v-icon>
               </v-btn>
               <v-switch v-model="$vuetify.theme.dark" hide-details></v-switch>
@@ -368,7 +368,7 @@ export default {
         //   }
         //   return this.$store.commit('ui/toggleUserDashboardLeftNav')
         // }
-        // this.$store.commit('ui/toggleUserDashboardLeftNav', false)
+        this.$store.commit('ui/toggleUserDashboardLeftNav', false)
         return this.$store.commit('ui/toggleMainLeftNav', v)
       },
     },

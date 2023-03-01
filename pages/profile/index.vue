@@ -676,13 +676,7 @@
                     </v-list-item-content>
                     <v-list-item-action>
                       <v-card
-                        class="
-                          text-capitalize
-                          elevated-light
-                          rounded-xl
-                          py-2
-                          px-4
-                        "
+                        class="text-capitalize elevated-light rounded-xl py-2 px-4"
                         flat
                         :class="
                           $vuetify.theme.dark
@@ -855,5 +849,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -274,6 +274,7 @@ div::-webkit-scrollbar-thumb {
 
 *::-webkit-scrollbar {
   width: 5px;
+  color: var(--primary);
 }
 *::-webkit-scrollbar-track {
   background: transparent;

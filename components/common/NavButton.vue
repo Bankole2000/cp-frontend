@@ -14,6 +14,7 @@
         :style="{
           backgroundColor: $vuetify.theme.dark ? '#121212' : '#f0efef',
         }"
+        @click="$emit('click')"
       >
         <div class="d-flex align-center">
           <v-icon :color="hover || isActive ? 'white' : ''" left>{{
@@ -84,5 +85,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -4,9 +4,6 @@ export default {
   },
   profileImage(state, _, rootState) {
     if (state.profile) {
-      if (state.profile.imageSecureUrl) {
-        return state.profile.imageSecureUrl;
-      }
       if (state.profile.imageUrl) {
         return state.profile.imageUrl;
       }
@@ -15,9 +12,6 @@ export default {
   },
   profileWallpaper(state, _, rootState) {
     if (state.profile) {
-      if (state.profile.wallpaperSecureUrl) {
-        return state.profile.wallpaperSecureUrl;
-      }
       if (state.profile.wallpaperUrl) {
         return state.profile.wallpaperUrl;
       }

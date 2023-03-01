@@ -26,6 +26,7 @@
     "core-js": "^3.25.3",
     "emoji-mart-vue": "^2.6.6",
     "js-cookie": "^3.0.1",
+    "masonry-layout": "^4.2.2",
     "nuxt": "^2.15.8",
     "nuxt-leaflet": "^0.0.27",
     "nuxt-socket-io": "^2.0.3",

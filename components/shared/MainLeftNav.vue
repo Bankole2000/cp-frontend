@@ -194,12 +194,13 @@ export default {
       {
         title: 'Dashboard',
         icon: 'mdi-view-dashboard-outline',
-        to: 'dashboard',
+        to: 'dashboard-index',
         activeRoutes: [
           'dashboard',
           'dashboard-index',
           'dashboard-index-listings',
-          'dashboard-index-people',
+          'dashboard-index-personals',
+          'dashboard-index-posts',
           'dashboard-index-services',
         ],
         badgeCount: 0,
