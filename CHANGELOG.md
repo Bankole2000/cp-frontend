@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.4](https://github.com/Bankole2000/cp-frontend/compare/v1.1.3...v1.1.4) (2023-03-01)
+
+
+### Features
+
+* **pages:** post Id page wip ([1effdc6](https://github.com/Bankole2000/cp-frontend/commits/1effdc686a3c44bc3c78e8ef3d1007ad60fc1d9d))
+
 ### [1.1.3](https://github.com/Bankole2000/cp-frontend/compare/v1.1.2...v1.1.3) (2023-02-02)
 
 
