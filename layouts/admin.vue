@@ -34,9 +34,32 @@
                 <v-icon>mdi-overscan</v-icon>
               </v-btn>
               <v-switch v-model="$vuetify.theme.dark" hide-details></v-switch>
-              <v-btn icon @click.stop="showRightNav = !showRightNav">
-                <v-icon>mdi-forum-outline</v-icon>
-              </v-btn>
+              <!-- <v-badge
+                bordered
+                color="error"
+                content="6"
+                overlap
+                offset-x="20"
+                offset-y="20"
+                class="mx-1"
+              >
+                <v-btn icon>
+                  <v-icon>mdi-bell-outline</v-icon>
+                </v-btn>
+              </v-badge> -->
+              <NotificationsMenu />
+              <v-badge
+                bordered
+                color="error"
+                content="6"
+                overlap
+                offset-x="20"
+                offset-y="20"
+              >
+                <v-btn icon @click.stop="showRightNav = !showRightNav">
+                  <v-icon>mdi-forum-outline</v-icon>
+                </v-btn>
+              </v-badge>
             </div>
           </v-col>
         </v-row>
@@ -293,6 +316,7 @@ import MainRightNav from '~/components/shared/MainRightNav.vue'
 import UserDashboardLeftNav from '~/components/shared/UserDashboardLeftNav.vue'
 import MainBottomNav from '~/components/shared/MainBottomNav.vue'
 import CreatePostModal from '~/components/modals/CreatePostModal.vue'
+import NotificationsMenu from '~/components/shared/NotificationsMenu.vue'
 export default {
   name: 'Admin',
   components: {
@@ -302,6 +326,7 @@ export default {
     UserDashboardLeftNav,
     MainBottomNav,
     CreatePostModal,
+    NotificationsMenu,
   },
   middleware: 'getUserIfLoggedIn',
   data: () => ({

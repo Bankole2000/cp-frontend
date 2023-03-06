@@ -76,7 +76,7 @@
                           ><v-icon>mdi-dots-horizontal</v-icon></v-btn
                         >
                         <v-btn icon outlined color="primary"
-                          ><v-icon>mdi-email-outline</v-icon></v-btn
+                          ><v-icon>mdi-chat-outline</v-icon></v-btn
                         >
                         <v-btn
                           outlined
@@ -85,14 +85,6 @@
                           color="primary"
                           class="text-capitalize"
                           >Following</v-btn
-                        >
-                        <v-btn
-                          outlined
-                          rounded
-                          large
-                          color="primary"
-                          class="text-capitalize"
-                          >Edit Profile</v-btn
                         >
                       </div>
                     </div>
@@ -291,9 +283,11 @@
                             $vuetify.theme.dark ? 'white--text' : 'black--text'
                           "
                         >
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Possimus accusantium eius fuga ratione
-                          laboriosam quae molestiae.
+                          {{
+                            profile.bio
+                              ? profile.bio
+                              : "Hi, I'm new to Relodger 👋"
+                          }}
                         </p>
 
                         <!-- {{ visible }} -->
@@ -550,9 +544,7 @@
                   class="mb-0"
                   :class="$vuetify.theme.dark ? 'white--text' : 'black--text'"
                 >
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Possimus accusantium eius fuga ratione laboriosam quae
-                  molestiae.
+                  {{ profile.bio ? profile.bio : "Hi, I'm new to Relodger 👋" }}
                 </p>
 
                 <!-- {{ visible }} -->
@@ -953,10 +945,10 @@ export default {
       if (this.profile) {
         return (
           this.profile.wallpaperUrl ||
-          `${this.$store.getters.profilePath}/u/wallpapaer/${this.profile.username}`
+          `${this.$store.getters.profilePath}/u/wallpaper/${this.profile.username}`
         )
       }
-      return `${this.$store.getters.profilePath}/u/wallpapaer/${this.$route.params.username}`
+      return `${this.$store.getters.profilePath}/u/wallpaper/${this.$route.params.username}`
     },
     profileImage() {
       if (this.profile) {

@@ -13,106 +13,7 @@
               :tile="false"
               class="mx-auto"
             >
-              <v-list-item
-                nuxt
-                :to="{
-                  name: 'profile-username',
-                  params: { username: profile.username },
-                }"
-                dense
-              >
-                <v-list-item-avatar
-                  size="40"
-                  class="mr-2"
-                  :class="{ 'mt-0': profile.promoted }"
-                >
-                  <v-img
-                    :src="
-                      profile.imageUrl
-                        ? profile.imageUrl
-                        : `${$store.getters.profilePath}/u/image/${profile.username}`
-                    "
-                  ></v-img>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <div class="d-flex align-center">
-                      <span
-                        class="body-2 text-truncate"
-                        style="max-width: 160px"
-                      >
-                        {{ profile.displayname }}
-                      </span>
-                      <v-icon small color="primary" class="ml-2"
-                        >mdi-checkbox-marked-circle</v-icon
-                      >
-                    </div>
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="font-weight-light">
-                    <div class="d-flex align-center">
-                      <span
-                        class="d-inline-block text-truncate"
-                        style="max-width: 100px"
-                      >
-                        @{{ profile.username }}
-                      </span>
-                      <v-chip
-                        v-if="profile.followsYou"
-                        label
-                        x-small
-                        class="bg-secondary-lt px-1 ml-2"
-                      >
-                        <span class="text--secondary">Follows you</span>
-                      </v-chip>
-                    </div>
-                  </v-list-item-subtitle>
-                  <v-list-item-subtitle v-if="profile.promoted">
-                    <div class="d-flex align-center mt-0">
-                      <v-icon x-small class="mr-1">mdi-finance</v-icon>
-                      <span class="text--disabled caption">Promoted</span>
-                    </div>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action :class="{ 'mt-n1': profile.promoted }">
-                  <v-btn
-                    v-if="!profile.followedByYou && !profile.sentRequest"
-                    class="text-capitalize rounded-xl"
-                    depressed
-                    small
-                    :class="
-                      $vuetify.theme.dark ? 'white black--text' : 'secondary'
-                    "
-                  >
-                    follow
-                  </v-btn>
-                  <v-hover v-else-if="profile.sentRequest" v-slot="{ hover }">
-                    <!-- :class="
-                        $vuetify.theme.dark ? 'black--text' : 'secondary--text'
-                      " -->
-                    <v-btn
-                      class="text-capitalize rounded-xl"
-                      outlined
-                      small
-                      :color="hover ? 'error' : ''"
-                    >
-                      {{ hover ? 'Cancel Request' : 'Request' }}
-                    </v-btn>
-                  </v-hover>
-                  <v-hover v-else-if="profile.followedByYou" v-slot="{ hover }">
-                    <!-- :class="
-                        $vuetify.theme.dark ? 'black--text' : 'secondary--text'
-                      " -->
-                    <v-btn
-                      class="text-capitalize rounded-xl"
-                      outlined
-                      small
-                      :color="hover ? 'error' : ''"
-                    >
-                      {{ hover ? 'Unfollow' : 'Following' }}
-                    </v-btn>
-                  </v-hover>
-                </v-list-item-action>
-              </v-list-item>
+              <profile-preview-list-item-small :profile="profile" />
             </v-skeleton-loader>
           </div>
         </v-list-item-group>
@@ -125,7 +26,9 @@
 </template>
 
 <script>
+import ProfilePreviewListItemSmall from './ProfilePreviewListItemSmall.vue'
 export default {
+  components: { ProfilePreviewListItemSmall },
   data: () => ({
     loading: true,
     suggestedProfiles: [
@@ -163,12 +66,81 @@ export default {
   },
   async mounted() {
     await this.$fetch()
+    await this.connectUser()
+    // this.socket.on('PULSE', (data) => {
+    //   console.log({ data })
+    // })
+    this.socket.on('USER_CONNECTED', (data) => {
+      console.log('USER_CONNECTED')
+      console.log({ data })
+    })
+    this.socket.on('FOLLOWED_YOU', (data) => {
+      console.log('FOLLOWED_YOU')
+      this.followedYou(data)
+    })
+    this.socket.on('UNFOLLOWED_YOU', (data) => {
+      console.log('UNFOLLOWED_YOU')
+      this.unfollowedYou(data)
+    })
+    this.socket.on('YOU_FOLLOWED', (data) => {
+      console.log('YOU_FOLLOWED')
+      this.youFollowed(data)
+    })
+    this.socket.on('YOU_UNFOLLOWED', (data) => {
+      console.log('YOU_UNFOLLOWED')
+      this.youUnfollowed(data)
+    })
+  },
+  async created() {
+    this.socket = await this.$nuxtSocket({
+      name: 'profile',
+      // channel: '',
+      reconnection: true,
+      autoconnect: true,
+      // path: `${this.$store.getters.profilePath}/socket`,
+      path: '/api/v1/profile/socket',
+    })
   },
   activated() {
     // Call fetch again if last fetch more than 30 sec ago
     if (this.$fetchState.timestamp <= Date.now() - 30000) {
       this.$fetch()
     }
+  },
+  methods: {
+    async connectUser() {
+      if (this.$store.getters['auth/isLoggedIn']) {
+        console.log('Emitting event')
+        await this.socket.emit(
+          'USER_CONNECTED',
+          this.$store.getters['auth/user']
+        )
+      }
+    },
+    youFollowed(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followingId
+      )
+      this.suggestedProfiles[index].followedByYou = true
+    },
+    youUnfollowed(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followingId
+      )
+      this.suggestedProfiles[index].followedByYou = false
+    },
+    followedYou(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followerId
+      )
+      this.suggestedProfiles[index].followsYou = true
+    },
+    unfollowedYou(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followerId
+      )
+      this.suggestedProfiles[index].followsYou = false
+    },
   },
 }
 </script>

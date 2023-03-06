@@ -25,6 +25,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/axios.js', mode: 'client' },
+    // { src: '~/plugins/socket.client.js', mode: 'client' },
     '~/plugins/common-components.js',
     '~/plugins/common-filters.js',
   ],
@@ -39,6 +40,7 @@ export default {
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/moment',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -48,6 +50,51 @@ export default {
     'nuxt-socket-io',
     'nuxt-leaflet',
   ],
+
+  io: {
+    sockets: [
+      {
+        name: 'profile',
+        url: `${process.env.BASE_URL}:${process.env.PROFILE_PORT}`,
+      },
+      {
+        name: 'chat',
+        url: `${process.env.BASE_URL}:${process.env.CHAT_PORT}`,
+      },
+      {
+        name: 'notification',
+        url: `${process.env.BASE_URL}:${process.env.NOTIFICATION_PORT}`,
+      },
+      {
+        name: 'feed',
+        url: `${process.env.BASE_URL}:${process.env.FEED_PORT}`,
+      },
+      {
+        name: 'post',
+        url: `${process.env.BASE_URL}:${process.env.POST_PORT}`,
+      },
+      {
+        name: 'transaction',
+        url: `${process.env.BASE_URL}:${process.env.TRANSACTION_PORT}`,
+      },
+      {
+        name: 'offer',
+        url: `${process.env.BASE_URL}:${process.env.OFFER_PORT}`,
+      },
+      {
+        name: 'listing',
+        url: `${process.env.BASE_URL}:${process.env.LISTING_PORT}`,
+      },
+      {
+        name: 'comms',
+        url: `${process.env.BASE_URL}:${process.env.COMMS_PORT}`,
+      },
+      {
+        name: 'event',
+        url: `${process.env.BASE_URL}:${process.env.EVENT_PORT}`,
+      }
+    ]
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
@@ -118,7 +165,7 @@ export default {
   build: {
     transpile: [/^v-snackbars($|\/)/, 'short-uuid']
   },
-  transition: {
+  pageTransition: {
     name: 'router-anim',
     mode: 'out-in'
   }
