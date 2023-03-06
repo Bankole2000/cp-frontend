@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.5](https://github.com/Bankole2000/cp-frontend/compare/v1.1.4...v1.1.5) (2023-03-06)
+
+
+### Features
+
+* **notifications:** base notification ui framework ([cff1565](https://github.com/Bankole2000/cp-frontend/commits/cff1565785df7a585ad7eded0228c0d4c28b2871))
+
 ### [1.1.4](https://github.com/Bankole2000/cp-frontend/compare/v1.1.3...v1.1.4) (2023-03-01)
 
 
