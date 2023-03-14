@@ -76,7 +76,7 @@
         <div style="max-height: calc(70vh); overflow-y: scroll">
           <div>
             <v-list three-line dense class="py-0">
-              <v-list-item-group class="py-0">
+              <v-list-item-group :key="componentKey" class="py-0">
                 <NotificationItem
                   v-for="(notification, i) in notifications"
                   :key="i"
@@ -451,6 +451,7 @@ export default {
       socket: null,
       total: 0,
       notifications: [],
+      componentKey: 0,
     }
   },
   async fetch() {
@@ -495,6 +496,7 @@ export default {
       console.log({ newVal, old })
       if (newVal) {
         await this.$fetch()
+        this.componentKey++
       }
       if (old) {
         console.log('mark all as seen')

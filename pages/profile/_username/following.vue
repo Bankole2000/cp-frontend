@@ -1,12 +1,18 @@
 <template>
   <div class="profile-following">
-    <h1>User Is Following</h1>
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12" class="pa-0">
+          <h1>User Is Following</h1>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['profile'],
+  props: ['profile', 'socket'],
   data: () => ({
     loading: true,
     followers: [],

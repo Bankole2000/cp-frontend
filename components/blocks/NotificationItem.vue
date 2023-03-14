@@ -31,7 +31,7 @@ export default {
         case 'FOLLOWED_YOU': {
           const { follower } = resourceData
           try {
-            this.$router.push({ path: `/profile/${follower.username}` })
+            this.$router.push({ path: `/profile/@${follower.username}` })
           } catch (error) {
             console.log({ error })
           }

@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <v-container fluid>
+    <v-container>
       <v-row>
         <v-col cols="12" sm="7" xl="8">
           <v-row>
@@ -121,5 +121,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -6,6 +6,7 @@
       minHeight: '100%',
       border: 'none',
       minWidth: $vuetify.breakpoint.smAndDown ? '80vw' : '',
+      zIndex: 7,
     }"
     class="elevated-light"
     app

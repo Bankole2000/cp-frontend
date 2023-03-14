@@ -31,7 +31,7 @@
               class="rounded-t-xl"
               @click="goToListing"
             >
-              <template v-slot:placeholder>
+              <template #placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
                   <v-progress-circular
                     indeterminate

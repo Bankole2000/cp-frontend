@@ -7,5 +7,8 @@ export default {
   },
   notificationPath(state) {
     return state.env.notificationPath;
-  }
+  },
+  postPath(state) {
+    return state.env.postPath;
+  },
 }

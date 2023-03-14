@@ -25,6 +25,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/axios.js', mode: 'client' },
+    { src: '~/plugins/vue-masonry', ssr: false },
+    { src: '~/plugins/emoji-picker', ssr: false },
     // { src: '~/plugins/socket.client.js', mode: 'client' },
     '~/plugins/common-components.js',
     '~/plugins/common-filters.js',
@@ -123,6 +125,7 @@ export default {
       postPath: process.env.BASE_URL + process.env.POST_PATH,
       ipFindAPIKey: process.env.IP_FIND_API_KEY,
       ipGeoAPIKey: process.env.IP_GEOLOCATION_API_KEY,
+      giphyAPIKey: process.env.GIPHY_API_KEY
     }
   },
 

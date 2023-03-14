@@ -13,7 +13,7 @@
               :tile="false"
               class="mx-auto"
             >
-              <profile-preview-list-item-small :profile="profile" />
+              <ProfilePreviewListItemSmall :profile="profile" />
             </v-skeleton-loader>
           </div>
         </v-list-item-group>

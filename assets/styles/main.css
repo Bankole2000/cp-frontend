@@ -271,10 +271,17 @@ div::-webkit-scrollbar-thumb {
   border-radius: 10px;
   border: transparent;
 } */
-
+*::-webkit-scrollbar-thumb {
+  /* background-color: var(--primary); */
+  background-image: linear-gradient(to right, var(--primary), var(--accent));
+  border-radius: 10px;
+  border: transparent;
+}
 *::-webkit-scrollbar {
   width: 5px;
+  height: 6px;
   color: var(--primary);
+  background-color: var(--accent-light);
 }
 *::-webkit-scrollbar-track {
   background: transparent;

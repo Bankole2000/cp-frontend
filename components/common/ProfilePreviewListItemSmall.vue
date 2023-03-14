@@ -3,7 +3,7 @@
     nuxt
     :to="{
       name: 'profile-username',
-      params: { username: profile.username },
+      params: { username: `@${profile.username}` },
     }"
     dense
   >
@@ -67,9 +67,6 @@
         follow
       </v-btn>
       <v-hover v-else-if="profile.sentRequest" v-slot="{ hover }">
-        <!-- :class="
-                        $vuetify.theme.dark ? 'black--text' : 'secondary--text'
-                      " -->
         <v-btn
           class="text-capitalize rounded-xl"
           outlined
@@ -79,7 +76,7 @@
           :color="hover ? 'error' : ''"
           @click.prevent="cancelFollowRequest(profile)"
         >
-          {{ hover ? 'Cancel Request' : 'Request' }}
+          {{ hover ? 'Cancel Request' : 'Requested' }}
         </v-btn>
       </v-hover>
       <v-hover v-else-if="profile.followedByYou" v-slot="{ hover }">

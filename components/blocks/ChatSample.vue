@@ -5,7 +5,7 @@
       <!-- <v-subheader>Recent chat</v-subheader> -->
       <v-list-item-group v-model="activeItem">
         <div v-for="(item, index) in items" :key="index">
-          <v-list-item class="pl-0">
+          <v-list-item class="pl-0" @click="showChat">
             <v-badge
               bordered
               bottom
@@ -31,6 +31,7 @@
               <v-chip class="ma-0" color="primary" x-small> 22 </v-chip>
             </v-list-item-action>
           </v-list-item>
+          <ConversationModal ref="chat" />
           <v-divider></v-divider>
         </div>
       </v-list-item-group>
@@ -41,9 +42,18 @@
 </template>
 
 <script>
+import ConversationModal from './chat/ConversationModal.vue'
 export default {
+  components: {
+    ConversationModal,
+  },
   data: () => ({
     activeItem: 0,
+    itemsa: [
+      { title: 'Home', icon: 'mdi-home-city' },
+      { title: 'My Account', icon: 'mdi-account' },
+      { title: 'Users', icon: 'mdi-account-group-outline' },
+    ],
     items: [
       {
         active: true,
@@ -119,8 +129,12 @@ export default {
       },
     ],
   }),
+  methods: {
+    showChat(val) {
+      this.$refs.chat.show(val)
+    },
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>

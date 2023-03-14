@@ -7,6 +7,7 @@
       border: 'none',
       zIndex: 8,
       minWidth: $vuetify.breakpoint.smAndDown ? '80vw' : '',
+      zIndex: 7,
     }"
     absolute
     fixed

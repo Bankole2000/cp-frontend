@@ -11,9 +11,10 @@
             filled
             single-line
             :style="{ fontSize: '1.4rem' }"
-            :placeholder="`Search @${profile.username}'s Followers`"
+            :placeholder="`Search ${profile.username}'s followers`"
             append-icon="mdi-send"
           ></v-text-field>
+          <v-divider></v-divider>
         </v-col>
       </v-row>
     </v-container>
@@ -25,6 +26,8 @@
 export default {
   props: ['profile'],
   data: () => ({
+    tab: 0,
+    items: ['Followers', 'Follow Requests'],
     loading: true,
     followers: [],
     total: 0,
@@ -45,6 +48,9 @@ export default {
     } finally {
       this.loading = false
     }
+  },
+  async mounted() {
+    await this.$fetch()
   },
 }
 </script>
