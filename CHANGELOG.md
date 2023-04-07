@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.7](https://github.com/Bankole2000/cp-frontend/compare/v1.1.6...v1.1.7) (2023-04-07)
+
+
+### Features
+
+* **posts:** create posts, quote posts and comments ([744ddf8](https://github.com/Bankole2000/cp-frontend/commits/744ddf86f5383ffc02fab5d346584ff71fe42dae))
+
 ### [1.1.6](https://github.com/Bankole2000/cp-frontend/compare/v1.1.5...v1.1.6) (2023-03-14)
 
 
