@@ -6,8 +6,8 @@
           <v-col cols="12" class="py-2">
             <v-slide-y-transition>
               <v-alert
-                :key="0"
                 v-show="success ? true : false"
+                :key="0"
                 text
                 dense
                 style="border-radius: 15px"
@@ -38,9 +38,9 @@
             /> -->
             <v-hover v-slot="{ hover }">
               <v-card
+                ref="countrySelectTrigger"
                 outlined
                 :disabled="loading"
-                ref="countrySelectTrigger"
                 class="rounded-xl d-flex align-center px-2 py-2"
                 :class="{ 'elevated-light': hover }"
                 :focusable="false"
@@ -73,12 +73,17 @@
               </v-card>
             </v-hover>
           </v-col>
-          <v-col cols="12" md="8" class="py-0">
+          <v-col
+            cols="12"
+            md="8"
+            class="py-0"
+            :class="$vuetify.breakpoint.smAndDown ? 'mt-4' : ''"
+          >
             <v-text-field
+              ref="phoneInput"
               v-model="loginData.phone"
               label="Phone Number"
               type="text"
-              ref="phoneInput"
               filled
               rounded
               single-line
@@ -138,7 +143,7 @@
             </div>
           </v-col>
         </v-row>
-        <countrySelectModal
+        <CountrySelectModal
           ref="countrySelectModal"
           :dialog="showCountrySelectModal"
           :country-code="visitorData ? visitorData.countryCode : null"
@@ -253,5 +258,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

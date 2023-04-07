@@ -35,11 +35,10 @@
                     :following-count="followingCount"
                   />
                 </div>
-                <nuxt-child
-                  :profile="profile"
-                  :socket="socket"
-                  style="margin-bottom: 50vh"
-                />
+                <!-- :profile-socket="profileSocket"
+                :post-socket="postSocket"
+                :sockets-ready="socketsReady" -->
+                <nuxt-child :profile="profile" style="margin-bottom: 50vh" />
               </v-col>
             </v-row>
           </v-container>
@@ -92,13 +91,30 @@ export default {
     MobileProfileActions,
   },
   layout: 'admin',
+  props: {
+    // profileSocket: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // postSocket: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // socketsReady: {
+    //   type: Boolean,
+    //   required: true,
+    //   default: false,
+    // },
+  },
   // scrollToTop: true,
   data() {
     return {
       visible: false,
       bottomNav: 'profile-index',
+      // listenersActive: false,
       showEditProfileModal: false,
-      socket: null,
+      profileSocket: {},
+      // socket: null,
       mainRoutes: [
         {
           title: 'Posts',
@@ -116,22 +132,22 @@ export default {
           activeRoutes: ['profile-index-listings'],
           badgeCount: 999999999,
         },
-        {
-          title: 'Personals',
-          icon: 'mdi-bullhorn-outline',
-          to: 'profile-index-ads',
-          route: '/profile/ads',
-          activeRoutes: ['profile-index-ads'],
-          badgeCount: 999999999,
-        },
-        {
-          title: 'Services',
-          icon: 'mdi-account-hard-hat-outline',
-          to: 'profile-index-services',
-          route: '/profile/services',
-          activeRoutes: ['profile-index-services'],
-          badgeCount: 999999999,
-        },
+        // {
+        //   title: 'Personals',
+        //   icon: 'mdi-bullhorn-outline',
+        //   to: 'profile-index-ads',
+        //   route: '/profile/ads',
+        //   activeRoutes: ['profile-index-ads'],
+        //   badgeCount: 999999999,
+        // },
+        // {
+        //   title: 'Services',
+        //   icon: 'mdi-account-hard-hat-outline',
+        //   to: 'profile-index-services',
+        //   route: '/profile/services',
+        //   activeRoutes: ['profile-index-services'],
+        //   badgeCount: 999999999,
+        // },
         {
           title: 'Followers',
           icon: 'mdi-account-multiple-plus-outline',
@@ -165,11 +181,6 @@ export default {
           badgeCount: 999999999,
         },
       ],
-      // profile: {
-      //   displayName: 'Display name',
-      //   username: 'username',
-      //   avatar: 'https://randomuser.me/api/portraits/women/79.jpg',
-      // },
     }
   },
   computed: {
@@ -185,39 +196,51 @@ export default {
       return Boolean(this.profile)
     },
   },
-  async mounted() {
+  // watch: {
+  //   async socketsReady(newVal) {
+  //     if (newVal) {
+  //       await this.startSocketListeners()
+  //     }
+  //   },
+  // },
+  mounted() {
     this.onElementObserved()
-    this.socket = await this.$nuxtSocket({
-      name: 'profile',
-      reconnection: true,
-      autoconnect: true,
-      path: '/api/v1/profile/socket',
-    })
-    await this.connectUser()
-    this.socket.on('USER_CONNECTED', (data) => {
-      console.log('USER_CONNECTED')
-      console.log({ data })
-    })
+    // this.connectSockets()
+    // if (this.socketsReady) {
+    //   await this.startSocketListeners()
+    // }
   },
   methods: {
-    async connectUser() {
-      if (this.$store.getters['auth/isLoggedIn']) {
-        console.log('Emitting event')
-        await this.socket.emit(
-          'USER_CONNECTED',
-          this.$store.getters['auth/user']
-        )
-      }
-    },
+    // async startSocketListeners() {
+    //   if (this.listenersActive) return
+    //   await this.profileSocket.on('USER_CONNECTED', (data) => {
+    //     console.log('USER_CONNECTED')
+    //     console.log({ data })
+    //   })
+    //   this.listenersActive = true
+    // },
+    // connectSockets() {
+    //   this.profileSocket = this.$nuxtSocket({
+    //     name: 'profile',
+    //     reconnection: true,
+    //     autoconnect: true,
+    //     path: '/api/v1/profile/socket',
+    //   })
+    //   if (this.$store.getters['auth/isLoggedIn']) {
+    //     // console.log('Connecting User Socket')
+    //     this.profileSocket.emit(
+    //       'USER_CONNECTED',
+    //       this.$store.getters['auth/user']
+    //     )
+    //   }
+    // },
     onElementObserved() {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.intersectionRatio > 0) {
-            // this.player.play();
             console.log('Is Intersecting')
             this.visible = true
           } else {
-            // this.player.pause();
             console.log('NOT intersecting')
             this.visible = false
           }

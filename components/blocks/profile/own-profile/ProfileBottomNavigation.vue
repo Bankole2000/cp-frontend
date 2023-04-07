@@ -2,6 +2,7 @@
   <v-bottom-navigation
     v-if="$vuetify.breakpoint.smAndDown"
     :height="!visible ? '115px' : '49px'"
+    style="z-index: 6"
     app
   >
     <template #default>

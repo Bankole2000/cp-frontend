@@ -71,7 +71,7 @@ export default {
       if (uuid) {
         await dispatch('ui/updateMessage', { uuid, ...errorMessage({ text }) }, { root: true })
       } else {
-        const message = errorMessage({ text, timeout: 3000 });
+        const message = errorMessage({ text, timeout: 5000 });
         await dispatch('ui/showMessage', message, { root: true });
       }
       return error
@@ -84,7 +84,7 @@ export default {
           ...errorMessage({ text })
         }, { root: true })
       } else {
-        const message = errorMessage({ text, timeout: 3000 });
+        const message = errorMessage({ text, timeout: 5000 });
         await dispatch('ui/showMessage', message, { root: true });
       }
       return error.response.data
@@ -93,7 +93,7 @@ export default {
     if (uuid) {
       await dispatch('ui/updateMessage', { uuid, ...errorMessage({ text }) }, { root: true })
     } else {
-      const message = errorMessage({ text, timeout: 3000 });
+      const message = errorMessage({ text, timeout: 5000 });
       await dispatch('ui/showMessage', message, { root: true });
     }
     return error
@@ -101,7 +101,7 @@ export default {
   async handleRequestSuccess({ dispatch }, { response, uuid }) {
     await dispatch('ui/updateMessage', {
       uuid,
-      ...successMessage({ text: `${response.message}` })
+      ...successMessage({ text: `${response.message}`, timeout: 5000 })
     }, { root: true })
     return response;
   }

@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   props: ['profile'],
   data() {
@@ -114,7 +114,14 @@ export default {
     }),
   },
   methods: {
+    ...mapActions({
+      showLoginModal: 'ui/showLoginModal',
+    }),
     async follow(profile) {
+      if (!this.$store.getters['auth/user']) {
+        this.showLoginModal({ action: 'follow' })
+        return
+      }
       if (this.loading) return
       this.loading = true
       try {

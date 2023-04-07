@@ -97,7 +97,12 @@
               </v-card>
             </v-hover>
           </v-col>
-          <v-col cols="12" md="8" class="py-0">
+          <v-col
+            cols="12"
+            md="8"
+            class="py-0"
+            :class="{ 'mt-4': $vuetify.breakpoint.smAndDown }"
+          >
             <v-text-field
               v-model="registerData.phone"
               :readonly="loading"
@@ -292,5 +297,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -1,5 +1,11 @@
 <template>
-  <v-card :loading="loading">
+  <v-card :loading="loading" class="rounded-xl">
+    <!-- :style="{
+      transform:
+        moveUpwards && key === '@'
+          ? `translateY(-${63 * (profiles.length - 1)}px)`
+          : '',
+    }" -->
     <v-list>
       <v-skeleton-loader
         :loading="loading"
@@ -163,6 +169,10 @@ export default {
       type: Object,
       default: () => {},
     },
+    moveUpwards: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -214,6 +224,7 @@ export default {
   },
   watch: {
     query: debounce(async function () {
+      console.log('loaded')
       await this.getData()
     }, 100),
   },
@@ -223,6 +234,9 @@ export default {
         console.log({ data })
         this.profiles = data.data.data
         this.loading = false
+        if (this.moveUpwards) {
+          this.$emit('nudge', this.profiles.length)
+        }
       })
       this.postSocket.on('SEARCH_TAGS', (data) => {
         console.log({ data })
@@ -237,13 +251,16 @@ export default {
       if (this.key === '@') {
         this.loading = true
         await this.profileSocket.emit('TAGGABLE_PROFILES', {
-          userId: this.$store.getters['auth/user'].userId,
+          userId: this.$store.getters['auth/user']?.userId,
           q: this.query ? this.query.substring(1) : null,
           page: this.page,
           limit: this.limit,
         })
       } else if (this.key === '#') {
         this.loading = true
+        if (this.moveUpwards) {
+          this.$emit('nudge', 0)
+        }
         await this.postSocket.emit('SEARCH_TAGS', {
           q: this.query ? this.query.substring(1) : null,
           page: this.page,

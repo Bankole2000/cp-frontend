@@ -399,37 +399,6 @@
                           </div>
                         </v-hover>
                       </div>
-                      <!-- <div style="flex: 1">
-          <v-hover v-slot="{ hover }">
-            <div
-              class="d-flex align-center justify-start"
-              style="cursor: pointer"
-              @click="repostPost"
-            >
-              <v-btn
-                icon
-                class="mr-1"
-                small
-                :class="
-                  hover && $vuetify.theme.dark
-                    ? 'bg-success-dk'
-                    : hover && !$vuetify.theme.dark
-                    ? 'bg-success-lt'
-                    : ''
-                "
-                :color="hover || repostedByUser ? 'success' : ''"
-              >
-                <v-icon size="24">mdi-repeat-variant</v-icon>
-              </v-btn>
-              <span
-                v-if="repostCount > 0"
-                class="font-weight-regular"
-                :class="hover || repostedByUser ? 'success--text' : ''"
-                >{{ repostCount | count }}</span
-              >
-            </div>
-          </v-hover>
-        </div> -->
                       <div style="flex: 1">
                         <v-hover v-slot="{ hover }">
                           <div

@@ -6,28 +6,48 @@
       ></v-img
     ></v-list-item-avatar>
     <v-list-item-content>
-      <v-list-item-subtitle>
-        <span
-          class="font-weight-bold"
-          :class="{
-            'secondary--text': !$vuetify.theme.dark,
-            'white--text': $vuetify.theme.dark,
+      <v-list-item-subtitle @click.self="$emit('handle-click')">
+        <nuxt-link
+          :to="{
+            name: 'profile-username',
+            params: { username: `@${post.createdByData.username}` },
           }"
-          >{{ post.createdByData.displayname }}</span
         >
-        <span class="text--secondary font-weight-regular">
+          <span
+            class="font-weight-bold"
+            :class="{
+              'secondary--text': !$vuetify.theme.dark,
+              'white--text': $vuetify.theme.dark,
+            }"
+            >{{ post.createdByData.displayname }}</span
+          >
+        </nuxt-link>
+        <span
+          class="text--secondary font-weight-regular"
+          @click.self="$emit('handle-click')"
+        >
           &bull; {{ $moment(post.created).fromNow() }}</span
         >
       </v-list-item-subtitle>
-      <v-list-item-subtitle class="font-weight-regular">
-        <span
-          style="cursor: pointer"
-          :class="{
-            'secondary--text': !$vuetify.theme.dark,
-            'white--text': $vuetify.theme.dark,
+      <v-list-item-subtitle
+        class="font-weight-regular"
+        @click.self="$emit('handle-click')"
+      >
+        <nuxt-link
+          :to="{
+            name: 'profile-username',
+            params: { username: `@${post.createdByData.username}` },
           }"
-          >@{{ post.createdByData.username }}</span
         >
+          <span
+            style="cursor: pointer"
+            :class="{
+              'secondary--text': !$vuetify.theme.dark,
+              'white--text': $vuetify.theme.dark,
+            }"
+            >@{{ post.createdByData.username }}</span
+          >
+        </nuxt-link>
         <span class="caption">&bull; Sponsored</span>
         <span class="caption">&bull; Location</span>
       </v-list-item-subtitle>
@@ -44,7 +64,13 @@ export default {
   components: {
     HeaderMenu,
   },
-  props: ['post'],
+  props: {
+    post: {
+      type: Object,
+      required: true,
+      default: () => {},
+    },
+  },
 }
 </script>
 

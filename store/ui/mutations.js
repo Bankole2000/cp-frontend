@@ -51,5 +51,13 @@ export default {
       return;
     }
     state.showVerifyDeviceModal = !state.showVerifyDeviceModal;
+  },
+  showLoginModal(state, payload) {
+    state.loginModal.show = payload.show
+    state.loginModal.action = payload.action ? payload.action : ''
+  },
+  showGlobalLoader(state, payload) {
+    state.globalLoader.show = payload.show
+    state.globalLoader.message = payload.message ? payload.message : 'Loading...'
   }
 }

@@ -77,6 +77,7 @@
                     :class="
                       $vuetify.theme.dark ? 'white black--text' : 'secondary'
                     "
+                    @click="follow"
                   >
                     follow
                   </v-btn>
@@ -229,6 +230,11 @@ export default {
         return this.profile._count.following
       }
       return 0
+    },
+  },
+  methods: {
+    follow() {
+      console.log('Follow')
     },
   },
 }

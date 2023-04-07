@@ -4,9 +4,15 @@
       v-model="dialog"
       content-class="rounded-xl elevated-light"
       persistent
+      :fullscreen="$vuetify.breakpoint.width < 400"
+      :scrollable="$vuetify.breakpoint.width < 400"
       max-width="600px"
     >
-      <v-card class="rounded-xl elevated-light">
+      <v-card
+        :tile="$vuetify.breakpoint.width < 400"
+        :class="{ 'rounded-xl': $vuetify.breakpoint.width > 400 }"
+        class="elevated-light"
+      >
         <v-card-title>
           <span class="headline">Create Post</span>
         </v-card-title>
@@ -76,62 +82,6 @@
             <v-card-text></v-card-text>
           </v-window-item>
         </v-window>
-        <!-- <v-container>
-          <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Legal first name*" required></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field
-                label="Legal middle name"
-                hint="example of helper text only on focus"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field
-                label="Legal last name*"
-                hint="example of persistent helper text"
-                persistent-hint
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field label="Email*" required></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                label="Password*"
-                type="password"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select
-                :items="['0-17', '18-29', '30-54', '54+']"
-                label="Age*"
-                required
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-autocomplete
-                :items="[
-                  'Skiing',
-                  'Ice hockey',
-                  'Soccer',
-                  'Basketball',
-                  'Hockey',
-                  'Reading',
-                  'Writing',
-                  'Coding',
-                  'Basejump',
-                ]"
-                label="Interests"
-                multiple
-              ></v-autocomplete>
-            </v-col>
-          </v-row>
-        </v-container> -->
-        <!-- <small>*indicates required field</small> -->
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -153,7 +103,7 @@ export default {
     draggable,
   },
   data: () => ({
-    dialog: true,
+    dialog: false,
     selected: 0,
     step: 1,
     draggableCards: [

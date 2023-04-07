@@ -117,7 +117,10 @@
             </v-card>
           </v-hover>
         </div> -->
-        <CreateButton v-if="isLoggedIn" />
+        <CreateButton
+          v-if="isLoggedIn"
+          @show-create-post-modal="$emit('show-create-post-modal')"
+        />
         <!-- <div class="ml-4 mr-8">
           <v-hover v-slot="{ hover }">
             <v-card

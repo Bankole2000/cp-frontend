@@ -19,4 +19,10 @@ export default {
   toggleMainLeftNav({ commit }, value) {
     commit("toggleMainLeftNav", value);
   },
+  showLoginModal({ commit }, { show = true, action = '' }) {
+    commit("showLoginModal", { show, action });
+  },
+  showGlobalLoader({ commit }, { show = true, action = '' }) {
+    commit("showGlobdalLoader", { show, action });
+  }
 }

@@ -17,32 +17,6 @@
           transition: 'all 0.2s ease-in-out',
         }"
       ></div>
-      <!-- <template v-slot>
-        <div class="d-flex">
-          <v-btn>
-            <span>Community</span>
-            <v-icon>mdi-google-circles-communities</v-icon>
-          </v-btn>
-          <v-btn>
-            <span>Community</span>
-            <v-icon>mdi-google-circles-communities</v-icon>
-          </v-btn>
-          <v-btn>
-            <span>Community</span>
-            <v-icon>mdi-google-circles-communities</v-icon>
-          </v-btn>
-          <v-btn>
-            <span>Community</span>
-            <v-icon>mdi-google-circles-communities</v-icon>
-          </v-btn>
-          <v-btn>
-            <span>Profile</span>
-            <v-avatar size="40" color="white">
-              <img :src="profileImage" />
-            </v-avatar>
-          </v-btn>
-        </div>
-      </template> -->
       <v-btn>
         <span>Community</span>
         <v-icon>mdi-google-circles-communities</v-icon>
@@ -53,7 +27,7 @@
         <v-icon>mdi-home-city-outline</v-icon>
       </v-btn>
 
-      <v-btn>
+      <!-- <v-btn>
         <span>People</span>
         <v-icon>mdi-account-group-outline</v-icon>
       </v-btn>
@@ -61,10 +35,6 @@
       <v-btn>
         <span>Services</span>
         <v-icon>mdi-account-hard-hat-outline</v-icon>
-      </v-btn>
-      <!-- <v-btn>
-        <span>Profile</span>
-        <v-icon>mdi-account-circle-outline</v-icon>
       </v-btn> -->
     </v-bottom-navigation>
   </div>
@@ -79,9 +49,9 @@ export default {
       routes: [
         'index',
         'index-listings',
-        'index-people',
-        'index-services',
-        'profile-index',
+        // 'index-people',
+        // 'index-services',
+        // 'profile-index',
       ],
     }
   },
@@ -99,12 +69,12 @@ export default {
           return 'primary'
         case 1:
           return 'info'
-        case 2:
-          return 'accent'
-        case 3:
-          return 'warning'
-        case 4:
-          return 'success'
+        // case 2:
+        //   return 'accent'
+        // case 3:
+        //   return 'warning'
+        // case 4:
+        //   return 'success'
         default:
           return 'blue-grey'
       }
@@ -119,5 +89,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -12,7 +12,10 @@
               :value="items.indexOf('Followers')"
               style="background-color: transparent"
             >
-              <ProfileFollowersList :profile="profile" :socket="socket" />
+              <ProfileFollowersList
+                :profile="profile"
+                :socket="profileSocket"
+              />
             </v-tab-item>
             <v-tab-item
               :value="items.indexOf('Requests')"
@@ -20,7 +23,7 @@
             >
               <ProfileFollowerRequestsList
                 :profile="profile"
-                :socket="socket"
+                :socket="profileSocket"
               />
             </v-tab-item>
           </v-tabs-items>
@@ -41,7 +44,21 @@ export default {
     ProfileFollowersList,
     ProfileFollowerRequestsList,
   },
-  props: ['profile', 'socket'],
+  props: {
+    profile: {
+      type: Object,
+      required: true,
+    },
+    profileSocket: {
+      type: Object,
+      required: true,
+    },
+    socketsReady: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   data: () => ({
     tab: 0,
     items: ['Followers', 'Requests'],
@@ -105,16 +122,21 @@ export default {
   },
   async mounted() {
     await this.$fetch()
-    this.socket.on('FOLLOWED_YOU', (data) => {
-      console.log('FOLLOWED_YOU')
-      this.followedYou(data)
-    })
-    this.socket.on('UNFOLLOWED_YOU', (data) => {
-      console.log('UNFOLLOWED_YOU')
-      this.unfollowedYou(data)
-    })
+    if (this.socketsReady) {
+      await this.startSocketListeners()
+    }
   },
   methods: {
+    async startSocketListeners() {
+      await this.profileSocket.on('FOLLOWED_YOU', (data) => {
+        console.log('FOLLOWED_YOU')
+        this.followedYou(data)
+      })
+      await this.profileSocket.on('UNFOLLOWED_YOU', (data) => {
+        console.log('UNFOLLOWED_YOU')
+        this.unfollowedYou(data)
+      })
+    },
     async clearSearch(e) {
       console.log({ e, searchTerm: this.searchTerm })
       this.searchTerm = ''

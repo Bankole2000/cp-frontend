@@ -26,7 +26,10 @@
                     :profile="profile"
                   />
                 </div>
-                <nuxt-child :profile="profile" />
+                <!-- :profile-socket="profileSocket"
+                :post-socket="postSocket"
+                :sockets-ready="socketsReady" -->
+                <nuxt-child :profile="profile" style="margin-bottom: 50vh" />
               </v-col>
             </v-row>
           </v-container>
@@ -70,6 +73,21 @@ export default {
     MobileProfileNavigation,
     ProfileHeader,
     ProfileDetails,
+  },
+  props: {
+    // profileSocket: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // postSocket: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // socketsReady: {
+    //   type: Boolean,
+    //   required: true,
+    //   default: false,
+    // },
   },
   async asyncData(context) {
     try {
@@ -124,22 +142,22 @@ export default {
             activeRoutes: ['profile-username-listings'],
             badgeCount: 0,
           },
-          {
-            title: 'Personal Ads',
-            icon: 'mdi-bullhorn-outline',
-            to: 'profile-username-ads',
-            route: `/profile/@${this.profile.username}/ads`,
-            activeRoutes: ['profile-username-ads'],
-            badgeCount: 0,
-          },
-          {
-            title: 'Services',
-            icon: 'mdi-account-hard-hat-outline',
-            to: 'profile-username-services',
-            route: `/profile/@${this.profile.username}/services`,
-            activeRoutes: ['profile-username-services'],
-            badgeCount: 0,
-          },
+          // {
+          //   title: 'Personal Ads',
+          //   icon: 'mdi-bullhorn-outline',
+          //   to: 'profile-username-ads',
+          //   route: `/profile/@${this.profile.username}/ads`,
+          //   activeRoutes: ['profile-username-ads'],
+          //   badgeCount: 0,
+          // },
+          // {
+          //   title: 'Services',
+          //   icon: 'mdi-account-hard-hat-outline',
+          //   to: 'profile-username-services',
+          //   route: `/profile/@${this.profile.username}/services`,
+          //   activeRoutes: ['profile-username-services'],
+          //   badgeCount: 0,
+          // },
           {
             title: 'Followers',
             icon: 'mdi-account-multiple-plus-outline',

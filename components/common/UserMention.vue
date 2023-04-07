@@ -161,29 +161,46 @@ export default {
       type: String,
       required: true,
     },
+    profileSocket: {
+      type: Object,
+      require: true,
+      default: () => {},
+    },
+    socketsReady: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   data() {
     return {
       profile: null,
-      loading: true,
+      loading: false,
       menu: false,
-      socket: null,
+      listenersActive: false,
     }
   },
   fetchOnServer: false,
   async fetch() {
     this.loading = true
+    if (this.profile) {
+      console.log('profile exists')
+      if (this.profile.username === this.username) {
+        this.loading = false
+        return
+      }
+    }
     try {
-      // const url = new URL(
-      //   `${this.$store.getters.profilePath}/u/profile/${this.username}`
-      // )
-      // const result = await this.$axios.$get(url.href)
-      console.log('emtting event GET_PROFILE_PREVIEW')
-      await this.socket.emit('GET_PROFILE_PREVIEW', {
-        userId: this.$store.getters['auth/user']?.userId,
-        username: this.username,
-      })
-      // console.log({ result })
+      console.log({ profileSocket: this.profileSocket })
+      if (this.profileSocket.connected) {
+        console.log('emtting event GET_PROFILE_PREVIEW')
+        const result = await this.profileSocket.emitP('GET_PROFILE_PREVIEW', {
+          userId: this.$store.getters['auth/user']?.userId,
+          username: this.username,
+        })
+        this.profile = result
+        console.log({ result })
+      }
     } catch (error) {
       console.log({ error })
     } finally {
@@ -200,21 +217,7 @@ export default {
       }
     }, 100),
   },
-  async mounted() {
-    this.socket = await this.$nuxtSocket({
-      name: 'profile',
-      // channel: '',
-      reconnection: true,
-      autoconnect: true,
-      // path: `${this.$store.getters.profilePath}/socket`,
-      path: '/api/v1/profile/socket',
-    })
-    this.socket.on('GET_PROFILE_PREVIEW', (data) => {
-      console.log('GET_PROFILE_PREVIEW')
-      console.log({ data })
-      this.profile = data
-    })
-  },
+  methods: {},
 }
 </script>
 

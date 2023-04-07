@@ -17,6 +17,7 @@
           rows="1"
           rounded
           single-line
+          autofocus
           label="caption"
           prepend-inner-icon="mdi-comment"
           placeholder="What's on your mind?"
@@ -93,7 +94,7 @@ export default {
     },
   },
   data: () => ({
-    caption: '',
+    // caption: '',
     userMenu: false,
     emojiMenu: false,
     maxlength: 140,
@@ -102,15 +103,15 @@ export default {
     postSocket: {},
   }),
   computed: {
-    // caption: {
-    //   get() {
-    //     return this.value
-    //   },
-    //   set(val) {
-    //     console.log({ val })
-    //     this.$emit('captionChanged', val)
-    //   },
-    // },
+    caption: {
+      get() {
+        return this.value
+      },
+      set(val) {
+        console.log({ val })
+        this.$emit('caption-changed', val)
+      },
+    },
     lastWord() {
       if (this.caption) {
         const words = this.caption.split(' ')
@@ -131,25 +132,21 @@ export default {
     },
   },
   watch: {
-    caption() {
-      this.$emit('changed', this.caption)
-    },
+    // caption() {
+    //   this.$emit('changed', this.caption)
+    // },
   },
   async mounted() {
     this.profileSocket = await this.$nuxtSocket({
       name: 'profile',
-      // channel: '',
       reconnection: true,
       autoconnect: true,
-      // path: `${this.$store.getters.profilePath}/socket`,
       path: '/api/v1/profile/socket',
     })
     this.postSocket = await this.$nuxtSocket({
       name: 'post',
-      // channel: '',
       reconnection: true,
       autoconnect: true,
-      // path: `${this.$store.getters.profilePath}/socket`,
       path: '/api/v1/post/socket',
     })
   },
@@ -177,7 +174,7 @@ export default {
       console.log({ e })
       const words = this.caption.split(' ')
       words.pop()
-      words.push(e)
+      words.push(`${e} `)
       this.caption = words.join(' ')
       this.$refs.caption.focus()
       console.log({ caption: this.caption })

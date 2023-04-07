@@ -46,21 +46,6 @@
               </div>
               <div class="subheading">@{{ profile.username }}</div>
             </div>
-            <!-- <div class="d-flex align-center mt-4">
-              <div>
-                <span class="font-weight-black">{{
-                  followingCount | count
-                }}</span>
-                <span class="text--secondary">Following</span>
-              </div>
-              <v-spacer></v-spacer>
-              <div>
-                <span class="font-weight-black">{{
-                  followerCount | count
-                }}</span>
-                <span class="text--secondary">Followers</span>
-              </div>
-            </div> -->
           </v-col>
         </v-row>
       </v-img>
@@ -136,20 +121,20 @@ export default {
           activeRoutes: ['dashboard-index-bookings'],
           badgeCount: 6,
         },
-        {
-          title: 'Services',
-          icon: 'mdi-account-box-outline',
-          to: 'dashboard-index-services',
-          activeRoutes: ['dashboard-index-services'],
-          badgeCount: 0,
-        },
-        {
-          title: 'Personal Ads',
-          icon: 'mdi-view-dashboard-outline',
-          to: 'dashboard-index-personals',
-          activeRoutes: ['dashboard-index-personals'],
-          badgeCount: 0,
-        },
+        // {
+        //   title: 'Services',
+        //   icon: 'mdi-account-box-outline',
+        //   to: 'dashboard-index-services',
+        //   activeRoutes: ['dashboard-index-services'],
+        //   badgeCount: 0,
+        // },
+        // {
+        //   title: 'Personal Ads',
+        //   icon: 'mdi-view-dashboard-outline',
+        //   to: 'dashboard-index-personals',
+        //   activeRoutes: ['dashboard-index-personals'],
+        //   badgeCount: 0,
+        // },
       ],
     }
   },

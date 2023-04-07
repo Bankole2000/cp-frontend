@@ -29,8 +29,20 @@
 import ProfilePreviewListItemSmall from './ProfilePreviewListItemSmall.vue'
 export default {
   components: { ProfilePreviewListItemSmall },
+  props: {
+    profileSocket: {
+      type: Object,
+      required: true,
+    },
+    socketsReady: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   data: () => ({
     loading: true,
+    listenersActive: false,
     suggestedProfiles: [
       {
         displayName: 'Jane Doe',
@@ -64,42 +76,18 @@ export default {
       this.loading = false
     }
   },
+  watch: {
+    socketsReady(newVal) {
+      if (newVal) {
+        this.startSocketListeners()
+      }
+    },
+  },
   async mounted() {
     await this.$fetch()
-    await this.connectUser()
-    // this.socket.on('PULSE', (data) => {
-    //   console.log({ data })
-    // })
-    this.socket.on('USER_CONNECTED', (data) => {
-      console.log('USER_CONNECTED')
-      console.log({ data })
-    })
-    this.socket.on('FOLLOWED_YOU', (data) => {
-      console.log('FOLLOWED_YOU')
-      this.followedYou(data)
-    })
-    this.socket.on('UNFOLLOWED_YOU', (data) => {
-      console.log('UNFOLLOWED_YOU')
-      this.unfollowedYou(data)
-    })
-    this.socket.on('YOU_FOLLOWED', (data) => {
-      console.log('YOU_FOLLOWED')
-      this.youFollowed(data)
-    })
-    this.socket.on('YOU_UNFOLLOWED', (data) => {
-      console.log('YOU_UNFOLLOWED')
-      this.youUnfollowed(data)
-    })
-  },
-  async created() {
-    this.socket = await this.$nuxtSocket({
-      name: 'profile',
-      // channel: '',
-      reconnection: true,
-      autoconnect: true,
-      // path: `${this.$store.getters.profilePath}/socket`,
-      path: '/api/v1/profile/socket',
-    })
+    if (this.socketsReady) {
+      this.startSocketListeners()
+    }
   },
   activated() {
     // Call fetch again if last fetch more than 30 sec ago
@@ -108,14 +96,29 @@ export default {
     }
   },
   methods: {
-    async connectUser() {
-      if (this.$store.getters['auth/isLoggedIn']) {
-        console.log('Emitting event')
-        await this.socket.emit(
-          'USER_CONNECTED',
-          this.$store.getters['auth/user']
-        )
-      }
+    startSocketListeners() {
+      if (this.listenersActive) return
+      this.profileSocket.on('USER_CONNECTED', (data) => {
+        console.log('USER_CONNECTED')
+        console.log({ data })
+      })
+      this.profileSocket.on('FOLLOWED_YOU', (data) => {
+        console.log('FOLLOWED_YOU')
+        this.followedYou(data)
+      })
+      this.profileSocket.on('UNFOLLOWED_YOU', (data) => {
+        console.log('UNFOLLOWED_YOU')
+        this.unfollowedYou(data)
+      })
+      this.profileSocket.on('YOU_FOLLOWED', (data) => {
+        console.log('YOU_FOLLOWED')
+        this.youFollowed(data)
+      })
+      this.profileSocket.on('YOU_UNFOLLOWED', (data) => {
+        console.log('YOU_UNFOLLOWED')
+        this.youUnfollowed(data)
+      })
+      this.listenersActive = true
     },
     youFollowed(followData) {
       const index = this.suggestedProfiles.findIndex(

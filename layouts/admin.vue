@@ -1,6 +1,6 @@
 <template>
   <v-app id="sandbox">
-    <MainLeftNav />
+    <MainLeftNav @show-create-post-modal="showCreatePostModal = true" />
     <UserDashboardLeftNav />
 
     <v-app-bar
@@ -37,7 +37,10 @@
                 <v-icon>mdi-overscan</v-icon>
               </v-btn>
               <v-switch v-model="$vuetify.theme.dark" hide-details></v-switch>
-              <NotificationsMenu />
+              <NotificationsMenu
+                :sockets-ready="socketsReady"
+                :socket="notificationSocket"
+              />
               <v-badge
                 bordered
                 color="error"
@@ -85,10 +88,19 @@
       <MultiSnackBars />
       <ChatContactsModal />
     </v-main>
+    <GlobalLoader />
+    <LoginModal />
     <MainRightNav />
-    <CreatePostModal />
+    <CreatePostModal
+      :sockets-ready="socketsReady"
+      :profile-socket="profileSocket"
+      :post-socket="postSocket"
+      :show="showCreatePostModal"
+      @close="showCreatePostModal = false"
+    />
     <MainBottomNav
       v-if="$route.name.startsWith('index') && $vuetify.breakpoint.smAndDown"
+      style="z-index: 6"
     />
   </v-app>
 </template>
@@ -99,8 +111,10 @@ import MainLeftNav from '~/components/shared/MainLeftNav.vue'
 import MainRightNav from '~/components/shared/MainRightNav.vue'
 import UserDashboardLeftNav from '~/components/shared/UserDashboardLeftNav.vue'
 import MainBottomNav from '~/components/shared/MainBottomNav.vue'
-import CreatePostModal from '~/components/modals/CreatePostModal.vue'
+import CreatePostModal from '~/components/modals/CreateNewPostModal.vue'
 import NotificationsMenu from '~/components/shared/NotificationsMenu.vue'
+import LoginModal from '~/components/modals/LoginModal.vue'
+import GlobalLoader from '~/components/modals/GlobalLoader.vue'
 export default {
   name: 'Admin',
   components: {
@@ -111,6 +125,8 @@ export default {
     MainBottomNav,
     CreatePostModal,
     NotificationsMenu,
+    LoginModal,
+    GlobalLoader,
   },
   middleware: 'getUserIfLoggedIn',
   data: () => ({
@@ -130,6 +146,11 @@ export default {
     clipped: false,
     bottomNav: 3,
     showSearch: false,
+    showCreatePostModal: false,
+    profileSocket: {},
+    postSocket: {},
+    socketsReady: false,
+    notificationSocket: {},
   }),
   computed: {
     showLeftNav: {
@@ -146,6 +167,14 @@ export default {
         return this.$store.state.ui.showMainRightNav
       },
       set(v) {
+        if (!this.$store.getters['auth/user']) {
+          this.$store.dispatch(
+            'ui/showLoginModal',
+            { action: 'chat' },
+            { root: true }
+          )
+          return
+        }
         return this.$store.commit('ui/toggleMainRightNav', v)
       },
     },
@@ -164,13 +193,50 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.$store.commit('ui/setMessages', [])
-    // setTimeout(() => {
-    //   this.showSearch = true
-    // }, 1000)
+    await this.connectSockets()
+    await this.connectUser()
+    this.socketsReady = true
   },
   methods: {
+    async connectSockets() {
+      this.profileSocket = await this.$nuxtSocket({
+        name: 'profile',
+        reconnection: true,
+        autoconnect: true,
+        path: '/api/v1/profile/socket',
+      })
+      this.postSocket = await this.$nuxtSocket({
+        name: 'post',
+        reconnection: true,
+        autoconnect: true,
+        path: '/api/v1/post/socket',
+      })
+      this.notificationSocket = await this.$nuxtSocket({
+        name: 'notification',
+        reconnection: true,
+        autoconnect: true,
+        path: '/api/v1/notification/socket',
+      })
+    },
+    async connectUser() {
+      if (this.$store.getters['auth/isLoggedIn']) {
+        console.log('Connecting User Socket')
+        await this.profileSocket.emit(
+          'USER_CONNECTED',
+          this.$store.getters['auth/user']
+        )
+        await this.postSocket.emit(
+          'USER_CONNECTED',
+          this.$store.getters['auth/user']
+        )
+        await this.notificationSocket.emit(
+          'USER_CONNECTED',
+          this.$store.getters['auth/user']
+        )
+      }
+    },
     toggleFullScreen() {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen()

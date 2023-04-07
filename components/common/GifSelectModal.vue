@@ -2,6 +2,7 @@
   <v-dialog
     v-model="dialog"
     scrollable
+    persistent
     :fullscreen="$vuetify.breakpoint.xs"
     width="600"
     content-class="rounded-xl"
@@ -25,6 +26,7 @@
             filled
             dense
             rounded
+            :readonly="loading"
             hide-details
             single-line
             :append-outer-icon="
@@ -50,6 +52,7 @@
                   :input-value="active"
                   active-class="purple white--text"
                   text
+                  :disabled="loading"
                   rounded
                   @click="toggle"
                 >
@@ -100,11 +103,14 @@
       <v-card-actions>
         <v-btn
           :disabled="!selected"
+          :loading="loading"
           rounded
           block
           :class="{
-            'bg-gradient-right-primary-accent white--text': !!selected,
+            'bg-gradient-right-primary-accent white--text':
+              !!selected || !loading,
           }"
+          @click="addGifToPost"
           ><v-icon left>mdi-content-save-outline</v-icon> Add</v-btn
         >
       </v-card-actions>
@@ -113,12 +119,18 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import ClientOnly from 'vue-client-only'
 import { GiphyFetch } from '@giphy/js-fetch-api'
 import GifItem from './GifItem.vue'
 import ObserverButton from './ObserverButton.vue'
 import categories from '@/utils/data/giffyCategories.json'
 import gifs from '@/utils/data/gifs.json'
+import {
+  errorMessage,
+  loadingMessage,
+  // successMessage
+} from '~/utils/messaging'
 export default {
   components: {
     ClientOnly,
@@ -139,6 +151,7 @@ export default {
   data() {
     return {
       gif: null,
+      loading: false,
       limit: 10,
       page: 1,
       next: null,
@@ -157,8 +170,11 @@ export default {
         return this.show
       },
       set(val) {
-        this.selected = null
-        this.$emit('show', val)
+        if (!val) {
+          if (this.loading) return
+          this.selected = null
+          this.$emit('show', val)
+        }
       },
     },
   },
@@ -184,6 +200,12 @@ export default {
     // console.log({ res, data })
   },
   methods: {
+    ...mapActions({
+      // addGifToPost: 'user/posts/addGifToPost',
+      showMessage: 'ui/showMessage',
+      handleRequestSuccess: 'handleRequestSuccess',
+      handleRequestError: 'handleRequestError',
+    }),
     async getGifCategories() {
       try {
         const categories = await this.gif.categories()
@@ -200,6 +222,57 @@ export default {
     cancel() {
       this.$emit('cancel')
     },
+    async addGifToPost() {
+      if (this.loading) return
+      if (!this.selected) {
+        const message = errorMessage({ text: 'Please select a gif first...' })
+        this.showMessage(message)
+        this.loading = false
+        return
+      }
+      this.loading = true
+      const message = loadingMessage({ text: 'Adding Your Gif...' })
+      const uuid = await this.showMessage(message)
+      try {
+        const url = new URL(
+          `${this.$store.getters.postPath}/posts/${this.postId}/media`
+        )
+        const response = await this.$axios.$post(url.href, {
+          type: 'GIF',
+          id: this.selected.id,
+          data: this.selected.images.original,
+        })
+        console.log({ response })
+        if (response.success) {
+          await this.handleRequestSuccess({ response, uuid })
+          this.selected = null
+          this.$emit('saved', response.data)
+        }
+      } catch (error) {
+        console.log({ error })
+        await this.handleRequestError({ error, uuid })
+      } finally {
+        this.loading = false
+      }
+    },
+    // async addGif() {
+    //   if (this.loading) return
+    //   try {
+    //     this.loading = true
+    //     const result = await this.addGifToPost({
+    //       id: this.selected.id,
+    //       postId: this.postId,
+    //       data: this.selected.images.original,
+    //     })
+    //     if (result.success) {
+    //       this.$emit('saved')
+    //     }
+    //   } catch (error) {
+    //     console.log({ error })
+    //   } finally {
+    //     this.loading = false
+    //   }
+    // },
     getGifs() {
       return new Promise((resolve) => {
         const limit = this.limit

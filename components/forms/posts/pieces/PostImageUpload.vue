@@ -42,51 +42,60 @@
             style="
               top: 50%;
               left: 50%;
-              width: 1080px;
-              height: 900px;
+              width: 720px;
+              height: 600px;
               position: relative;
             "
           >
-            <div
-              v-if="!imageSelected"
-              :style="{
-                backgroundColor: $vuetify.theme.dark ? '#1e1e1e' : '#f0efef',
-              }"
-              class="d-flex flex-column align-center justify-center"
-              style="height: 100%; width: 100%; cursor: pointer"
-              @click="croppa.chooseFile()"
-              @dblclick="croppa.chooseFile()"
-            >
-              <div class="d-flex text-center align-center">
-                <v-icon size="80">mdi-camera</v-icon>
-                <v-icon size="80">mdi-image-multiple</v-icon>
-              </div>
-              <h1 class="text-h2 font-weight-bold mt-4">Add a Picture</h1>
-              <h1 class="text-h3 mt-4">
-                {{ $vuetify.breakpoint.smAndDown ? 'Tap' : 'Click' }} to add an
-                image
-              </h1>
-            </div>
             <Croppa
               v-model="croppa"
-              :width="1080"
-              :height="900"
-              placeholder-color="#606060"
+              :width="720"
+              :height="600"
+              placeholder-color="#00000000"
               :placeholder-font-size="24"
               :prevent-white-space="true"
               :show-remove-button="true"
               :show-loading="true"
               :loading-size="50"
-              loading-color="#606060"
+              style="z-index: 3"
+              loading-color="#00000000"
               canvas-color="transparent"
-              :quality="2"
+              :quality="1"
               @dblclick="croppa.chooseFile()"
               @init="handleCroppaInit"
             >
+              <div
+                v-if="!imageSelected"
+                :style="{
+                  backgroundColor: $vuetify.theme.dark ? '#1e1e1e' : '#f0efef',
+                }"
+                class="d-flex flex-column align-center justify-center"
+                style="
+                  height: 100%;
+                  width: 100%;
+                  cursor: pointer;
+                  position: absolute;
+                  top: 0;
+                  z-index: -1;
+                "
+                @click="croppa.chooseFile()"
+                @dblclick="croppa.chooseFile()"
+              >
+                <div class="d-flex text-center align-center">
+                  <v-icon size="80">mdi-camera</v-icon>
+                  <v-icon size="80">mdi-image-multiple</v-icon>
+                </div>
+                <h1 class="text-h2 font-weight-bold mt-4">Add a Picture</h1>
+                <h1 class="text-h3 mt-4">
+                  {{ $vuetify.breakpoint.smAndDown ? 'Tap' : 'Click' }} Or Drag
+                  n Drop
+                </h1>
+              </div>
             </Croppa>
+
             <div
               class="d-flex"
-              style="position: absolute; top: 0; z-index: 1; width: 100%"
+              style="position: absolute; top: 0; z-index: 4; width: 100%"
             >
               <v-spacer></v-spacer>
               <v-tooltip top>
@@ -94,9 +103,10 @@
                   <v-btn
                     :style="{ transform: `scale(${1 / scale})` }"
                     icon
+                    :disabled="loading"
                     :dark="$vuetify.theme.dark"
                     v-bind="attrs"
-                    class="ma-16"
+                    class="my-4 mr-8"
                     v-on="on"
                     @click.stop="cancel"
                   >
@@ -116,8 +126,8 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-btn
-                :disabled="!imageSelected"
                 icon
+                :disabled="loading || !imageSelected"
                 color="primary"
                 dark
                 v-bind="attrs"
@@ -131,10 +141,10 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-btn
-                :disabled="!imageSelected"
                 icon
                 color="primary"
                 dark
+                :disabled="loading || !imageSelected"
                 class="mx-2"
                 v-bind="attrs"
                 @click="croppa.rotate()"
@@ -147,10 +157,10 @@
           <v-tooltip top>
             <template #activator="{ on, attrs }">
               <v-btn
-                :disabled="!imageSelected"
                 icon
                 color="error"
                 dark
+                :disabled="loading || !imageSelected"
                 v-bind="attrs"
                 @click="croppa.remove()"
                 v-on="on"
@@ -163,6 +173,7 @@
           <v-btn
             text
             rounded-lg
+            :disabled="loading || !imageSelected"
             color="error"
             class="pr-4"
             @click.stop="cancel"
@@ -175,14 +186,14 @@
             <v-btn
               block
               style="transition: all 0.3s ease-in-out"
-              nuxt
+              depressed
               rounded-lg
               class="white--text my-0 pr-4"
-              :class="
-                hover
-                  ? 'bg-gradient-right-primary-error elevated'
-                  : 'bg-gradient-right-primary-accent elevated-light'
-              "
+              :class="{
+                'bg-gradient-right-primary-accent white--text':
+                  !!imageSelected && !loading,
+                'elevated-light': hover,
+              }"
               :loading="loading"
               :disabled="loading || !imageSelected"
               @click="saveImage"
@@ -198,6 +209,12 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import {
+  loadingMessage,
+  // errorMessage,
+  // successMessage
+} from '~/utils/messaging'
 export default {
   props: {
     postId: {
@@ -222,7 +239,7 @@ export default {
       return this.width ? (this.width / 6) * 5 : 350
     },
     scale() {
-      return this.width / 1080
+      return this.width / 720
     },
     imageSelected() {
       if (this.croppa.hasImage) {
@@ -242,37 +259,95 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      // uploadImage: 'user/posts/addImageToPost',
+      showMessage: 'ui/showMessage',
+      handleRequestSuccess: 'handleRequestSuccess',
+      handleRequestError: 'handleRequestError',
+    }),
+    async uploadImage(data) {
+      const message = loadingMessage({
+        text: 'Uploading Your Image - please wait...',
+      })
+      const uuid = await this.showMessage(message)
+      try {
+        const url = new URL(
+          `${this.$store.getters.postPath}/posts/${this.postId}/media`
+        )
+        const response = await this.$axios.$post(url.href, data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        console.log({ response })
+        if (response.success) {
+          await this.handleRequestSuccess({ response, uuid })
+          await this.croppa.remove()
+          this.$emit('image-saved', response.data)
+        }
+        return response
+      } catch (error) {
+        console.log({ error })
+        await this.handleRequestError({ error, uuid })
+        return null
+      }
+    },
     blobToFile(blob, fileName) {
       blob.lastModifiedDate = new Date()
       blob.name = `${fileName}.${blob.type.split('/')[1]}`
       return blob
     },
-    saveImage() {
+    async saveImage() {
+      if (this.loading) return
+      this.loading = true
       console.log({ croppa: this.croppa })
-      this.croppa.getChosenFile()
-      this.croppa.generateBlob((blob) => {
-        console.log({ blob })
+      try {
+        const blob = await this.croppa.promisedBlob()
         const file = this.blobToFile(blob, 'postImage')
         const formData = new FormData()
-        console.log({ file })
         formData.append('media', file, file.name)
         formData.append('type', 'IMAGE')
-        const url = `${this.$store.getters.postPath}/posts/${this.postId}/media`
-        this.$axios
-          .$post(url, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then((res) => {
-            console.log({ res })
-            this.$emit('close', false)
-            this.$emit('imageSaved', res)
-          })
-          .catch((err) => {
-            console.log({ err })
-          })
-      })
+        // const url = new URL(
+        //   `${this.$store.getters.postPath}/posts/${this.postId}/media`
+        // )
+        const result = await this.uploadImage(formData)
+        console.log({ result })
+        // if (result?.success) {
+        //   this.croppa.remove()
+        //   this.$emit('cancel')
+        // }
+      } catch (error) {
+        console.log({ error })
+      } finally {
+        this.loading = false
+      }
+
+      // this.croppa.generateBlob((blob) => {
+      //   console.log({ blob })
+      //   const file = this.blobToFile(blob, 'postImage')
+      //   const formData = new FormData()
+      //   console.log({ file })
+      //   formData.append('media', file, file.name)
+      //   formData.append('type', 'IMAGE')
+      //   const url = `${this.$store.getters.postPath}/posts/${this.postId}/media`
+      //   this.$axios
+      //     .$post(url, formData, {
+      //       headers: {
+      //         'Content-Type': 'multipart/form-data',
+      //       },
+      //     })
+      //     .then((res) => {
+      //       console.log({ res })
+      //       this.$emit('close', false)
+      //       this.$emit('imageSaved', res)
+      //     })
+      //     .catch((err) => {
+      //       console.log({ err })
+      //     })
+      //     .finally(() => {
+      //       this.loading = false
+      //     })
+      // })
     },
     cancel() {
       if (this.imageSelected) {

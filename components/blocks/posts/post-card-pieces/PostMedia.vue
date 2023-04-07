@@ -37,7 +37,11 @@
         </div>
       </div>
     </v-overlay>
-    <PostMediaCarousel :media="post.postMedia" />
+    <PostMediaCarousel
+      :media="post.postMedia"
+      @image-clicked="$emit('image-clicked')"
+      @media-changed="mediaChanged"
+    />
   </div>
 </template>
 
@@ -54,10 +58,21 @@ export default {
     }
   },
   mounted() {
-    if (!this.post) this.contentWarning = false
-    if (!this.post.moderation) this.contentWarning = false
-    if (this.post.moderation.contentWarning)
-      this.contentWarning = this.post.moderation.contentWarning
+    if (!this.post) {
+      this.contentWarning = false
+      return
+    }
+    if (!this.post.moderation) {
+      this.contentWarning = false
+      return
+    }
+    this.contentWarning = this.post.moderation.contentWarning
+  },
+  methods: {
+    mediaChanged(e) {
+      console.log({ e })
+      this.$emit('media-changed', e)
+    },
   },
 }
 </script>

@@ -9,7 +9,7 @@
       </v-img>
     </div>
     <div style="flex: 4" class="flex-grow pl-4">
-      <p class="caption mb-0">
+      <p class="caption mb-0" style="font-size: 14px">
         {{ post.caption }}
       </p>
     </div>

@@ -1,6 +1,10 @@
 <template>
   <v-hover v-slot="{ hover }">
-    <div class="d-flex align-center justify-start" style="cursor: pointer">
+    <div
+      class="d-flex align-center justify-start"
+      style="cursor: pointer"
+      @click="addComment"
+    >
       <v-btn
         icon
         class="mr-1"
@@ -16,15 +20,35 @@
       >
         <v-icon size="24">mdi-chat-outline</v-icon>
       </v-btn>
-      <span class="font-weight-regular" :class="hover ? 'primary--text' : ''">{{
-        999999 | count
-      }}</span>
+      <span
+        v-if="!!commentCount"
+        class="font-weight-regular"
+        :class="hover ? 'primary--text' : ''"
+        >{{ commentCount | count }}</span
+      >
     </div>
   </v-hover>
 </template>
 
 <script>
-export default {}
+import { mapActions } from 'vuex'
+export default {
+  props: {
+    commentCount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+  },
+  methods: {
+    ...mapActions({
+      showLoginModal: 'ui/showLoginModal',
+    }),
+    addComment() {
+      this.$emit('show-comments')
+    },
+  },
+}
 </script>
 
 <style></style>

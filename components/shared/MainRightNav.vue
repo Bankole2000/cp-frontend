@@ -9,6 +9,7 @@
       backgroundColor: $vuetify.theme.dark ? '#1e1e1e' : '#ffffff',
       minHeight: '100%',
       border: 'none',
+      zIndex: 7,
       minWidth: $vuetify.breakpoint.smAndDown ? '100vw' : '360px',
     }"
   >

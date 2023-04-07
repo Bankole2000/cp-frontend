@@ -1,8 +1,9 @@
 <template>
   <v-menu
-    v-model="menu"
+    v-model="showNotifications"
     :max-height="$vuetify.breakpoint.height / 1.2"
     bottom
+    :disabled="!$store.getters['auth/user']"
     :min-width="$vuetify.breakpoint.xs ? '90vw' : 350"
     :max-width="$vuetify.breakpoint.xs ? '90vw' : 400"
     left
@@ -12,7 +13,13 @@
     transition="slide-x-transition"
   >
     <template #activator="{ on, attrs }">
-      <v-btn icon v-bind="attrs" class="mx-2" v-on="on">
+      <v-btn
+        icon
+        v-bind="attrs"
+        class="mx-2"
+        @click="showNotifications = !showNotifications"
+        v-on="on"
+      >
         <v-badge
           bordered
           color="error"
@@ -444,11 +451,21 @@ import NotificationItem from '../blocks/NotificationItem.vue'
 import { infoMessage } from '@/utils/messaging'
 export default {
   components: { NotificationItem },
+  props: {
+    socket: {
+      type: Object,
+      required: true,
+    },
+    socketsReady: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   data() {
     return {
       loading: false,
       menu: false,
-      socket: null,
       total: 0,
       notifications: [],
       componentKey: 0,
@@ -457,6 +474,10 @@ export default {
   async fetch() {
     try {
       this.loading = true
+      if (!this.$store.getters['auth/user']) {
+        this.loading = false
+        return
+      }
       let res
       if (this.notifications.length) {
         res = await this.$axios.$get(
@@ -490,6 +511,23 @@ export default {
       }
       return 0
     },
+    showNotifications: {
+      get() {
+        return this.menu
+      },
+      set(val) {
+        console.log({ val, loggedIn: !!this.$store.getters['auth/user'] })
+        if (!this.$store.getters['auth/user'] && val) {
+          this.$store.dispatch(
+            'ui/showLoginModal',
+            { action: 'notification' },
+            { root: true }
+          )
+        } else {
+          this.menu = val
+        }
+      },
+    },
   },
   watch: {
     async menu(newVal, old) {
@@ -509,49 +547,43 @@ export default {
   fetchOnServer: false,
   async mounted() {
     await this.$fetch()
-    this.socket = await this.$nuxtSocket({
-      name: 'notification',
-      reconnection: true,
-      autoconnect: true,
-      // path: `${this.$store.getters.profilePath}/socket`,
-      path: '/api/v1/notification/socket',
-    })
-    await this.connectUser()
-    this.socket.on('USER_CONNECTED', (data) => {
-      console.log('USER_CONNECTED')
-      console.log({ data })
-    })
-    this.socket.on('NEW_NOTIFICATION', async (data) => {
-      console.log('NEW_NOTIFICATION')
-      await this.showMessage(data.data.notification)
-      this.notifications.unshift(data.data)
-      console.log({ data })
-    })
-    this.socket.on('ALL_NOTIFICATIONS_SEEN', (data) => {
-      console.log('ALL_NOTIFICATIONS_SEEN')
-      console.log({ data })
-      this.notifications.forEach((x) => {
-        x.seen = true
+    if (this.socketsReady) {
+      this.socket.on('USER_CONNECTED', (data) => {
+        console.log('USER_CONNECTED')
+        console.log({ data })
       })
-    })
-    this.socket.on('ALL_NOTIFICATIONS_READ', (data) => {
-      console.log('ALL_NOTIFICATIONS_READ')
-      console.log({ data })
-      this.notifications.forEach((x) => {
-        x.seen = true
-        x.read = true
+      this.socket.on('NEW_NOTIFICATION', async (data) => {
+        console.log('NEW_NOTIFICATION')
+        await this.showMessage(data.data.notification)
+        this.notifications.unshift(data.data)
+        console.log({ data })
       })
-    })
-    this.socket.on('NOTIFICATION_READ', (data) => {
-      console.log('NOTIFICATION_READ')
-      console.log({ data })
-      this.notifications.forEach((x) => {
-        if (x.notificationId === data.notificationId) {
-          x.read = true
+      this.socket.on('ALL_NOTIFICATIONS_SEEN', (data) => {
+        console.log('ALL_NOTIFICATIONS_SEEN')
+        console.log({ data })
+        this.notifications.forEach((x) => {
           x.seen = true
-        }
+        })
       })
-    })
+      this.socket.on('ALL_NOTIFICATIONS_READ', (data) => {
+        console.log('ALL_NOTIFICATIONS_READ')
+        console.log({ data })
+        this.notifications.forEach((x) => {
+          x.seen = true
+          x.read = true
+        })
+      })
+      this.socket.on('NOTIFICATION_READ', (data) => {
+        console.log('NOTIFICATION_READ')
+        console.log({ data })
+        this.notifications.forEach((x) => {
+          if (x.notificationId === data.notificationId) {
+            x.read = true
+            x.seen = true
+          }
+        })
+      })
+    }
   },
   // async created() {
 
