@@ -8,5 +8,13 @@ export default () => ({
     show: false,
     clipped: true,
     miniVariant: false,
+  },
+  loginModal: {
+    show: false,
+    action: '',
+  },
+  globalLoader: {
+    show: true,
+    message: 'Loading...',
   }
 })

@@ -6,6 +6,7 @@
       minHeight: '100%',
       border: 'none',
       minWidth: $vuetify.breakpoint.smAndDown ? '80vw' : '',
+      zIndex: 7,
     }"
     class="elevated-light"
     app
@@ -116,7 +117,10 @@
             </v-card>
           </v-hover>
         </div> -->
-        <CreateButton v-if="isLoggedIn" />
+        <CreateButton
+          v-if="isLoggedIn"
+          @show-create-post-modal="$emit('show-create-post-modal')"
+        />
         <!-- <div class="ml-4 mr-8">
           <v-hover v-slot="{ hover }">
             <v-card
@@ -194,12 +198,13 @@ export default {
       {
         title: 'Dashboard',
         icon: 'mdi-view-dashboard-outline',
-        to: 'dashboard',
+        to: 'dashboard-index',
         activeRoutes: [
           'dashboard',
           'dashboard-index',
           'dashboard-index-listings',
-          'dashboard-index-people',
+          'dashboard-index-personals',
+          'dashboard-index-posts',
           'dashboard-index-services',
         ],
         badgeCount: 0,

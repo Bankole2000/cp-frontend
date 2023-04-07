@@ -4,16 +4,22 @@
       v-model="dialog"
       content-class="rounded-xl elevated-light"
       persistent
+      :fullscreen="$vuetify.breakpoint.width < 400"
+      :scrollable="$vuetify.breakpoint.width < 400"
       max-width="600px"
     >
-      <v-card class="rounded-xl elevated-light">
+      <v-card
+        :tile="$vuetify.breakpoint.width < 400"
+        :class="{ 'rounded-xl': $vuetify.breakpoint.width > 400 }"
+        class="elevated-light"
+      >
         <v-card-title>
           <span class="headline">Create Post</span>
         </v-card-title>
         <v-divider></v-divider>
         <v-window v-model="step">
           <v-window-item :value="1">
-            <v-card-text>
+            <v-card-text style="overflow-x: scroll">
               <v-item-group v-model="selected" mandatory>
                 <v-container>
                   <v-row align="center">
@@ -40,18 +46,18 @@
                               :color="active ? 'primary' : ''"
                               class="d-flex align-center rounded-lg"
                               :class="{
-                                'ml-0 mr-2': n === 0,
-                                'mx-2': n !== 0,
+                                'ml-0 mr-1': n === 0,
+                                'mx-1': n !== 0,
                                 'elevated-light': hover || active,
                               }"
                               flat
                               dark
-                              height="100"
+                              height="60"
                               style="
                                 cursor: move;
                                 transition: all 0.2s ease-in-out;
                               "
-                              width="100"
+                              width="50"
                               @click="toggle"
                             >
                               <v-scroll-y-transition>
@@ -76,62 +82,6 @@
             <v-card-text></v-card-text>
           </v-window-item>
         </v-window>
-        <!-- <v-container>
-          <v-row>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field label="Legal first name*" required></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field
-                label="Legal middle name"
-                hint="example of helper text only on focus"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6" md="4">
-              <v-text-field
-                label="Legal last name*"
-                hint="example of persistent helper text"
-                persistent-hint
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field label="Email*" required></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-text-field
-                label="Password*"
-                type="password"
-                required
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-select
-                :items="['0-17', '18-29', '30-54', '54+']"
-                label="Age*"
-                required
-              ></v-select>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <v-autocomplete
-                :items="[
-                  'Skiing',
-                  'Ice hockey',
-                  'Soccer',
-                  'Basketball',
-                  'Hockey',
-                  'Reading',
-                  'Writing',
-                  'Coding',
-                  'Basejump',
-                ]"
-                label="Interests"
-                multiple
-              ></v-autocomplete>
-            </v-col>
-          </v-row>
-        </v-container> -->
-        <!-- <small>*indicates required field</small> -->
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -153,7 +103,7 @@ export default {
     draggable,
   },
   data: () => ({
-    dialog: true,
+    dialog: false,
     selected: 0,
     step: 1,
     draggableCards: [
@@ -171,6 +121,39 @@ export default {
       },
       {
         title: 'Five',
+      },
+      {
+        title: 'Six',
+      },
+      {
+        title: 'Seven',
+      },
+      {
+        title: 'Eight',
+      },
+      {
+        title: 'Nine',
+      },
+      {
+        title: 'Ten',
+      },
+      {
+        title: 'Eleven',
+      },
+      {
+        title: 'Twelve',
+      },
+      {
+        title: 'Thirteen',
+      },
+      {
+        title: 'Fourteen',
+      },
+      {
+        title: 'Fifteen',
+      },
+      {
+        title: 'Sixteen',
       },
     ],
   }),

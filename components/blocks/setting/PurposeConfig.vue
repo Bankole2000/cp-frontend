@@ -76,7 +76,7 @@
                 <span>Refresh</span>
               </v-tooltip>
             </v-tab>
-            <v-tab> {{ purposeData.id ? 'Edit' : 'Add' }} Subgroup </v-tab>
+            <v-tab> {{ subgroupData.id ? 'Edit' : 'Add' }} Subgroup </v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab" class="mt-4">
             <v-tab-item>

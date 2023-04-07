@@ -6,58 +6,15 @@
       <v-list two-line class="py-0">
         <v-list-item-group>
           <div v-for="(profile, i) in suggestedProfiles" :key="i">
-            <v-list-item dense>
-              <v-list-item-avatar
-                size="40"
-                class="mr-2"
-                :class="{ 'mt-0': i === 0 }"
-              >
-                <v-img :src="profile.avatar"></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <div class="d-flex align-center">
-                    <span class="body-2 text-truncate" style="max-width: 160px">
-                      {{ profile.displayName }}
-                    </span>
-                    <v-icon small color="primary"
-                      >mdi-checkbox-marked-circle</v-icon
-                    >
-                  </div>
-                </v-list-item-title>
-                <v-list-item-subtitle class="font-weight-light">
-                  <div class="d-flex align-center">
-                    <span
-                      class="d-inline-block text-truncate"
-                      style="max-width: 100px"
-                    >
-                      @{{ profile.username }}
-                    </span>
-                    <v-chip label x-small class="bg-secondary-lt px-1 ml-2">
-                      <span class="text--secondary">Follows you</span>
-                    </v-chip>
-                  </div>
-                </v-list-item-subtitle>
-                <v-list-item-subtitle v-if="i === 0">
-                  <div class="d-flex align-center mt-0">
-                    <v-icon x-small class="mr-1">mdi-finance</v-icon>
-                    <span class="text--disabled caption">Promoted</span>
-                  </div>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-action :class="{ 'mt-n1': i === 0 }">
-                <v-btn
-                  class="text-capitalize rounded-xl"
-                  depressed
-                  small
-                  :class="
-                    $vuetify.theme.dark ? 'white black--text' : 'secondary'
-                  "
-                >
-                  follow
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
+            <v-skeleton-loader
+              :boilerplate="false"
+              :loading="loading"
+              type="list-item-avatar-two-line"
+              :tile="false"
+              class="mx-auto"
+            >
+              <ProfilePreviewListItemSmall :profile="profile" />
+            </v-skeleton-loader>
           </div>
         </v-list-item-group>
       </v-list>
@@ -69,8 +26,23 @@
 </template>
 
 <script>
+import ProfilePreviewListItemSmall from './ProfilePreviewListItemSmall.vue'
 export default {
+  components: { ProfilePreviewListItemSmall },
+  props: {
+    profileSocket: {
+      type: Object,
+      required: true,
+    },
+    socketsReady: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
   data: () => ({
+    loading: true,
+    listenersActive: false,
     suggestedProfiles: [
       {
         displayName: 'Jane Doe',
@@ -89,8 +61,91 @@ export default {
       },
     ],
   }),
+  fetchOnServer: false,
+  async fetch() {
+    try {
+      this.loading = true
+      const { data } = await this.$axios.$get(
+        `${this.$store.getters.profilePath}/u/suggested`
+      )
+      console.log({ data, context: this.$nuxt.context })
+      this.suggestedProfiles = data
+    } catch (error) {
+      console.log({ error })
+    } finally {
+      this.loading = false
+    }
+  },
+  watch: {
+    socketsReady(newVal) {
+      if (newVal) {
+        this.startSocketListeners()
+      }
+    },
+  },
+  async mounted() {
+    await this.$fetch()
+    if (this.socketsReady) {
+      this.startSocketListeners()
+    }
+  },
+  activated() {
+    // Call fetch again if last fetch more than 30 sec ago
+    if (this.$fetchState.timestamp <= Date.now() - 30000) {
+      this.$fetch()
+    }
+  },
+  methods: {
+    startSocketListeners() {
+      if (this.listenersActive) return
+      this.profileSocket.on('USER_CONNECTED', (data) => {
+        console.log('USER_CONNECTED')
+        console.log({ data })
+      })
+      this.profileSocket.on('FOLLOWED_YOU', (data) => {
+        console.log('FOLLOWED_YOU')
+        this.followedYou(data)
+      })
+      this.profileSocket.on('UNFOLLOWED_YOU', (data) => {
+        console.log('UNFOLLOWED_YOU')
+        this.unfollowedYou(data)
+      })
+      this.profileSocket.on('YOU_FOLLOWED', (data) => {
+        console.log('YOU_FOLLOWED')
+        this.youFollowed(data)
+      })
+      this.profileSocket.on('YOU_UNFOLLOWED', (data) => {
+        console.log('YOU_UNFOLLOWED')
+        this.youUnfollowed(data)
+      })
+      this.listenersActive = true
+    },
+    youFollowed(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followingId
+      )
+      this.suggestedProfiles[index].followedByYou = true
+    },
+    youUnfollowed(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followingId
+      )
+      this.suggestedProfiles[index].followedByYou = false
+    },
+    followedYou(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followerId
+      )
+      this.suggestedProfiles[index].followsYou = true
+    },
+    unfollowedYou(followData) {
+      const index = this.suggestedProfiles.findIndex(
+        (x) => x.userId === followData.followerId
+      )
+      this.suggestedProfiles[index].followsYou = false
+    },
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>

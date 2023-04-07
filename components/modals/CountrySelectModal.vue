@@ -2,14 +2,18 @@
   <div class="country-select-modal">
     <v-dialog
       :value="dialog"
-      content-class="rounded-xl elevated-light"
+      :content-class="
+        !$vuetify.breakpoint.smAndDown ? 'rounded-xl elevated-light' : ''
+      "
       persistent
       :fullscreen="$vuetify.breakpoint.smAndDown"
       :width="$vuetify.breakpoint.smAndDown ? '100vw' : '400px'"
       scrollable
     >
       <v-card
-        class="pa-0 rounded-xl elevated-light"
+        class="pa-0 elevated-light"
+        :tile="$vuetify.breakpoint.smAndDown"
+        :class="{ 'rounded-xl': !$vuetify.breakpoint.smAndDown }"
         :width="$vuetify.breakpoint.smAndDown ? '100vw' : '400px'"
         :height="$vuetify.breakpoint.smAndDown ? '100vh' : '450px'"
       >
@@ -272,5 +276,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

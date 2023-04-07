@@ -12,17 +12,21 @@
             >{{ message.icon }}</v-icon
           >
           <!-- v-if="message.avatar" -->
-          <v-avatar size="35" class="mr-2">
+          <v-avatar v-if="message.avatar" size="35" class="mr-2">
             <img
-              src="https://randomuser.me/api/portraits/women/75.jpg"
-              alt="John"
+              :src="
+                message.avatar
+                  ? message.avatar
+                  : 'https://randomuser.me/api/portraits/women/75.jpg'
+              "
             />
           </v-avatar>
           <p class="my-0 py-0">
             <strong v-if="message.type" class="text-capitalize">
               {{ message.type }}:</strong
             >
-            <span>{{ message.text }}</span>
+            <!-- {{ message.text }} -->
+            <span v-html="message.text"> </span>
           </p>
         </div>
         <v-progress-linear
@@ -39,7 +43,7 @@
           :timeout="message.timeout"
         />
       </template>
-      <template #action="{ close, message }">
+      <template v-if="!$vuetify.breakpoint.xs" #action="{ close, message }">
         <v-progress-circular
           v-if="message.loading"
           width="2"
@@ -57,10 +61,22 @@
         >
         <v-btn
           v-if="message.action"
+          class="text-capitalize"
           text
           @click="takeAction(message.action, close)"
           >{{ message.action.text }}</v-btn
         >
+        <v-btn
+          v-if="message.action || (message.loading && message.timeout == -1)"
+          small
+          icon
+          color="white"
+          @click="close()"
+        >
+          <v-icon small>mdi-window-close</v-icon></v-btn
+        >
+      </template>
+      <template v-else #action="{ close, message }">
         <v-btn
           v-if="message.action || (message.loading && message.timeout == -1)"
           small
@@ -129,5 +145,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

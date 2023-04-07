@@ -1,0 +1,41 @@
+name: Deploy Staging
+on: workflow_dispatch
+jobs:
+  first-job: # this can be any name
+    runs-on: ubuntu-latest
+    # specifies environment where job will be run
+    steps:
+      - name: Pring greeting
+        run: echo "Hello World!"
+      - name: Print goodbye
+        run: echo "Job Done - Goodbye"
+      - name: Print multiline
+        run: |
+          echo "First output"
+          echo "Second line output"
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with: 
+          node-version: 16
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Build project
+        run: npm run build
+      - name: Deploy
+        run: echo "Deploying..."
+  deploy:
+    needs: [first-job, another-job] # this job depends on the other job begin succesful
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+      - name: Build project
+        run: npm run build
+      - name: Deploy
+        run: echo "Deploying..."

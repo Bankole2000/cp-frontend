@@ -10,5 +10,14 @@ export default {
   },
   showMainRightNav(state) {
     return state.showMainRightNav;
+  },
+  showLoginModal(state) {
+    return state.loginModal.show
+  },
+  loginModalAction(state) {
+    return state.loginModal.action
+  },
+  showGlobalLoader(state) {
+    return state.globalLoader.show
   }
 }

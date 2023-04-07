@@ -42,6 +42,28 @@
         </v-hover>
       </template>
       <v-list>
+        <v-list-item>
+          <v-hover v-slot="{ hover }">
+            <v-card
+              block
+              flat
+              class="px-4 py-2 my-2 rounded-xl d-flex align-center"
+              :class="{
+                'elevated-light': hover,
+                'bg-primary-lt': true,
+              }"
+              width="180"
+              style="text-align: left; transition: all 0.3s ease-in-out"
+              :style="{
+                backgroundColor: $vuetify.theme.dark ? '#121212' : '#f0efef',
+              }"
+              @click="$emit('show-create-post-modal')"
+            >
+              <v-icon left>mdi-post-outline</v-icon>
+              <p class="mb-0">Post</p>
+            </v-card>
+          </v-hover>
+        </v-list-item>
         <v-list-item v-for="(item, index) in links" :key="index">
           <v-hover v-slot="{ hover }">
             <nuxt-link :to="{ name: item.route }">
@@ -80,11 +102,11 @@ export default {
     return {
       menu: false,
       links: [
-        {
-          name: 'Post',
-          icon: 'mdi-post-outline',
-          route: 'create-post',
-        },
+        // {
+        //   name: 'Post',
+        //   icon: 'mdi-post-outline',
+        //   route: 'create-post',
+        // },
         {
           name: 'Listing',
           icon: 'mdi-home-account',
@@ -112,5 +134,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -4,7 +4,7 @@
       <v-card
         flat
         class="py-3 mb-4 d-flex pl-6 align-center"
-        :to="{ name: to }"
+        :to="{ name: to, params }"
         nuxt
         :class="{
           'elevated-light bg-gradient-right-primary-accent white--text':
@@ -14,6 +14,7 @@
         :style="{
           backgroundColor: $vuetify.theme.dark ? '#121212' : '#f0efef',
         }"
+        @click="$emit('click')"
       >
         <div class="d-flex align-center">
           <v-icon :color="hover || isActive ? 'white' : ''" left>{{
@@ -26,7 +27,7 @@
           v-if="badgeCount > 0"
           :class="{ 'elevated-light': hover }"
           small
-          class="mr-4"
+          class="mr-4 px-2"
           color="error darken-1"
         >
           {{ badgeCount | count }}
@@ -67,6 +68,10 @@ export default {
       type: Number,
       default: 0,
     },
+    params: {
+      type: Object,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -84,5 +89,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

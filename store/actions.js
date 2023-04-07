@@ -1,3 +1,4 @@
+import { /* loadingMessage */ errorMessage, successMessage } from "~/utils/messaging";
 export default {
   async nuxtServerInit({ commit, dispatch, rootGetters }, { $config, app, req }) {
     commit("setEnv", $config.env);
@@ -59,5 +60,49 @@ export default {
       console.log({ error });
       commit('settings/setVisitorData', null);
     }
+  },
+  async handleRequestError({ commit, dispatch }, { error, uuid }) {
+    console.log({ error, response: error.response })
+    if (!error) {
+      return null;
+    }
+    if (!error.response) {
+      const text = error.message ? error.message : 'Something went wrong'
+      if (uuid) {
+        await dispatch('ui/updateMessage', { uuid, ...errorMessage({ text }) }, { root: true })
+      } else {
+        const message = errorMessage({ text, timeout: 5000 });
+        await dispatch('ui/showMessage', message, { root: true });
+      }
+      return error
+    }
+    if (error.response.data) {
+      const text = error.response.data.message;
+      if (uuid) {
+        await dispatch('ui/updateMessage', {
+          uuid,
+          ...errorMessage({ text })
+        }, { root: true })
+      } else {
+        const message = errorMessage({ text, timeout: 5000 });
+        await dispatch('ui/showMessage', message, { root: true });
+      }
+      return error.response.data
+    }
+    const text = error.message ? error.message : 'Something went wrong'
+    if (uuid) {
+      await dispatch('ui/updateMessage', { uuid, ...errorMessage({ text }) }, { root: true })
+    } else {
+      const message = errorMessage({ text, timeout: 5000 });
+      await dispatch('ui/showMessage', message, { root: true });
+    }
+    return error
+  },
+  async handleRequestSuccess({ dispatch }, { response, uuid }) {
+    await dispatch('ui/updateMessage', {
+      uuid,
+      ...successMessage({ text: `${response.message}`, timeout: 5000 })
+    }, { root: true })
+    return response;
   }
 }

@@ -7,15 +7,25 @@
       border: 'none',
       zIndex: 8,
       minWidth: $vuetify.breakpoint.smAndDown ? '80vw' : '',
+      zIndex: 7,
     }"
     absolute
+    fixed
     class="elevated-light"
     overflow
   >
-    <div>
+    <div
+      style="
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-items: flex-start;
+      "
+    >
       <v-img
         :aspect-ratio="16 / 9"
-        src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+        style="flex-grow: 0"
+        :src="profileWallpaper"
       >
         <v-row
           align="start"
@@ -28,73 +38,113 @@
         >
           <v-col>
             <v-avatar size="50" class="mb-2">
-              <img
-                src="https://randomuser.me/api/portraits/women/85.jpg"
-                alt="John"
-              />
+              <img :src="profileImage" alt="John" />
             </v-avatar>
-            <div class="heading font-weight-black">Display name</div>
-            <div class="subheading">@username</div>
-            <div class="d-flex align-center mt-4">
-              <div>
-                <span>999</span>
-                <span class="text--secondary">Following</span>
+            <div v-if="profile">
+              <div class="heading font-weight-black">
+                {{ profile.displayname }}
               </div>
-              <v-spacer></v-spacer>
-              <div>
-                <span>999</span>
-                <span class="text--secondary">Followers</span>
-              </div>
+              <div class="subheading">@{{ profile.username }}</div>
             </div>
           </v-col>
         </v-row>
       </v-img>
-    </div>
-    <div class="ml-4 mr-8">
-      <v-hover v-slot="{ hover }">
-        <v-card
-          flat
-          class="py-4 mb-4 d-flex pl-6"
-          :class="{
-            'elevated-light': hover || $route.name === 'dashboard',
-            primary: $route.name == 'dashboard',
-          }"
-          style="
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-          "
-          @click="openMainNav"
-        >
-          <div class="d-flex align-center">
-            <!-- <DynamicIcon
-                v-if="mainRoutes[currentValue] <= item.minValue"
-                :icon="item.icon"
-                :color="$route.name == item.route ? 'white' : '#888888'"
-                :size="24"
-              /> -->
-            <!-- <v-icon v-else color="success">mdi-check-circle</v-icon> -->
-            <p
-              class="mb-0 ml-2"
-              :class="
-                $route.name == 'dashboard' ? 'white--text font-weight-bold' : ''
-              "
-            >
-              Back
-            </p>
+      <div class="mt-16">
+        <div v-if="isLoggedIn" class="ml-4 mr-8">
+          <NavButton
+            title="Home"
+            icon="mdi-arrow-left"
+            to="index"
+            :active-routes="[]"
+            :badge-count="null"
+            @click="nav = false"
+          />
+          <div v-for="(item, i) in mainRoutes" :key="i">
+            <NavButton
+              :title="item.title"
+              :icon="item.icon"
+              :to="item.to"
+              :active-routes="item.activeRoutes"
+              :badge-count="item.badgeCount"
+            />
           </div>
-        </v-card>
-      </v-hover>
+          <NavButton
+            title="Admin"
+            icon="mdi-security"
+            to="dashboard-admin"
+            :active-routes="[]"
+            :badge-count="null"
+            @click="nav = false"
+          />
+        </div>
+      </div>
     </div>
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import NavButton from '../common/NavButton.vue'
+
 export default {
+  components: { NavButton },
+  data() {
+    return {
+      mainRoutes: [
+        {
+          title: 'Dashboard',
+          icon: 'mdi-view-dashboard-outline',
+          to: 'dashboard-index',
+          route: '/dashboard/',
+          activeRoutes: ['dashboard-index'],
+          badgeCount: 0,
+        },
+        {
+          title: 'Posts',
+          icon: 'mdi-post-outline',
+          to: 'dashboard-index-posts',
+          route: '/dashboard/posts',
+          activeRoutes: ['dashboard-index-posts'],
+          badgeCount: 0,
+        },
+        {
+          title: 'Listings',
+          icon: 'mdi-home-account',
+          to: 'dashboard-index-listings',
+          activeRoutes: ['dashboard-index-listings'],
+          badgeCount: 6,
+        },
+        {
+          title: 'Bookings',
+          icon: 'mdi-calendar',
+          to: 'dashboard-index-bookings',
+          activeRoutes: ['dashboard-index-bookings'],
+          badgeCount: 6,
+        },
+        // {
+        //   title: 'Services',
+        //   icon: 'mdi-account-box-outline',
+        //   to: 'dashboard-index-services',
+        //   activeRoutes: ['dashboard-index-services'],
+        //   badgeCount: 0,
+        // },
+        // {
+        //   title: 'Personal Ads',
+        //   icon: 'mdi-view-dashboard-outline',
+        //   to: 'dashboard-index-personals',
+        //   activeRoutes: ['dashboard-index-personals'],
+        //   badgeCount: 0,
+        // },
+      ],
+    }
+  },
   computed: {
     ...mapGetters({
       showMainNav: 'ui/showMainLeftNav',
+      isLoggedIn: 'auth/isLoggedIn',
+      profileImage: 'user/profileImage',
+      profile: 'user/profile',
+      profileWallpaper: 'user/profileWallpaper',
     }),
     nav: {
       get() {

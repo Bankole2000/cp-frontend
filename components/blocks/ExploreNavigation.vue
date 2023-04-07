@@ -37,25 +37,24 @@ export default {
           activeRoutes: ['index-listings'],
           badgeCount: 6,
         },
-        {
-          title: 'Personal Ads',
-          icon: 'mdi-bullhorn-outline',
-          to: 'index-people',
-          activeRoutes: ['index-people'],
-          badgeCount: 0,
-        },
-        {
-          title: 'Services',
-          icon: 'mdi-account-hard-hat-outline',
-          to: 'index-services',
-          activeRoutes: ['index-services'],
-          badgeCount: 0,
-        },
+        // {
+        //   title: 'Personal Ads',
+        //   icon: 'mdi-bullhorn-outline',
+        //   to: 'index-people',
+        //   activeRoutes: ['index-people'],
+        //   badgeCount: 0,
+        // },
+        // {
+        //   title: 'Services',
+        //   icon: 'mdi-account-hard-hat-outline',
+        //   to: 'index-services',
+        //   activeRoutes: ['index-services'],
+        //   badgeCount: 0,
+        // },
       ],
     }
   },
 }
 </script>
 
-<style>
-</style>
+<style></style>

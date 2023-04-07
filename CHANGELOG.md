@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.7](https://github.com/Bankole2000/cp-frontend/compare/v1.1.6...v1.1.7) (2023-04-07)
+
+
+### Features
+
+* **posts:** create posts, quote posts and comments ([744ddf8](https://github.com/Bankole2000/cp-frontend/commits/744ddf86f5383ffc02fab5d346584ff71fe42dae))
+
+### [1.1.6](https://github.com/Bankole2000/cp-frontend/compare/v1.1.5...v1.1.6) (2023-03-14)
+
+
+### Features
+
+* **posts:** users can create post ([c30838a](https://github.com/Bankole2000/cp-frontend/commits/c30838a99aa222d92181e994023abacecdebc87a))
+
+### [1.1.5](https://github.com/Bankole2000/cp-frontend/compare/v1.1.4...v1.1.5) (2023-03-06)
+
+
+### Features
+
+* **notifications:** base notification ui framework ([cff1565](https://github.com/Bankole2000/cp-frontend/commits/cff1565785df7a585ad7eded0228c0d4c28b2871))
+
+### [1.1.4](https://github.com/Bankole2000/cp-frontend/compare/v1.1.3...v1.1.4) (2023-03-01)
+
+
+### Features
+
+* **pages:** post Id page wip ([1effdc6](https://github.com/Bankole2000/cp-frontend/commits/1effdc686a3c44bc3c78e8ef3d1007ad60fc1d9d))
+
 ### [1.1.3](https://github.com/Bankole2000/cp-frontend/compare/v1.1.2...v1.1.3) (2023-02-02)
 
 

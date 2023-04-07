@@ -12,7 +12,7 @@
           origin="top left"
         >
           <template #activator="{ on }">
-            <v-list-item-avatar class="mx-2" size="48" color="grey" v-on="on">
+            <v-list-item-avatar class="mx-2" size="40" color="grey" v-on="on">
               <v-img src="https://cdn.vuetifyjs.com/images/lists/3.jpg"></v-img
             ></v-list-item-avatar>
             <v-list-item-content v-on="on">
@@ -100,7 +100,7 @@
                 ></v-list-item-avatar> -->
 
         <v-list-item-action class="ma-0" @click="goToListing">
-          <v-btn icon large class="ma-2">
+          <v-btn icon class="ma-2">
             <v-icon size="32">mdi-dots-horizontal</v-icon>
           </v-btn>
         </v-list-item-action>
@@ -447,5 +447,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

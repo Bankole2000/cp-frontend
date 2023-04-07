@@ -2,7 +2,7 @@
   <div>
     <div>
       <!-- Important updates / Messages -->
-      <v-container :fluid="$vuetify.breakpoint.mdOnly">
+      <v-container>
         <!-- Maybe Some ads - Sponsored profiles / listings / posts -->
         <v-row>
           <v-col v-if="$vuetify.breakpoint.mdAndUp" cols="3" xl="2">
@@ -20,6 +20,9 @@
             </div>
           </v-col>
           <v-col cols="12" md="9" xl="10">
+            <!-- :profile-socket="profileSocket"
+            :post-socket="postSocket"
+            :sockets-ready="socketsReady" -->
             <nuxt-child />
           </v-col>
         </v-row>
@@ -37,6 +40,11 @@ export default {
   scrollToTop: true,
   data() {
     return {
+      // profileSocket: {},
+      // postSocket: {},
+      // notificationSocket: {},
+      // chatSocket: {},
+      // socketsReady: false,
       mainRoutes: [
         {
           title: 'Community',
@@ -69,9 +77,29 @@ export default {
       ],
     }
   },
-  mounted() {
-    this.$store.commit('ui/setMessages', [])
+  // async mounted() {
+  //   await this.connectSockets()
+  //   await this.connectUser()
+  //   this.socketsReady = true
+  // },
+  methods: {
+    // async connectSockets() {
+    //   this.profileSocket = await this.$nuxtSocket({
+    //     name: 'profile',
+    //     reconnection: true,
+    //     autoconnect: true,
+    //     path: '/api/v1/profile/socket',
+    //   })
+    // },
+    // async connectUser() {
+    //   if (this.$store.getters['auth/isLoggedIn']) {
+    //     console.log('Connecting User Socket')
+    //     await this.profileSocket.emit(
+    //       'USER_CONNECTED',
+    //       this.$store.getters['auth/user']
+    //     )
+    //   }
+    // },
   },
-  methods: {},
 }
 </script>

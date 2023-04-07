@@ -14,6 +14,9 @@ export default {
   user(state) {
     return state.user;
   },
+  userId(state) {
+    return state.user ? state.user.userId : null;
+  },
   emailVerified(state) {
     return state.user ? state.user.emailVerified : false;
   },

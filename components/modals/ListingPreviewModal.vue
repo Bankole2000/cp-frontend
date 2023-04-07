@@ -67,7 +67,7 @@
 <script>
 export default {
   data: () => ({
-    dialog: true,
+    dialog: false,
     images: [
       'https://images.squarespace-cdn.com/content/v1/625964627d9818640fa5b8cb/c3dda892-6330-42e7-baf3-6a905a200493/5+Tips+to+get+you+started+as+a+great+Dungeon+Master+in+Dungeons+and+Dragons+%7C+crit+academy',
       'https://i.pinimg.com/originals/32/3f/4f/323f4f9d59315390b539db3b09cc14a6.jpg',
@@ -77,5 +77,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

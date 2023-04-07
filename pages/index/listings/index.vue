@@ -41,7 +41,10 @@
           <v-card class="elevated-light rounded-xl mb-4">
             <v-card-title>Trending</v-card-title>
           </v-card>
-          <SuggestedProfilesCard />
+          <SuggestedProfilesCard
+            :profile-socket="profileSocket"
+            :sockets-ready="socketsReady"
+          />
         </div>
       </v-col>
     </v-row>
@@ -51,8 +54,43 @@
 <script>
 export default {
   layout: 'admin',
+  props: {},
+  data() {
+    return {
+      postSocket: {},
+      profileSocket: {},
+      socketsReady: false,
+    }
+  },
+  methods: {
+    async connectSockets() {
+      this.profileSocket = this.$nuxtSocket({
+        name: 'profile',
+        reconnection: true,
+        autoconnect: true,
+        path: '/api/v1/profile/socket',
+      })
+      this.postSocket = this.$nuxtSocket({
+        name: 'post',
+        reconnection: true,
+        autoconnect: true,
+        path: '/api/v1/post/socket',
+      })
+      if (this.$store.getters['auth/isLoggedIn']) {
+        console.log('Connecting User Socket')
+        await this.profileSocket.emitP(
+          'USER_CONNECTED',
+          this.$store.getters['auth/user']
+        )
+        await this.postSocket.emitP(
+          'USER_CONNECTED',
+          this.$store.getters['auth/user']
+        )
+      }
+      this.socketsReady = true
+    },
+  },
 }
 </script>
 
-<style>
-</style>
+<style></style>
