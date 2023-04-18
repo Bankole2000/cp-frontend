@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  layout: 'admin',
+  layout: 'app',
   data() {
     return {
       tab: null,
@@ -59,5 +59,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

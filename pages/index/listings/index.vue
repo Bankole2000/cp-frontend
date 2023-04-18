@@ -53,7 +53,7 @@
 
 <script>
 export default {
-  layout: 'admin',
+  layout: 'app',
   props: {},
   data() {
     return {

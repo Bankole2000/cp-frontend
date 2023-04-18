@@ -6,9 +6,8 @@
 
 <script>
 export default {
-  layout: 'admin',
+  layout: 'app',
 }
 </script>
 
-<style>
-</style>
+<style></style>

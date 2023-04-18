@@ -1,10 +1,11 @@
 // import colors from 'vuetify/es5/util/colors'
 
 export default {
+  mode: 'universal',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - cribplug',
-    title: 'cribplug',
+    titleTemplate: '%s | Relodger',
+    title: 'Relodger',
     htmlAttrs: {
       lang: 'en',
     },
@@ -57,43 +58,43 @@ export default {
     sockets: [
       {
         name: 'profile',
-        url: `${process.env.BASE_URL}:${process.env.PROFILE_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.PROFILE_PORT}`,
       },
       {
         name: 'chat',
-        url: `${process.env.BASE_URL}:${process.env.CHAT_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.CHAT_PORT}`,
       },
       {
         name: 'notification',
-        url: `${process.env.BASE_URL}:${process.env.NOTIFICATION_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.NOTIFICATION_PORT}`,
       },
       {
         name: 'feed',
-        url: `${process.env.BASE_URL}:${process.env.FEED_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.FEED_PORT}`,
       },
       {
         name: 'post',
-        url: `${process.env.BASE_URL}:${process.env.POST_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.POST_PORT}`,
       },
       {
         name: 'transaction',
-        url: `${process.env.BASE_URL}:${process.env.TRANSACTION_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.TRANSACTION_PORT}`,
       },
       {
         name: 'offer',
-        url: `${process.env.BASE_URL}:${process.env.OFFER_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.OFFER_PORT}`,
       },
       {
         name: 'listing',
-        url: `${process.env.BASE_URL}:${process.env.LISTING_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.LISTING_PORT}`,
       },
       {
         name: 'comms',
-        url: `${process.env.BASE_URL}:${process.env.COMMS_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.COMMS_PORT}`,
       },
       {
         name: 'event',
-        url: `${process.env.BASE_URL}:${process.env.EVENT_PORT}`,
+        url: `${process.env.BASE_URL}${process.env.EVENT_PORT}`,
       }
     ]
   },

@@ -66,7 +66,7 @@
 
 <script>
 export default {
-  layout: 'admin',
+  layout: 'app',
   middleware: ['checkAuth', 'requireUser'],
   data() {
     return {

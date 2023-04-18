@@ -11,9 +11,9 @@
           <v-card flat class="pa-4 elevated-light">
             something
             <HoverButton
-              @click="youClicked"
               text="button text"
               classes="text-capitalize"
+              @click="youClicked"
             />
           </v-card>
           <div style="height: 300vh">
@@ -36,5 +36,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

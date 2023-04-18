@@ -527,7 +527,7 @@ import URLMention from '~/components/common/URLMention.vue'
 import UserMention from '~/components/common/UserMention.vue'
 export default {
   components: { UserMention, TagMention, URLMention },
-  layout: 'admin',
+  layout: 'app',
   // asyncData(context) {
   //   console.log({ context, env: context.app.$config.env })
   //   return {}
