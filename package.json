@@ -71,10 +71,10 @@
   "author": {
     "name": "Bankole Esan",
     "email": "techybanky@gmail.com",
-    "url": "https://banky.studio"
+    "url": "https://bankole2000.github.io/webpieces"
   },
   "engines": {
-    "npm": "8.1.2",
-    "node": "16.13.1"
+    "npm": "8.19.2",
+    "node": "v16.18.1"
   }
 }
