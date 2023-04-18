@@ -75,7 +75,6 @@
     "url": "https://bankole2000.github.io/webpieces"
   },
   "engines": {
-    "npm": "8.19.2",
-    "node": "v16.18.1"
+    "node": "16.x"
   }
 }
