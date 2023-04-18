@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.8](https://github.com/Bankole2000/cp-frontend/compare/v1.1.7...v1.1.8) (2023-04-18)
+
+
+### Bug Fixes
+
+* **staging:** fixing for test deployment on railway ([496117f](https://github.com/Bankole2000/cp-frontend/commits/496117f90e4522fb4c51de93c608640ce3317e52))
+
 ### [1.1.7](https://github.com/Bankole2000/cp-frontend/compare/v1.1.6...v1.1.7) (2023-04-07)
 
 

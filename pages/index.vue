@@ -36,7 +36,7 @@ import ExploreNavigation from '~/components/blocks/ExploreNavigation.vue'
 export default {
   name: 'IndexPage',
   components: { ExploreNavigation },
-  layout: 'admin',
+  layout: 'app',
   scrollToTop: true,
   data() {
     return {

@@ -90,7 +90,7 @@ export default {
     ProfileBottomNavigation,
     MobileProfileActions,
   },
-  layout: 'admin',
+  layout: 'app',
   props: {
     // profileSocket: {
     //   type: Object,
